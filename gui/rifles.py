@@ -96,12 +96,9 @@ class RiflesLi(QtWidgets.QListWidget):
             self.addItem(item)
             self.setItemWidget(item, widget)
         else:
-            print('uid', uid)
             item = self.item(uid)
-            print('item', item)
             widget = self.itemWidget(item)
             widget.set_data(rifle)
-
 
 
 class RiflesHeader(QtWidgets.QWidget):
@@ -183,19 +180,6 @@ class RiflesWidget(QtWidgets.QWidget):
     def rifle_double_clicked(self, item: QtWidgets.QListWidgetItem):
         widget: RifleItemWidget = self.rifles_list.itemWidget(item)
         self.rifle_double_clicked_sig.emit(self.rifles_list.indexFromItem(item).row(), widget.rifle_data)
-
-
-class FirearmProps(QtWidgets.QWidget):
-    def __init__(self, parent=None):
-        super(FirearmProps, self).__init__(parent)
-        self.setupUi(self)
-
-    def setupUi(self, firearmProps):
-        firearmProps.setObjectName("firearmProps")
-
-    def retranslateUi(self, firearmProps):
-        _translate = QtCore.QCoreApplication.translate
-        firearmProps.setWindowTitle(_translate("firearmProps", "Form"))
 
 
 class AddRifleHeader(QtWidgets.QWidget):
