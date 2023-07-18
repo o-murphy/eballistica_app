@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ArcheBCUpdate</class>
+ <widget class="QMainWindow" name="ArcheBCUpdate">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>516</width>
+    <height>104</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>516</width>
+    <height>104</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>516</width>
+    <height>104</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>ArcherBC Update</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../.rsrc/Icon.ico</normaloff>../.rsrc/Icon.ico</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget {
+	background-color: rgb(51, 51, 51);
+	color: white;
+}
+QTabBar::tab {
+	height: 40px; width: 100px;
+	background-color: rgb(76, 76, 76);
+	color: rgb(255, 170, 0);
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	border: 0px solid rgb(76, 76, 76);
+}
+QTabBar::tab:!selected {
+	border: 1px solid rgb(76, 76, 76);
+	background-color:rgb(28, 28, 28); 
+	color: rgb(255, 255, 255);
+}
+
+QTabBar::tab:hover {
+	border: 0px solid rgb(51, 51, 51);
+}
+
+QTabBar::tab:!hover {
+	border: 1px solid rgb(51, 51, 51);
+}
+
+QTabWidget::pane { 
+	border: 2px solid rgb(76, 76, 76); 
+}
+QScrollArea {
+	border: 0; 
+}
+
+QProgressBar {
+    background: white;
+    color: black;
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+QProgressBar::chunk {
+    background: rgb(50, 63, 57);
+} 
+
+QProgressBar::text::highlighted {
+    color: white;
+}
+
+
+
+</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="3" column="0">
+     <widget class="QProgressBar" name="progressBar">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>6</height>
+       </size>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+      <property name="textVisible">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QDialogButtonBox" name="buttonBox">
+      <property name="standardButtons">
+       <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      </property>
+      <property name="centerButtons">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="label">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Looking for updates...</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

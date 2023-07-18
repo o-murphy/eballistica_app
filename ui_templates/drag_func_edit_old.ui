@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>572</width>
+    <height>493</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>572</width>
+    <height>493</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>572</width>
+    <height>493</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../../.rsrc/Icon.ico</normaloff>../../.rsrc/Icon.ico</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget {
+	background-color: rgb(51, 51, 51);
+	color: white;
+}
+
+QTableWidget {
+	
+	background-color: rgb(40, 40, 40);
+}
+
+QHeaderView::section {
+	background-color: rgb(51, 51, 51);
+}
+
+QTableWidget::item:selected {
+	background-color: rgb(51, 51, 51);
+}
+
+QPushButton {
+	background-color: rgb(51, 51, 51);
+}
+
+QSpinBox::up-button, QDoubleSpinBox::up-button { width: 20px; }
+QSpinBox::down-button, QDoubleSpinBox::down-button { width: 20px; }
+QSpinBox, QDoubleSpinBox {
+	background-color: rgb(40, 40, 40);
+	alternate-background-color: rgb(40, 40, 40);
+	color: rgb(255, 255, 255);
+}
+QLineEdit, QLabel, QComboBox, QPushButton, QToolButton {
+	color: rgb(255, 255, 255);
+}
+QLineEdit {
+	border: 0px solid grey;
+	background-color: rgb(40, 40, 40);
+}
+QGroupBox {
+	color: rgb(255, 255, 255);
+	border: 1px solid rgb(78, 78, 78);
+	padding-top: 25px;
+}
+
+QGroupBox::title {
+	padding: 5px 20px 5px 20px;
+	color: rgb(255, 170, 0);
+	border-top-left-radius: 10px;
+	border-bottom-right-radius: 10px;
+	background-color: rgb(40, 40, 40);
+}</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="1" column="0">
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Step</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QDoubleSpinBox" name="Step">
+     <property name="minimum">
+      <double>-1.000000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>1.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.010000000000000</double>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="4">
+    <widget class="QTableWidget" name="tableWidget">
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>80</height>
+      </size>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+     <attribute name="horizontalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="horizontalHeaderDefaultSectionSize">
+      <number>45</number>
+     </attribute>
+     <attribute name="horizontalHeaderMinimumSectionSize">
+      <number>28</number>
+     </attribute>
+     <attribute name="verticalHeaderDefaultSectionSize">
+      <number>28</number>
+     </attribute>
+     <attribute name="verticalHeaderMinimumSectionSize">
+      <number>28</number>
+     </attribute>
+     <row>
+      <property name="text">
+       <string>v</string>
+      </property>
+     </row>
+     <row>
+      <property name="text">
+       <string>i</string>
+      </property>
+     </row>
+     <column>
+      <property name="text">
+       <string>1</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>2</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>3</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>4</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>5</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>New Column</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>New Column</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>New Column</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>New Column</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>New Column</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>New Column</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>New Column</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>New Column</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>New Column</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>New Column</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>New Column</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>New Column</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>New Column</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>New Column</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>New Column</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>New Column</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>New Column</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>New Column</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>New Column</string>
+      </property>
+     </column>
+     <item row="0" column="0">
+      <property name="text">
+       <string>0.000</string>
+      </property>
+     </item>
+     <item row="0" column="1">
+      <property name="text">
+       <string>0.800</string>
+      </property>
+     </item>
+     <item row="0" column="2">
+      <property name="text">
+       <string>0.850</string>
+      </property>
+     </item>
+     <item row="0" column="3">
+      <property name="text">
+       <string>0.900</string>
+      </property>
+     </item>
+     <item row="0" column="4">
+      <property name="text">
+       <string>0.950</string>
+      </property>
+     </item>
+     <item row="0" column="5">
+      <property name="text">
+       <string>1.000</string>
+      </property>
+     </item>
+     <item row="0" column="6">
+      <property name="text">
+       <string>1.100</string>
+      </property>
+     </item>
+     <item row="0" column="7">
+      <property name="text">
+       <string>1.200</string>
+      </property>
+     </item>
+     <item row="0" column="8">
+      <property name="text">
+       <string>1.400</string>
+      </property>
+     </item>
+     <item row="0" column="9">
+      <property name="text">
+       <string>1.600</string>
+      </property>
+     </item>
+     <item row="0" column="10">
+      <property name="text">
+       <string>1.800</string>
+      </property>
+     </item>
+     <item row="0" column="11">
+      <property name="text">
+       <string>2.000</string>
+      </property>
+     </item>
+     <item row="0" column="12">
+      <property name="text">
+       <string>2.200</string>
+      </property>
+     </item>
+     <item row="0" column="13">
+      <property name="text">
+       <string>2.500</string>
+      </property>
+     </item>
+     <item row="1" column="0">
+      <property name="text">
+       <string>0.140</string>
+      </property>
+     </item>
+     <item row="1" column="1">
+      <property name="text">
+       <string>0.140</string>
+      </property>
+     </item>
+     <item row="1" column="2">
+      <property name="text">
+       <string>0.142</string>
+      </property>
+     </item>
+     <item row="1" column="3">
+      <property name="text">
+       <string>0.160</string>
+      </property>
+     </item>
+     <item row="1" column="4">
+      <property name="text">
+       <string>0.240</string>
+      </property>
+     </item>
+     <item row="1" column="5">
+      <property name="text">
+       <string>0.430</string>
+      </property>
+     </item>
+     <item row="1" column="6">
+      <property name="text">
+       <string>0.447</string>
+      </property>
+     </item>
+     <item row="1" column="7">
+      <property name="text">
+       <string>0.434</string>
+      </property>
+     </item>
+     <item row="1" column="8">
+      <property name="text">
+       <string>0.410</string>
+      </property>
+     </item>
+     <item row="1" column="9">
+      <property name="text">
+       <string>0.385</string>
+      </property>
+     </item>
+     <item row="1" column="10">
+      <property name="text">
+       <string>0.365</string>
+      </property>
+     </item>
+     <item row="1" column="11">
+      <property name="text">
+       <string>0.350</string>
+      </property>
+     </item>
+     <item row="1" column="12">
+      <property name="text">
+       <string>0.339</string>
+      </property>
+     </item>
+     <item row="1" column="13">
+      <property name="text">
+       <string>0.320</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QPushButton" name="Down">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>100</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Down</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QPushButton" name="Up">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>100</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Up</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="2">
+    <widget class="QPushButton" name="PeakUp">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>100</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Peak Up</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2">
+    <widget class="QPushButton" name="PeakDown">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>100</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Peak Down</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="3">
+    <widget class="QPushButton" name="EndUp">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>100</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>End Up</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="3">
+    <widget class="QPushButton" name="EndDown">
+     <property name="minimumSize">
+      <size>
+       <width>100</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>100</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>End Down</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0" colspan="4">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+     <property name="centerButtons">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
