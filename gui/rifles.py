@@ -1,4 +1,4 @@
-from PySide6 import QtWidgets, QtCore
+from PySide6 import QtWidgets, QtCore, QtGui
 
 from datatypes.rifle import RifleData
 from .app_logo import AppLogo, AppLabel
@@ -53,8 +53,38 @@ class RiflesDelegate(QtWidgets.QStyledItemDelegate):
 
 
 class RiflesLi(QtWidgets.QListWidget):
+    edit_context_action = QtCore.Signal(object)
+
     def __init__(self, parent=None):
         super(RiflesLi, self).__init__(parent)
+
+    def contextMenuEvent(self, event):
+        # self.itemAt(event.pos())
+        context_menu = QtWidgets.QMenu(self)
+
+        edit_item = QtGui.QAction('Edit', self)
+        remove_item = QtGui.QAction('Delete', self)
+
+        context_menu.addAction(edit_item)
+        context_menu.addAction(remove_item)
+
+        selected_item = self.itemAt(event.pos())
+
+        if selected_item:
+            # Perform custom actions based on the selected item
+            uid = self.indexFromItem(selected_item).row()
+
+            action = context_menu.exec_(event.globalPos())
+
+            event.accept()
+            if action == edit_item:
+                self.edit_context_action.emit(selected_item)
+            elif action == remove_item:
+                self.takeItem(uid)
+
+    def setupUi(self, RiflesLi):
+        self.menu = QtWidgets.QMenu()
+        self.menu.addAction(self.edit_item)
 
     def store_rifle(self, uid, rifle):
         if uid is None:
@@ -144,6 +174,7 @@ class RiflesWidget(QtWidgets.QWidget):
     def connectUi(self, riflesWidget: 'RiflesWidget'):
         self.rifles_list.itemDoubleClicked.connect(self.rifle_double_clicked)
         self.rifles_list.itemClicked.connect(self.rifle_clicked)
+        self.rifles_list.edit_context_action.connect(self.rifle_double_clicked)
 
     def rifle_clicked(self, item: QtWidgets.QListWidgetItem):
         widget: RifleItemWidget = self.rifles_list.itemWidget(item)
