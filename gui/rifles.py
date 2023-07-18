@@ -21,7 +21,6 @@ class RifleItemWidget(QtWidgets.QWidget):
 
         self.gridLayout.addWidget(self.box)
 
-
         self.boxLayout = QtWidgets.QGridLayout(self.box)
         self.boxLayout.setObjectName("boxLayout")
 
@@ -57,13 +56,22 @@ class RiflesLi(QtWidgets.QListWidget):
     def __init__(self, parent=None):
         super(RiflesLi, self).__init__(parent)
 
-    def store_rifle(self, rifle):
-        widget = RifleItemWidget()
-        widget.set_data(rifle)
-        item = QtWidgets.QListWidgetItem()
-        item.setSizeHint(widget.sizeHint())
-        self.addItem(item)
-        self.setItemWidget(item, widget)
+    def store_rifle(self, uid, rifle):
+        if uid is None:
+            widget = RifleItemWidget()
+            widget.set_data(rifle)
+            item = QtWidgets.QListWidgetItem()
+            item.setSizeHint(widget.sizeHint())
+            item.setData(0, self.count())
+            self.addItem(item)
+            self.setItemWidget(item, widget)
+        else:
+            print('uid', uid)
+            item = self.item(uid)
+            print('item', item)
+            widget = self.itemWidget(item)
+            widget.set_data(rifle)
+
 
 
 class RiflesHeader(QtWidgets.QWidget):
@@ -100,7 +108,8 @@ class RiflesHeader(QtWidgets.QWidget):
 
 
 class RiflesWidget(QtWidgets.QWidget):
-    rifle_double_clicked_sig = QtCore.Signal(object)
+    rifle_clicked_sig = QtCore.Signal(object, object)
+    rifle_double_clicked_sig = QtCore.Signal(object, object)
 
     def __init__(self, parent=None):
         super(RiflesWidget, self).__init__(parent)
@@ -134,10 +143,15 @@ class RiflesWidget(QtWidgets.QWidget):
 
     def connectUi(self, riflesWidget: 'RiflesWidget'):
         self.rifles_list.itemDoubleClicked.connect(self.rifle_double_clicked)
+        self.rifles_list.itemClicked.connect(self.rifle_clicked)
+
+    def rifle_clicked(self, item: QtWidgets.QListWidgetItem):
+        widget: RifleItemWidget = self.rifles_list.itemWidget(item)
+        self.rifle_clicked_sig.emit(self.rifles_list.indexFromItem(item).row(), widget.rifle_data)
 
     def rifle_double_clicked(self, item: QtWidgets.QListWidgetItem):
-        widget = self.rifles_list.itemWidget(item)
-        self.rifle_double_clicked_sig.emit(widget.rifle_data)
+        widget: RifleItemWidget = self.rifles_list.itemWidget(item)
+        self.rifle_double_clicked_sig.emit(self.rifles_list.indexFromItem(item).row(), widget.rifle_data)
 
 
 class FirearmProps(QtWidgets.QWidget):
@@ -158,8 +172,8 @@ class AddRifleHeader(QtWidgets.QWidget):
         super(AddRifleHeader, self).__init__(parent)
         self.setupUi(self)
 
-    def setupUi(self, addRifleHeader):
-        addRifleHeader.setObjectName("addRifleHeader")
+    def setupUi(self, editRifleWidgetHeader):
+        editRifleWidgetHeader.setObjectName("editRifleWidgetHeader")
 
         self.hBoxLayout = QtWidgets.QHBoxLayout(self)
         self.hBoxLayout.setObjectName("hBoxLayout")
@@ -169,38 +183,41 @@ class AddRifleHeader(QtWidgets.QWidget):
         self.hBoxLayout.addWidget(self.logo)
         self.hBoxLayout.addWidget(self.label)
 
-        addRifleHeader.setObjectName("addRifleHeader")
+        editRifleWidgetHeader.setObjectName("editRifleWidgetHeader")
         self.okButton = QtWidgets.QPushButton('Ok')
 
         self.hBoxLayout.addWidget(self.okButton)
 
-        self.retranslateUi(addRifleHeader)
-        QtCore.QMetaObject.connectSlotsByName(addRifleHeader)
+        self.retranslateUi(editRifleWidgetHeader)
+        QtCore.QMetaObject.connectSlotsByName(editRifleWidgetHeader)
 
-    def retranslateUi(self, addRifleHeader: 'AddRifleHeader'):
+    def retranslateUi(self, editRifleWidgetHeader: 'AddRifleHeader'):
         _translate = QtCore.QCoreApplication.translate
-        addRifleHeader.setWindowTitle(_translate("addRifleHeader", "Form"))
-        addRifleHeader.okButton.setText(_translate("addRifleHeader", "Ok"))
-        # addRifleHeader.menuButton.setText(_translate("addRifleHeader", "..."))
+        editRifleWidgetHeader.setWindowTitle(_translate("editRifleWidgetHeader", "Form"))
+        editRifleWidgetHeader.okButton.setText(_translate("editRifleWidgetHeader", "Ok"))
+        # editRifleWidgetHeader.menuButton.setText(_translate("editRifleWidgetHeader", "..."))
 
 
-class AddRifle(QtWidgets.QWidget):
-    ok_clicked = QtCore.Signal(object)
+class EditRifleWidget(QtWidgets.QWidget):
+    ok_clicked = QtCore.Signal(object, object)
 
-    def __init__(self, parent=None):
-        print(parent)
-        super(AddRifle, self).__init__(parent)
+    def __init__(self, parent=None, uid: int = None, data: RifleData = None):
+        super(EditRifleWidget, self).__init__(parent)
         self.setupUi(self)
         self.connectUi(self)
+        self.uid = uid
 
-    def setupUi(self, addRifle):
-        addRifle.setObjectName("addRifle")
+        if data is not None:
+            self.set_data(data)
+
+    def setupUi(self, editRifleWidget):
+        editRifleWidget.setObjectName("editRifleWidget")
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(addRifle.sizePolicy().hasHeightForWidth())
-        addRifle.setSizePolicy(sizePolicy)
-        addRifle.setMinimumSize(QtCore.QSize(0, 0))
+        sizePolicy.setHeightForWidth(editRifleWidget.sizePolicy().hasHeightForWidth())
+        editRifleWidget.setSizePolicy(sizePolicy)
+        editRifleWidget.setMinimumSize(QtCore.QSize(0, 0))
 
         self.header = AddRifleHeader(self)
 
@@ -224,10 +241,13 @@ class AddRifle(QtWidgets.QWidget):
         self.barrel_twist_dir_label = QtWidgets.QLabel('Twist direction')
         self.sight_height_label = QtWidgets.QLabel('Sight Height')
         self.sight_offset_label = QtWidgets.QLabel('Sight Offset')
-        
+
         self.name = QtWidgets.QLineEdit('Template')
         self.barrel_twist = QtWidgets.QDoubleSpinBox()
         self.barrel_twist_dir = QtWidgets.QComboBox()
+        self.barrel_twist_dir.addItem('Right', True)
+        self.barrel_twist_dir.addItem('Left', False)
+
         self.sight_height = QtWidgets.QDoubleSpinBox()
         self.sight_offset = QtWidgets.QDoubleSpinBox()
 
@@ -242,15 +262,25 @@ class AddRifle(QtWidgets.QWidget):
         self.vBoxLayout.addWidget(self.props_box)
         self.vBoxLayout.addWidget(self.reticle_box)
 
-        self.retranslateUi(addRifle)
-        QtCore.QMetaObject.connectSlotsByName(addRifle)
+        self.retranslateUi(editRifleWidget)
+        QtCore.QMetaObject.connectSlotsByName(editRifleWidget)
 
-    def retranslateUi(self, addRifle: 'AddRifle'):
+    def retranslateUi(self, editRifleWidget: 'EditRifleWidget'):
         _translate = QtCore.QCoreApplication.translate
-        addRifle.setWindowTitle(_translate("addRifle", "Form"))
+        editRifleWidget.setWindowTitle(_translate("editRifleWidget", "Form"))
 
-    def connectUi(self, addRifle):
+    def connectUi(self, editRifleWidget):
         self.header.okButton.clicked.connect(self.save_rifle)
+
+    def set_data(self, rifle: RifleData, uid=None):
+        self.uid = uid
+        if rifle:
+            self.name.setText(rifle.name)
+            self.barrel_twist.setValue(rifle.barrel_twist)
+            index = self.barrel_twist_dir.findData(rifle.barrel_twist_dir)
+            self.barrel_twist_dir.setCurrentIndex(index)
+            self.sight_height.setValue(rifle.sight_height)
+            self.sight_offset.setValue(rifle.sight_offset)
 
     def save_rifle(self):
         rifle_data = RifleData(
@@ -260,5 +290,4 @@ class AddRifle(QtWidgets.QWidget):
             self.sight_height.value(),
             self.sight_offset.value()
         )
-        self.ok_clicked.emit(rifle_data)
-
+        self.ok_clicked.emit(self.uid, rifle_data)
