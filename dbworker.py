@@ -1,6 +1,6 @@
 import enum
 import json
-
+from functools import wraps
 from sqlalchemy import create_engine, Column, Integer, Float, String, Enum, Boolean, ForeignKey
 from sqlalchemy.orm import relationship, declarative_base, sessionmaker, mapped_column, validates
 
@@ -73,11 +73,11 @@ class AmmoData(Base):
 
         if rifle is None:
             raise ValueError("AmmoData must be associated with a RifleData.")
-
+        print('init', self.id)
         self.rifle = rifle
         self.zerodata = ZeroData(ammo=self)
-        self.target = Target(ammo=self)
-        self.atmo = AtmoData(ammo=self)
+        # self.target = Target(ammo=self)
+        # self.atmo = AtmoData(ammo=self)
 
     def get_cd(self):
         return json.loads(self.cd)  # Deserialize the JSON to retrieve the list.
@@ -121,15 +121,22 @@ class ZeroData(Base):
     ammo_id = mapped_column(ForeignKey("ammo.id", ondelete="CASCADE"), nullable=False, unique=True)
     ammo = relationship("AmmoData", back_populates="zerodata")
 
+    def __init__(self, zero_range=100, zero_height=90, zero_offset=0, is_zero_atmo=True,
+                 altitude=0, pressure=760, temperature=15, humidity=50, ammo=None):
+        super(ZeroData, self).__init__(zero_range=zero_range, zero_height=zero_height, zero_offset=zero_offset,
+                                       is_zero_atmo=is_zero_atmo, altitude=altitude, pressure=pressure,
+                                       temperature=temperature, humidity=humidity, ammo=ammo)
+
     def __repr__(self):
         return "<{0.__class__.__name__}(id={0.id!r})>".format(self)
 
-    @validates('ammo_id')
-    def validate_ammo_id(self, key, ammo_id):
-        with Session() as session:
-            if not session.query(AmmoData).filter_by(id=ammo_id).scalar():
-                raise ValueError(f"AmmoData with ID {ammo_id} does not exist in the database.")
-        return ammo_id
+    # @validates('ammo_id')
+    # def validate_ammo_id(self, key, ammo_id):
+    #     print('validate_ammo_id', ammo_id)
+    #     with Session() as session:
+    #         if ammo_id is not None and not session.query(AmmoData).filter_by(id=ammo_id).scalar():
+    #             raise ValueError(f"AmmoData with ID {ammo_id} does not exist in the database.")
+    #     return ammo_id
 
 
 class Target(Base):
@@ -186,22 +193,60 @@ Session = sessionmaker(bind=engine)
 
 
 class Worker:
+
     @staticmethod
-    def list_rifles(*args, **kwargs):
+    def list_rifles(**kwargs):
         with Session() as session:
-            rifles = session.query(RifleData).all()
+            rifles = session.query(RifleData).filter_by(**kwargs)
         return rifles
 
     @staticmethod
-    def add_or_update(*args, **kwargs):
+    def rifle_add_or_update(*args, **kwargs):
         with Session() as session:
             rifle = RifleData(*args, **kwargs)
-            session.merge(rifle)
+            rifle = session.merge(rifle)
             session.commit()
 
     @staticmethod
-    def delete_rifle(uid, *args, **kwargs):
+    def delete_rifle(uid, **kwargs):
         with Session() as session:
             rifle = session.get(RifleData, uid)
             session.delete(rifle)
             session.commit()
+
+    @staticmethod
+    def list_ammos(**kwargs):
+        with Session() as session:
+            ammos = session.query(AmmoData).filter_by(**kwargs)
+        return ammos
+
+    @staticmethod
+    def ammo_add_or_update(ammo):
+        with Session() as session:
+            ammo = session.merge(ammo)
+            session.commit()
+
+    # @staticmethod
+    # def zero_add_or_update(*args, **kwargs):
+    #     with Session() as session:
+    #         zero = ZeroData(*args, **kwargs)
+    #         zero = session.merge(zero)
+    #         session.commit()
+
+    @staticmethod
+    def ammo_merge_transaction(ammo, zero):
+        with Session() as session:
+            ammo = AmmoData(**ammo)
+            ammo = session.merge(ammo)
+            session.commit()
+            zero = ZeroData(**zero, ammo=ammo)
+            zero = session.merge(zero)
+            session.commit()
+
+    @staticmethod
+    def delete_ammo(uid, **kwargs):
+        with Session() as session:
+            ammo = session.get(AmmoData, uid)
+            session.delete(ammo)
+            session.commit()
+

@@ -82,7 +82,6 @@ class RiflesLi(QtWidgets.QListWidget):
             if action == edit_item:
                 self.edit_context_action.emit(selected_item)
             elif action == remove_item:
-                # self.takeItem(uid)
                 uid = self.itemWidget(selected_item).rifle_data.id
                 Worker.delete_rifle(uid)
                 self.refresh()
@@ -103,8 +102,9 @@ class RiflesLi(QtWidgets.QListWidget):
     def refresh(self):
         rifles = Worker.list_rifles()
         self.clear()
-        for rifle in rifles:
-            self.create_item(rifle)
+        if rifles:
+            for rifle in rifles:
+                self.create_item(rifle)
 
     # def store_rifle(self, uid, rifle):
     #     if uid is None:
@@ -319,7 +319,7 @@ class EditRifleWidget(QtWidgets.QWidget):
         self.sight_offset.setValue(rifle.sight_offset)
 
     def save_rifle(self):
-        Worker.add_or_update(
+        Worker.rifle_add_or_update(
             id=self.uid,
             name=self.name.text(),
             barrel_twist=self.barrel_twist.value(),
