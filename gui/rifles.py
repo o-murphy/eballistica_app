@@ -1,6 +1,7 @@
 from PySide6 import QtWidgets, QtCore, QtGui
 
-from datatypes.rifle import RifleData
+# from datatypes.datatypes import RifleData
+from dbworker import Worker, TwistDir, RifleData
 from .app_logo import AppLogo, AppLabel
 
 
@@ -57,6 +58,7 @@ class RiflesLi(QtWidgets.QListWidget):
 
     def __init__(self, parent=None):
         super(RiflesLi, self).__init__(parent)
+        self.refresh()
 
     def contextMenuEvent(self, event):
         # self.itemAt(event.pos())
@@ -80,25 +82,43 @@ class RiflesLi(QtWidgets.QListWidget):
             if action == edit_item:
                 self.edit_context_action.emit(selected_item)
             elif action == remove_item:
-                self.takeItem(uid)
+                # self.takeItem(uid)
+                uid = self.itemWidget(selected_item).rifle_data.id
+                Worker.delete_rifle(uid)
+                self.refresh()
 
     def setupUi(self, RiflesLi):
         self.menu = QtWidgets.QMenu()
         self.menu.addAction(self.edit_item)
 
-    def store_rifle(self, uid, rifle):
-        if uid is None:
-            widget = RifleItemWidget()
-            widget.set_data(rifle)
-            item = QtWidgets.QListWidgetItem()
-            item.setSizeHint(widget.sizeHint())
-            item.setData(0, self.count())
-            self.addItem(item)
-            self.setItemWidget(item, widget)
-        else:
-            item = self.item(uid)
-            widget = self.itemWidget(item)
-            widget.set_data(rifle)
+    def create_item(self, rifle):
+        widget = RifleItemWidget()
+        widget.set_data(rifle)
+        item = QtWidgets.QListWidgetItem()
+        item.setSizeHint(widget.sizeHint())
+        item.setData(0, rifle.id)
+        self.addItem(item)
+        self.setItemWidget(item, widget)
+
+    def refresh(self):
+        rifles = Worker.list_rifles()
+        self.clear()
+        for rifle in rifles:
+            self.create_item(rifle)
+
+    # def store_rifle(self, uid, rifle):
+    #     if uid is None:
+    #         widget = RifleItemWidget()
+    #         widget.display_data(rifle)
+    #         item = QtWidgets.QListWidgetItem()
+    #         item.setSizeHint(widget.sizeHint())
+    #         item.setData(0, self.count())
+    #         self.addItem(item)
+    #         self.setItemWidget(item, widget)
+    #     else:
+    #         item = self.item(uid)
+    #         widget = self.itemWidget(item)
+    #         widget.display_data(rifle)
 
 
 class RiflesHeader(QtWidgets.QWidget):
@@ -135,8 +155,8 @@ class RiflesHeader(QtWidgets.QWidget):
 
 
 class RiflesWidget(QtWidgets.QWidget):
-    rifle_clicked_sig = QtCore.Signal(object, object)
-    rifle_double_clicked_sig = QtCore.Signal(object, object)
+    rifle_clicked_sig = QtCore.Signal(object)
+    rifle_double_clicked_sig = QtCore.Signal(object)
 
     def __init__(self, parent=None):
         super(RiflesWidget, self).__init__(parent)
@@ -159,7 +179,6 @@ class RiflesWidget(QtWidgets.QWidget):
         self.rifles_list = RiflesLi(self)
         self.vBoxLayout.addWidget(self.header)
         self.vBoxLayout.addWidget(self.rifles_list)
-        self.vBoxLayout.addWidget(RifleItemWidget())
 
         self.retranslateUi(riflesWidget)
         QtCore.QMetaObject.connectSlotsByName(riflesWidget)
@@ -175,11 +194,11 @@ class RiflesWidget(QtWidgets.QWidget):
 
     def rifle_clicked(self, item: QtWidgets.QListWidgetItem):
         widget: RifleItemWidget = self.rifles_list.itemWidget(item)
-        self.rifle_clicked_sig.emit(self.rifles_list.indexFromItem(item).row(), widget.rifle_data)
+        self.rifle_clicked_sig.emit(widget.rifle_data)
 
     def rifle_double_clicked(self, item: QtWidgets.QListWidgetItem):
         widget: RifleItemWidget = self.rifles_list.itemWidget(item)
-        self.rifle_double_clicked_sig.emit(self.rifles_list.indexFromItem(item).row(), widget.rifle_data)
+        self.rifle_double_clicked_sig.emit(widget.rifle_data)
 
 
 class AddRifleHeader(QtWidgets.QWidget):
@@ -214,16 +233,16 @@ class AddRifleHeader(QtWidgets.QWidget):
 
 
 class EditRifleWidget(QtWidgets.QWidget):
-    ok_clicked = QtCore.Signal(object, object)
+    ok_clicked = QtCore.Signal()
 
-    def __init__(self, parent=None, uid: int = None, data: RifleData = None):
+    def __init__(self, parent=None, uid: int = None, rifle: 'RifleData' = None):
         super(EditRifleWidget, self).__init__(parent)
         self.setupUi(self)
         self.connectUi(self)
         self.uid = uid
 
-        if data is not None:
-            self.set_data(data)
+        if rifle is not None:
+            self.display_data(rifle)
 
     def setupUi(self, editRifleWidget):
         editRifleWidget.setObjectName("editRifleWidget")
@@ -260,8 +279,8 @@ class EditRifleWidget(QtWidgets.QWidget):
         self.name = QtWidgets.QLineEdit('Template')
         self.barrel_twist = QtWidgets.QDoubleSpinBox()
         self.barrel_twist_dir = QtWidgets.QComboBox()
-        self.barrel_twist_dir.addItem('Right', True)
-        self.barrel_twist_dir.addItem('Left', False)
+        self.barrel_twist_dir.addItem('Right', TwistDir.Right)
+        self.barrel_twist_dir.addItem('Left', TwistDir.Left)
 
         self.sight_height = QtWidgets.QDoubleSpinBox()
         self.sight_offset = QtWidgets.QDoubleSpinBox()
@@ -287,22 +306,25 @@ class EditRifleWidget(QtWidgets.QWidget):
     def connectUi(self, editRifleWidget):
         self.header.okButton.clicked.connect(self.save_rifle)
 
-    def set_data(self, rifle: RifleData, uid=None):
-        self.uid = uid
-        if rifle:
-            self.name.setText(rifle.name)
-            self.barrel_twist.setValue(rifle.barrel_twist)
-            index = self.barrel_twist_dir.findData(rifle.barrel_twist_dir)
-            self.barrel_twist_dir.setCurrentIndex(index)
-            self.sight_height.setValue(rifle.sight_height)
-            self.sight_offset.setValue(rifle.sight_offset)
+    def display_data(self, rifle: 'RifleData'):
+        if not rifle:
+            rifle = RifleData('New Rifle')
+        print(rifle.barrel_twist)
+        self.uid = rifle.id
+        self.name.setText(rifle.name)
+        self.barrel_twist.setValue(rifle.barrel_twist)
+        index = self.barrel_twist_dir.findData(rifle.barrel_twist_dir)
+        self.barrel_twist_dir.setCurrentIndex(index)
+        self.sight_height.setValue(rifle.sight_height)
+        self.sight_offset.setValue(rifle.sight_offset)
 
     def save_rifle(self):
-        rifle_data = RifleData(
-            self.name.text(),
-            self.barrel_twist.value(),
-            self.barrel_twist_dir.currentData(),
-            self.sight_height.value(),
-            self.sight_offset.value()
+        Worker.add_or_update(
+            id=self.uid,
+            name=self.name.text(),
+            barrel_twist=self.barrel_twist.value(),
+            barrel_twist_dir=self.barrel_twist_dir.currentData(),
+            sight_height=self.sight_height.value(),
+            sight_offset=self.sight_offset.value(),
         )
-        self.ok_clicked.emit(self.uid, rifle_data)
+        self.ok_clicked.emit()

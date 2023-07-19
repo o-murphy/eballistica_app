@@ -169,32 +169,21 @@ QLabel {
 	font-size: 14px;
 }
 
-QGroupBox {
-	color: rgb(255, 255, 255);
-	border: 1px solid rgb(78, 78, 78);
-	padding-top: 25px;
+QGroupBox  {
+    border: 1px solid gray;
+    color: rgb(255, 255, 255);
+    border-color: 1px solid rgb(78, 78, 78);
+    margin-top: 27px;
     font-size: 14px;
 }
 
-QGroupBox::title {
-	padding: 5px 20px 5px 20px;
-	color: rgb(255, 170, 0);
-	border-top-left-radius: 10px;
-	border-bottom-right-radius: 10px;
-	background-color: rgb(40, 40, 40);
-    font-size: 14px;
-}
-
-QGroupBox#rifleGroupBox::indicator {
-    image: url(":/ballistics/rifle.svg");
-}
-
-QGroupBox#cartridgeGroupBox::indicator {
-    image: url(":/ballistics/cartridge.svg");
-}
-
-QGroupBox#bulletGroupBox::indicator {
-    image: url(":/ballistics/bullet.svg");
+QGroupBox::title  {
+    color: rgb(255, 170, 0);
+    background-color: rgb(40, 40, 40);
+    subcontrol-origin: margin;
+    subcontrol-position: top center;
+    padding: 5px 8000px 5px 8000px;
+    color: rgb(255, 255, 255);
 }
 
 QTableWidget, QTableView {

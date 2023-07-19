@@ -1,6 +1,60 @@
 from PySide6 import QtWidgets, QtCore, QtGui
 
+from datatypes.datatypes import BulletData
 from gui.app_logo import AppLogo, AppLabel
+
+
+class BulletItemWidget(QtWidgets.QWidget):
+    def __init__(self, parent=None):
+        super(BulletItemWidget, self).__init__(parent)
+        self.setupUi(self)
+        self.bullet_data = None
+
+    def setupUi(self, bulletItemWidget):
+        bulletItemWidget.setObjectName("bulletItemWidget")
+
+        self.box = QtWidgets.QGroupBox('', self)
+
+        self.gridLayout = QtWidgets.QGridLayout(self)
+        self.gridLayout.setObjectName("gridLayout")
+        self.gridLayout.setContentsMargins(0, 0, 0, 0)
+
+        self.gridLayout.addWidget(self.box)
+
+        self.boxLayout = QtWidgets.QFormLayout(self.box)
+        self.boxLayout.setObjectName("boxLayout")
+
+        self.caliber = QtWidgets.QLabel()
+        self.caliber_label = QtWidgets.QLabel()
+        self.bullet = QtWidgets.QLabel()
+        self.bullet_label = QtWidgets.QLabel()
+        self.mv = QtWidgets.QLabel()
+        self.mv_label = QtWidgets.QLabel()
+        self.zero = QtWidgets.QLabel()
+        self.zero_label = QtWidgets.QLabel()
+
+        self.boxLayout.addRow(self.caliber_label, self.caliber)
+        self.boxLayout.addRow(self.bullet_label, self.bullet)
+        self.boxLayout.addRow(self.mv_label, self.mv)
+        self.boxLayout.addRow(self.zero_label, self.zero)
+        self.translateUi(self)
+
+    def translateUi(self, bulletItemWidget):
+        _translate = QtCore.QCoreApplication.translate
+        bulletItemWidget.setWindowTitle(_translate("bulletItemWidget", "Form"))
+        bulletItemWidget.caliber_label.setText(_translate("bulletItemWidget", 'Caliber:'))
+        bulletItemWidget.bullet_label.setText(_translate("bulletItemWidget", 'Bullet Wt/Drag:'))
+        bulletItemWidget.mv_label.setText(_translate("bulletItemWidget", 'MV:'))
+        bulletItemWidget.zero_label.setText(_translate("bulletItemWidget", 'Zero Rng/Ht:'))
+
+    def set_data(self, bullet: BulletData):
+        self.bullet_data = bullet
+        self.box.setTitle(self.bullet_data.name)
+        self.caliber.setText(f'{bullet.diameter}')
+        self.bullet.setText(f'{bullet.weight}/{bullet.drag_model.name}')
+        self.mv.setText(f'{bullet.muzzle_velocity}')
+        self.zero.setText(f'{bullet.zero_range}/{bullet.zero_height}')
+
 
 
 class BulletsDelegate(QtWidgets.QStyledItemDelegate):

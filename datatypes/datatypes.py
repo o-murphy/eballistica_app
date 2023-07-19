@@ -23,7 +23,7 @@ class DragModel(IntFlag):
 @dataclasses.dataclass
 class BulletData:
 
-    __slots__ = ('name', 'diameter', 'weight', 'length', 'muzzle_velocity', 'temp_sens', 'powder_temp', 'atmo_std',
+    __slots__ = ('name', 'diameter', 'weight', 'length', 'muzzle_velocity', 'temp_sens', 'powder_temp',
                  'drag_model', 'bc', 'zero_range', 'zero_height', 'zero_offset', 'is_zero_atmo', 'altitude',
                  'pressure', 'temperature', 'humidity')
 
@@ -34,5 +34,13 @@ class BulletData:
     muzzle_velocity: float
     temp_sens: float
     powder_temp: float
-    atmo_std: True
     drag_model: DragModel
+    bc: float
+    zero_range: float
+    zero_height: float
+    zero_offset: float
+    is_zero_atmo: bool
+    altitude: float
+    pressure: float
+    temperature: float
+    humidity: float
