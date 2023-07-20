@@ -27,6 +27,10 @@ QSpinBox, QDoubleSpinBox {
 }
 
 QComboBox {
+    background-color: rgb(40, 40, 40);
+}
+
+QComboBox {
 	background-color: rgb(40, 40, 40);
     border: 0px;
 }
@@ -82,6 +86,17 @@ QTableView {
     selection-background-color: rgb(51, 51, 51);
 }
 
+
+
+QRadioButton::indicator {
+		border: 0px;
+		border-radius: 5px;
+}
+QRadioButton::indicator:checked {
+		background-color: rgb(255, 170, 0);
+		border: 0px;
+}
+
 QCheckBox, QRadioButton {
 	padding-left: 0px;
 	padding-right: 0px;
@@ -94,19 +109,9 @@ QCheckBox::indicator, QRadioButton::indicator {
 	 border-radius: 2px;
 }
 
-QRadioButton::indicator {
-		border: 0px;
-		border-radius: 5px;
-}
-
 QCheckBox::indicator:checked {
 	background-color: rgb(255, 170, 0);
     image: url(":/custom/res/custom/check.png");
-}
-
-QRadioButton::indicator:checked {
-		background-color: rgb(255, 170, 0);
-		border: 0px;
 }
 
 QCheckBox::indicator:unchecked, QRadioButton::indicator:unchecked {
@@ -122,14 +127,6 @@ QCheckBox:disabled {
 	color: rgb(78, 78, 78);
 }
 
-QRadioButton::indicator:disabled, QRadioButton::indicator:unchecked:disabled {
-	background-color:rgb(98, 98, 98);
-}
-
-QWidget:disabled {
-	color: rgb(160, 160, 160);
-}
-
 QCheckBox::indicator:checked {
     background: rgb(255, 170, 0);
 }
@@ -139,9 +136,17 @@ QCheckBox::indicator:unchecked {
 QCheckBox {
     color: white;
 }
-QComboBox {
-    background-color: rgb(40, 40, 40);
+
+QRadioButton::indicator:disabled, QRadioButton::indicator:unchecked:disabled {
+	background-color:rgb(98, 98, 98);
 }
+
+QWidget:disabled {
+	color: rgb(160, 160, 160);
+}
+
+
+
 
 QSpinBox {
     background-color: rgb(40, 40, 40);

@@ -1,7 +1,8 @@
 from PySide6 import QtWidgets, QtCore, QtGui
 
-from dbworker import Worker, AmmoData, DragModel
+from datatypes.dbworker import Worker, AmmoData, DragModel
 from gui.app_logo import AppLogo, AppLabel
+from gui.widgets import DSpinBoxHCenter, FormSpinBox, FormComboBox, FormCheckBox
 
 
 class AmmoItemWidget(QtWidgets.QWidget):
@@ -261,89 +262,65 @@ class EditAmmoWidget(QtWidgets.QWidget):
         self.name_boxLayout = QtWidgets.QFormLayout(self.name_box)
         self.name_boxLayout.setObjectName("name_boxLayout")
 
-        self.ammo_boxLayout = QtWidgets.QGridLayout(self.ammo_box)
+        self.ammo_boxLayout = QtWidgets.QVBoxLayout(self.ammo_box)
         self.ammo_boxLayout.setObjectName("ammo_boxLayout")
 
-        self.zero_boxLayout = QtWidgets.QFormLayout(self.zero_box)
+        self.zero_boxLayout = QtWidgets.QGridLayout(self.zero_box)
         self.zero_boxLayout.setObjectName("zero_boxLayout")
 
         self.header = AddAmmoHeader(self)
         self.name_label = QtWidgets.QLabel('Name')
         self.name = QtWidgets.QLineEdit('Template')
 
-        self.diameter_label = QtWidgets.QLabel('Diameter')
-        self.diameter = QtWidgets.QDoubleSpinBox()
-        self.weight_label = QtWidgets.QLabel('Weight')
-        self.weight = QtWidgets.QDoubleSpinBox()
-        self.length_label = QtWidgets.QLabel('Length')
-        self.length = QtWidgets.QDoubleSpinBox()
-        self.mv_label = QtWidgets.QLabel('Muzzle velocity')
-        self.mv = QtWidgets.QDoubleSpinBox()
-        self.powder_sens_label = QtWidgets.QLabel('Powder sensitivity')
-        self.powder_sens = QtWidgets.QDoubleSpinBox()
-        self.powder_temp_label = QtWidgets.QLabel('Powder temp')
-        self.powder_temp = QtWidgets.QDoubleSpinBox()
-        self.drag_model_label = QtWidgets.QLabel('Drag model')
-        self.drag_model = QtWidgets.QComboBox()
-        self.bc_label = QtWidgets.QLabel('Ballistic coefficient')
-        self.bc = QtWidgets.QDoubleSpinBox()
+        self.diameter = FormSpinBox(self, 0.01, 155, 1, 'in', 'Diameter')
+        self.weight = FormSpinBox(self, 0.01, 1000, 1, 'grn', 'Weight')
+        self.length = FormSpinBox(self, 0.01, 10, 1, 'in', 'Length')
+        self.mv = FormSpinBox(self, 1, 2000, 1, 'mps', 'Muzzle velocity')
+        self.powder_sens = FormSpinBox(self, 1, 100, 1, '%', 'Powder sensitivity')
+        self.powder_temp = FormSpinBox(self, -50, +50, 1, 'C', 'Powder temp')
+        # self.drag_model_label = QtWidgets.QLabel('Drag model')
+        self.drag_model = FormComboBox(prefix='Drag model')
+        self.bc = FormSpinBox(self, 0.001, 2, 0.01, prefix='Ballistic coefficient')
 
         self.drag_model.addItem('G1', DragModel.G1)
         self.drag_model.addItem('G7', DragModel.G7)
         self.drag_model.addItem('CDM', DragModel.CDM)
 
-        self.zero_range_label = QtWidgets.QLabel('Zero range')
-        self.zero_range = QtWidgets.QDoubleSpinBox()
-        self.zero_height_label = QtWidgets.QLabel('Zero range')
-        self.zero_height = QtWidgets.QDoubleSpinBox()
-        self.zero_offset_label = QtWidgets.QLabel('Zero range')
-        self.zero_offset = QtWidgets.QDoubleSpinBox()
+        self.zero_range = FormSpinBox(self, 1, 500, 1, 'mm', 'Zero range')
+        self.zero_height = FormSpinBox(self, 1, 500, 1, 'mm', 'Zero height')
+        self.zero_offset = FormSpinBox(self, 1, 500, 1, 'mm', 'Zero offset')
 
-        self.is_zero_atmo_label = QtWidgets.QLabel('Zero atmosphere')
-        self.is_zero_atmo = QtWidgets.QCheckBox()
+        self.is_zero_atmo = FormCheckBox(self, prefix='Zero atmosphere')
 
-        self.altitude_label = QtWidgets.QLabel('Altitude')
-        self.altitude = QtWidgets.QDoubleSpinBox()
+        self.altitude = FormSpinBox(self, 0, 359, 1, 'degree', 'Altitude')
+        self.pressure = FormSpinBox(self, 0, 1100, 1, 'kpa', 'Pressure')
+        self.temperature = FormSpinBox(self, -50, 50, 1, 'C', 'Temperature')
+        self.humidity = FormSpinBox(self, 0, 100, 1, '%', 'Humidity')
 
-        self.pressure_label = QtWidgets.QLabel('Pressure')
-        self.pressure = QtWidgets.QDoubleSpinBox()
-        self.temperature_label = QtWidgets.QLabel('Temperature')
-        self.temperature = QtWidgets.QDoubleSpinBox()
-        self.humidity_label = QtWidgets.QLabel('Humidity')
-        self.humidity = QtWidgets.QDoubleSpinBox()
-
-        # for ch in self.ammo_box.findChildren(QtWidgets.QDoubleSpinBox):
+        # for ch in self.ammo_box.findChildren(DSpinBoxHCenter):
         #     ch.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Preferred)
-        # for ch in self.ammo_box.findChildren(QtWidgets.QComboBox):
+        # for ch in self.ammo_box.findChildren(ComboBoxHCenter):
         #     ch.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Preferred)
 
         self.name_boxLayout.addRow(self.name_label, self.name)
 
-        self.ammo_boxLayout.addWidget(self.diameter_label)
-        self.ammo_boxLayout.addWidget(self.diameter, 0, 1)
-        self.ammo_boxLayout.addWidget(self.weight_label)
+        self.ammo_boxLayout.addWidget(self.diameter)
         self.ammo_boxLayout.addWidget(self.weight)
-        self.ammo_boxLayout.addWidget(self.length_label)
         self.ammo_boxLayout.addWidget(self.length)
-        self.ammo_boxLayout.addWidget(self.mv_label)
         self.ammo_boxLayout.addWidget(self.mv)
-        self.ammo_boxLayout.addWidget(self.powder_sens_label)
         self.ammo_boxLayout.addWidget(self.powder_sens)
-        self.ammo_boxLayout.addWidget(self.powder_temp_label)
         self.ammo_boxLayout.addWidget(self.powder_temp)
-        self.ammo_boxLayout.addWidget(self.drag_model_label)
         self.ammo_boxLayout.addWidget(self.drag_model)
-        self.ammo_boxLayout.addWidget(self.bc_label)
         self.ammo_boxLayout.addWidget(self.bc)
 
-        self.zero_boxLayout.addRow(self.zero_range_label, self.zero_range)
-        self.zero_boxLayout.addRow(self.zero_height_label, self.zero_height)
-        self.zero_boxLayout.addRow(self.zero_offset_label, self.zero_offset)
-        self.zero_boxLayout.addRow(self.is_zero_atmo_label, self.is_zero_atmo)
-        self.zero_boxLayout.addRow(self.altitude_label, self.altitude)
-        self.zero_boxLayout.addRow(self.pressure_label, self.pressure)
-        self.zero_boxLayout.addRow(self.temperature_label, self.temperature)
-        self.zero_boxLayout.addRow(self.humidity_label, self.humidity)
+        self.zero_boxLayout.addWidget(self.zero_range)
+        self.zero_boxLayout.addWidget(self.zero_height)
+        self.zero_boxLayout.addWidget(self.zero_offset)
+        self.zero_boxLayout.addWidget(self.is_zero_atmo)
+        self.zero_boxLayout.addWidget(self.altitude)
+        self.zero_boxLayout.addWidget(self.pressure)
+        self.zero_boxLayout.addWidget(self.temperature)
+        self.zero_boxLayout.addWidget(self.humidity)
 
         self.vBoxLayout.addWidget(self.header)
         self.vBoxLayout.addWidget(self.name_box)

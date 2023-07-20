@@ -1,11 +1,13 @@
 /* QCheckBox */
 
-QCheckBox {
+/*QCheckBox {
 	padding-left: 5px;
 	padding-right: 5px;
 	font-size: 14px;
 	color: white;
+	subcontrol-position: left;
 }
+
 
 QCheckBox::indicator:unchecked {
 	background-color: rgb(255, 255, 255);
@@ -26,6 +28,46 @@ QCheckBox::indicator:checked {
 }
 QCheckBox::indicator:unchecked {
     background: white;
+}*/
+
+QCheckBox, QRadioButton {
+	padding-left: 0px;
+	padding-right: 0px;
+	color: white;
+}
+QCheckBox::indicator, QRadioButton::indicator {
+     width: 16px;
+     height: 16px;
+     border: 0px;
+	 border-radius: 2px;
+}
+
+QCheckBox::indicator:checked {
+	background-color: rgb(255, 170, 0);
+    image: url(":/custom/res/custom/check.png");
+}
+
+QCheckBox::indicator:unchecked, QRadioButton::indicator:unchecked {
+	background-color: rgb(255, 255, 255);
+}
+
+QCheckBox::indicator:unchecked:hover {
+	background-color:  rgb(255, 255, 255);
+	image: url(":/custom/res/custom/check.png");
+}
+
+QCheckBox:disabled {
+	color: rgb(78, 78, 78);
+}
+
+QCheckBox::indicator:checked {
+    background: rgb(255, 170, 0);
+}
+QCheckBox::indicator:unchecked {
+    background: white;
+}
+QCheckBox {
+    color: white;
 }
 
 /* QComboBox */
@@ -36,6 +78,7 @@ QComboBox:enabled {
     color: white;
     border: 0px;
     font-size: 14px;
+    text-align: center;
 }
 
 QComboBox:disabled {
@@ -54,13 +97,56 @@ QComboBox::drop-down {
 }
 
 QComboBox::drop-down:hover {
-	background-color: rgb(75, 75, 75);
+    color: white;
+	background: rgb(98, 98, 98);
 	border: 0px;
 	border-radius: 2px;
 }
 
 QComboBox::drop-down:disabled {
     image: url("");
+}
+/*
+QComboBox {
+    background-color: rgb(40, 40, 40);
+}
+
+QComboBox {
+	background-color: rgb(40, 40, 40);
+    border: 0px;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    background: transparent;
+	image: url(":/custom/res/custom/caret-down-fill_8.png");
+    width: 20px;
+}
+
+QComboBox::drop-down:hover {
+	background-color: rgb(75, 75, 75);
+	border: 0px;
+	border-radius: 2px;
+}
+
+QComboBox::drop-down:disabled {
+}*/
+
+QComboBox QAbstractItemView::item {
+  color: white;
+  background-color: black;
+  padding: 4;
+  selection-background-color: rgb(39, 44, 54);
+  selection-color: white;
+}
+
+QComboBox QAbstractItemView::item:hover {
+  color: white;
+  background-color: rgb(98, 98, 98);
+  padding: 4;
+  selection-background-color: rgb(39, 44, 54);
+  selection-color: white;
 }
 
 
@@ -167,35 +253,42 @@ QLineEdit {
 
 QLabel {
 	font-size: 14px;
+    background-color: transparent;
 }
 
 QGroupBox  {
-    border: 1px solid gray;
-    color: rgb(255, 255, 255);
-    border-color: 1px solid rgb(78, 78, 78);
+    border: 0;
+    color: white;
     margin-top: 27px;
     font-size: 14px;
+    background-color: transparent;
 }
 
 QGroupBox::title  {
+    font-weight: bold;
     color: rgb(255, 170, 0);
     background-color: rgb(40, 40, 40);
     subcontrol-origin: margin;
     subcontrol-position: top center;
     padding: 5px 8000px 5px 8000px;
-    color: rgb(255, 255, 255);
 }
 
-QTableWidget, QTableView {
+QListWidget {
+    color: transparent; /*disables numpers of the row*/
+}
+
+QTableWidget, QTableView, QListWidget, QListView {
     outline: 0;
-	background-color: rgb(40, 40, 40);
+	background-color: transparent;
 }
 
 QHeaderView::section {
-	background-color: rgb(51, 51, 51);
+	background-color: transparent;
 }
 
-QTableWidget::item:selected, QTableView::item:selected {
+QTableWidget::item:selected, QTableView::item:selected, QListWidget::item:selected, QListView::item:selected
+{
+    color: transparent; /*disables numpers of the row*/
 	background-color: rgb(51, 51, 51);
 }
 
@@ -300,9 +393,6 @@ QWidget QPushButton#add:hover {
 	border-radius: 0px;
 }
 
-/*QTabWidget QWidget#profileCurrent QTabBar::tab {
-	height: 25px; width: 200px;
-}*/
 
 QCalendarWidget QToolButton {
   	height: 40px;
@@ -483,14 +573,15 @@ QTableView::section:selected QAbstractItemView::section:selected {
     padding: 2px 4px 2px 4px;
 }
 
-QTableWidget::item, QTableView::item {
-    padding-left: 4px;
-    padding-right: 4px;
+QTableWidget::item, QTableView::item, QListWidget::item, QListView::item {
+    /*padding-left: 4px;
+    padding-right: 4px;*/
 }
 
 
 
-QTableWidget::item:selected, QTableView::item:selected {
+QTableWidget::item:selected, QTableView::item:selected, QListWidget::item:selected, QListView::item:selected
+{
 	background-color: rgb(51, 51, 51);
 }
 
@@ -667,102 +758,28 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
     background: none;
 }
 
-QTableView {
-	border : 2px solid rgb(78, 78, 78);
+QTableView, QListView {
+	border : 0;
 }
 
-QTableWidget, QTableView {
+QTableWidget, QTableView
+/* QListWidget, QListView */ {
 	border-color: rgb(76, 76, 76);
 	background-color: rgb(51, 51, 51);
 	outline: 0;
 }
 
-QTableWidget::item:selected, QTableView::item:selected {
+QTableWidget::item:selected, QTableView::item:selected, QListWidget::item:selected, QListView::item:selected
+{
 	background-color: rgb(40, 40, 40);
 }
 
-QTableWidget::item:hover, QTableView::item:hover {
+QTableWidget::item:hover, QTableView::item:hover, QListWidget::item:hover, QListView::item:hover
+{
 	background-color: rgb(78, 78, 78);
 }
 
-QTableWidget::item, QTableView::item {
+QTableWidget::item, QTableView::item, QListWidget::item, QListView::item {
 	background-color: rgb(55, 52, 63);
 }
 
-
-/* AppSettings */
-
-
-#AppSettings QTabBar::tab:top {
-	height: 20px; width: 100px;
-    font-size: 12px;
-}
-
-#AppSettings QWidget {
-    font-size: 12px;
-}
-
-#AppSettings QCheckBox::indicator {
-     width: 12px;
-     height: 12px;
-     border: 0px;
-     border-radius: 2px;
-}
-
-
-
-/* profileItem */
-
-
-#profileItem QWidget {
-	border: 1px solid rgb(78, 78, 78);
-	/* font-size: 14px; */
-}
-
-#profileItem QLabel {
-	border: 0;
-	background-color: transparent;
-}
-
-#profileItem QSpinBox, QDoubleSpinBox {
-	background-color: rgb(40, 40, 40);
-	alternate-background-color: rgb(40, 40, 40);
-	color: rgb(255, 255, 255);
-	border: 0;
-}
-
-#profileItem QSpinBox::up-button, QDoubleSpinBox::up-button {
-	width: 20px;
-	image: url(":/custom/res/custom/caret-up-fill_8.png");
-}
-#profileItem QSpinBox::down-button, QDoubleSpinBox::down-button {
-	width: 20px;
-	image: url(":/custom/res/custom/caret-down-fill_8.png");
-}
-
-#profileItem QSpinBox::down-button:hover, QSpinBox::up-button:hover,
-#profileItem QDoubleSpinBox::down-button:hover, QDoubleSpinBox::up-button:hover {
-		background-color: rgb(75, 75, 75);
-}
-
-#profileItem QWidget#tile {
-    background-color: black;
-    border: 0px;
-    /* font-size: 14px; */
-    color: black;
-    /* font-family: "Bahnschrift Light Condensed"; */
-}
-
-QLabel#caliberShort, QLabel#weightTile {
-	background-color: white;
-	color: black;
-	/* font: "Arial Narrow"; */
-    font-size: 13px;
-}
-
-
-/* profilesTable */
-QTableWidget::item, QTableView::item {
-    padding-left: 2px;
-    padding-right: 2px;
-}

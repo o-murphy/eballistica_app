@@ -18,9 +18,9 @@ def main_app_qss():
     try:
         with open('qss/application.qss', 'r') as fh:
             app_qss = fh.read()
-        with open('qss/profiles_table.qss', 'r') as fh:
-            tab_qss = fh.read()
-        return tab_qss + app_qss
+        # with open('qss/profiles_table.qss', 'r') as fh:
+        #     tab_qss = fh.read()
+        return app_qss
     except FileNotFoundError as err:
         print(traceback.format_exc())
         return ''

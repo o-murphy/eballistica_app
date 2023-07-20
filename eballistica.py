@@ -4,6 +4,8 @@ from PySide6 import QtGui, QtWidgets
 
 from gui.app import App
 from gui.stylesheet import main_app_qss
+import res_rc
+assert res_rc
 
 
 def main(argv):
@@ -21,7 +23,7 @@ def main(argv):
     else:
         window.showFullScreen()
 
-    app.exec()
+    app.exit(app.exec())
 
 
 if __name__ == '__main__':

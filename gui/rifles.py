@@ -1,8 +1,9 @@
 from PySide6 import QtWidgets, QtCore, QtGui
 
 # from datatypes.datatypes import RifleData
-from dbworker import Worker, TwistDir, RifleData
+from datatypes.dbworker import Worker, TwistDir, RifleData
 from .app_logo import AppLogo, AppLabel
+from .widgets import DSpinBoxHCenter
 
 
 class RifleItemWidget(QtWidgets.QWidget):
@@ -44,6 +45,7 @@ class RifleItemWidget(QtWidgets.QWidget):
 
 
 class RiflesDelegate(QtWidgets.QStyledItemDelegate):
+
     def sizeHint(self, option, index):
         size = super().sizeHint(option, index)
         widget = index.data(QtCore.Qt.UserRole)
@@ -58,6 +60,7 @@ class RiflesLi(QtWidgets.QListWidget):
 
     def __init__(self, parent=None):
         super(RiflesLi, self).__init__(parent)
+        self.setupUi(self)
         self.refresh()
 
     def contextMenuEvent(self, event):
@@ -87,8 +90,8 @@ class RiflesLi(QtWidgets.QListWidget):
                 self.refresh()
 
     def setupUi(self, RiflesLi):
-        self.menu = QtWidgets.QMenu()
-        self.menu.addAction(self.edit_item)
+        print(self.findChildren(QtWidgets.QWidget))
+
 
     def create_item(self, rifle):
         widget = RifleItemWidget()
@@ -267,7 +270,7 @@ class EditRifleWidget(QtWidgets.QWidget):
         self.name_boxLayout = QtWidgets.QFormLayout(self.name_box)
         self.name_boxLayout.setObjectName("name_boxLayout")
 
-        self.props_boxLayout = QtWidgets.QFormLayout(self.props_box)
+        self.props_boxLayout = QtWidgets.QGridLayout(self.props_box)
         self.props_boxLayout.setObjectName("props_boxLayout")
 
         self.name_label = QtWidgets.QLabel('Name')
@@ -277,19 +280,24 @@ class EditRifleWidget(QtWidgets.QWidget):
         self.sight_offset_label = QtWidgets.QLabel('Sight Offset')
 
         self.name = QtWidgets.QLineEdit('Template')
-        self.barrel_twist = QtWidgets.QDoubleSpinBox()
+        self.barrel_twist = DSpinBoxHCenter()
         self.barrel_twist_dir = QtWidgets.QComboBox()
         self.barrel_twist_dir.addItem('Right', TwistDir.Right)
         self.barrel_twist_dir.addItem('Left', TwistDir.Left)
 
-        self.sight_height = QtWidgets.QDoubleSpinBox()
-        self.sight_offset = QtWidgets.QDoubleSpinBox()
+        self.sight_height = DSpinBoxHCenter()
+        self.sight_offset = DSpinBoxHCenter()
 
         self.name_boxLayout.addRow(self.name_label, self.name)
-        self.props_boxLayout.addRow(self.barrel_twist_label, self.barrel_twist)
-        self.props_boxLayout.addRow(self.barrel_twist_dir_label, self.barrel_twist_dir)
-        self.props_boxLayout.addRow(self.sight_height_label, self.sight_height)
-        self.props_boxLayout.addRow(self.sight_offset_label, self.sight_offset)
+
+        self.props_boxLayout.addWidget(self.barrel_twist_label)
+        self.props_boxLayout.addWidget(self.barrel_twist, 0, 1)
+        self.props_boxLayout.addWidget(self.barrel_twist_dir_label)
+        self.props_boxLayout.addWidget(self.barrel_twist_dir)
+        self.props_boxLayout.addWidget(self.sight_height_label)
+        self.props_boxLayout.addWidget(self.sight_height)
+        self.props_boxLayout.addWidget(self.sight_offset_label)
+        self.props_boxLayout.addWidget(self.sight_offset)
 
         self.vBoxLayout.addWidget(self.header)
         self.vBoxLayout.addWidget(self.name_box)
