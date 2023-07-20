@@ -9,12 +9,16 @@ assert res_rc
 from qt_material import apply_stylesheet
 
 
+extra = {
+    'primaryTextColor': '#FFFFFF'
+}
+
 def main(argv):
     app = QtWidgets.QApplication(argv)
 
     app.setWindowIcon(QtGui.QIcon('Icon.ico'))
     # app.setStyleSheet(main_app_qss())
-    apply_stylesheet(app, theme='dark_teal.xml')
+    apply_stylesheet(app, extra=extra, theme='dark_blue.xml')
     # stylesheet_fix = """
     # 'QDoubleSpinBox {color: white;}'
     # /*'QLabel {color: white;}'*/

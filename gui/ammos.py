@@ -220,8 +220,9 @@ class AddAmmoHeader(QtWidgets.QWidget):
 
         editAmmoWidgetHeader.setObjectName("editAmmoWidgetHeader")
         self.okButton = QPushButton('Ok')
+        self.okButton.setChecked(True)
         self.okButton.setShortcut(QtGui.QKeySequence('Ctrl+S'))
-        self.okButton.setProperty('class', 'success')
+        # self.okButton.setProperty('class', 'success')
 
         self.hBoxLayout.addWidget(self.okButton)
 
