@@ -124,37 +124,37 @@ class RiflesLi(QtWidgets.QListWidget):
     #         widget.display_data(rifle)
 
 
-class RiflesHeader(QtWidgets.QWidget):
-    def __init__(self, parent=None):
-        super(RiflesHeader, self).__init__(parent)
-        self.setupUi(self)
-
-    def setupUi(self, riflesHeader):
-        riflesHeader.setObjectName("riflesHeader")
-
-        self.hBoxLayout = QtWidgets.QHBoxLayout(self)
-        self.hBoxLayout.setObjectName("hBoxLayout")
-
-        self.logo = AppLogo()
-        self.label = AppLabel()
-        self.hBoxLayout.addWidget(self.logo)
-        self.hBoxLayout.addWidget(self.label)
-
-        riflesHeader.setObjectName("riflesHeader")
-        self.addButton = QtWidgets.QPushButton('+')
-        self.menuButton = QtWidgets.QPushButton('...')
-
-        self.hBoxLayout.addWidget(self.addButton)
-        self.hBoxLayout.addWidget(self.menuButton)
-
-        self.retranslateUi(riflesHeader)
-        QtCore.QMetaObject.connectSlotsByName(riflesHeader)
-
-    def retranslateUi(self, riflesHeader: 'RiflesHeader'):
-        _translate = QtCore.QCoreApplication.translate
-        riflesHeader.setWindowTitle(_translate("riflesHeader", "Form"))
-        riflesHeader.addButton.setText(_translate("riflesHeader", "+"))
-        riflesHeader.menuButton.setText(_translate("riflesHeader", "..."))
+# class RiflesHeader(QtWidgets.QWidget):
+#     def __init__(self, parent=None):
+#         super(RiflesHeader, self).__init__(parent)
+#         self.setupUi(self)
+#
+#     def setupUi(self, riflesHeader):
+#         riflesHeader.setObjectName("riflesHeader")
+#
+#         self.hBoxLayout = QtWidgets.QHBoxLayout(self)
+#         self.hBoxLayout.setObjectName("hBoxLayout")
+#
+#         self.logo = AppLogo()
+#         self.label = AppLabel()
+#         self.hBoxLayout.addWidget(self.logo)
+#         self.hBoxLayout.addWidget(self.label)
+#
+#         riflesHeader.setObjectName("riflesHeader")
+#         self.addButton = QtWidgets.QPushButton('+')
+#         # self.menuButton = QtWidgets.QPushButton('...')
+#
+#         self.hBoxLayout.addWidget(self.addButton)
+#         # self.hBoxLayout.addWidget(self.menuButton)
+#
+#         self.retranslateUi(riflesHeader)
+#         QtCore.QMetaObject.connectSlotsByName(riflesHeader)
+#
+#     def retranslateUi(self, riflesHeader: 'RiflesHeader'):
+#         _translate = QtCore.QCoreApplication.translate
+#         riflesHeader.setWindowTitle(_translate("riflesHeader", "Form"))
+#         riflesHeader.addButton.setText(_translate("riflesHeader", "+"))
+#         # riflesHeader.menuButton.setText(_translate("riflesHeader", "..."))
 
 
 class RiflesWidget(QtWidgets.QWidget):
@@ -178,9 +178,9 @@ class RiflesWidget(QtWidgets.QWidget):
         self.vBoxLayout.setObjectName("vBoxLayout")
         self.vBoxLayout.setContentsMargins(0, 0, 0, 0)
 
-        self.header = RiflesHeader(self)
+        # self.header = RiflesHeader(self)
         self.rifles_list = RiflesLi(self)
-        self.vBoxLayout.addWidget(self.header)
+        # self.vBoxLayout.addWidget(self.header)
         self.vBoxLayout.addWidget(self.rifles_list)
 
         self.retranslateUi(riflesWidget)
@@ -215,10 +215,10 @@ class AddRifleHeader(QtWidgets.QWidget):
         self.hBoxLayout = QtWidgets.QHBoxLayout(self)
         self.hBoxLayout.setObjectName("hBoxLayout")
 
-        self.logo = AppLogo()
-        self.label = AppLabel()
-        self.hBoxLayout.addWidget(self.logo)
-        self.hBoxLayout.addWidget(self.label)
+        # self.logo = AppLogo()
+        # self.label = AppLabel()
+        # self.hBoxLayout.addWidget(self.logo)
+        # self.hBoxLayout.addWidget(self.label)
 
         editRifleWidgetHeader.setObjectName("editRifleWidgetHeader")
         self.okButton = QtWidgets.QPushButton('Ok')

@@ -1,6 +1,19 @@
-from PySide6.QtGui import QPainter
-from PySide6.QtWidgets import *
 from PySide6.QtCore import Qt
+from PySide6.QtWidgets import *
+
+
+class Spacer(QWidget):
+    Vertical = 0
+    Horizontal = 1
+
+    def __init__(self, parent=None, width: int = 1, direction=Vertical):
+        super(Spacer, self).__init__(parent)
+        if direction is Spacer.Vertical:
+            self.setFixedWidth(width)
+        elif direction is Spacer.Horizontal:
+            self.setFixedHeight(width)
+        else:
+            raise ValueError(direction)
 
 
 class DSpinBoxHCenter(QDoubleSpinBox):
@@ -16,7 +29,6 @@ class DSpinBoxHCenter(QDoubleSpinBox):
 
 
 class ComboBoxHCenter(QComboBox):
-
     class Delegate(QStyledItemDelegate):
         def initStyleOption(self, option, index):
             super().initStyleOption(option, index)
@@ -128,4 +140,3 @@ class FormCheckBox(QWidget):
 
     def setChecked(self, value: bool):
         self.value_field.setChecked(value)
-

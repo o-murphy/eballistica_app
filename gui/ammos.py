@@ -141,9 +141,9 @@ class AmmosHeader(QtWidgets.QWidget):
         self.hBoxLayout.addWidget(self.label)
 
         ammosHeader.setObjectName("ammosHeader")
-        self.addButton = QtWidgets.QPushButton('+')
+        # self.addButton = QtWidgets.QPushButton('+')
 
-        self.hBoxLayout.addWidget(self.addButton)
+        # self.hBoxLayout.addWidget(self.addButton)
 
         self.retranslateUi(ammosHeader)
         QtCore.QMetaObject.connectSlotsByName(ammosHeader)
@@ -151,7 +151,7 @@ class AmmosHeader(QtWidgets.QWidget):
     def retranslateUi(self, ammosHeader: 'AmmosHeader'):
         _translate = QtCore.QCoreApplication.translate
         ammosHeader.setWindowTitle(_translate("ammosHeader", "Form"))
-        ammosHeader.addButton.setText(_translate("ammosHeader", "+"))
+        # ammosHeader.addButton.setText(_translate("ammosHeader", "+"))
 
 
 class AmmosWidget(QtWidgets.QWidget):
@@ -175,9 +175,9 @@ class AmmosWidget(QtWidgets.QWidget):
         self.vBoxLayout.setObjectName("vBoxLayout")
         self.vBoxLayout.setContentsMargins(0, 0, 0, 0)
 
-        self.header = AmmosHeader(self)
+        # self.header = AmmosHeader(self)
         self.ammos_list = AmmosLi(self)
-        self.vBoxLayout.addWidget(self.header)
+        # self.vBoxLayout.addWidget(self.header)
         self.vBoxLayout.addWidget(self.ammos_list)
 
         self.retranslateUi(ammosWidget)
@@ -212,10 +212,10 @@ class AddAmmoHeader(QtWidgets.QWidget):
         self.hBoxLayout = QtWidgets.QHBoxLayout(self)
         self.hBoxLayout.setObjectName("hBoxLayout")
 
-        self.logo = AppLogo()
-        self.label = AppLabel()
-        self.hBoxLayout.addWidget(self.logo)
-        self.hBoxLayout.addWidget(self.label)
+        # self.logo = AppLogo()
+        # self.label = AppLabel()
+        # self.hBoxLayout.addWidget(self.logo)
+        # self.hBoxLayout.addWidget(self.label)
 
         editAmmoWidgetHeader.setObjectName("editAmmoWidgetHeader")
         self.okButton = QtWidgets.QPushButton('Ok')
@@ -384,3 +384,108 @@ class EditAmmoWidget(QtWidgets.QWidget):
         self.pressure.setValue(zerodata.pressure)
         self.temperature.setValue(zerodata.temperature)
         self.humidity.setValue(zerodata.humidity)
+
+
+class EditShotWidget(QtWidgets.QWidget):
+    ok_clicked = QtCore.Signal(object)
+
+    def __init__(self, parent=None):
+        super(EditShotWidget, self).__init__(parent)
+        self.setupUi(self)
+        self.connectUi(self)
+        self.ammo = None
+        self.rifle = None
+
+    def setupUi(self, editAmmoWidget):
+        editAmmoWidget.setObjectName("editAmmoWidget")
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(editAmmoWidget.sizePolicy().hasHeightForWidth())
+        editAmmoWidget.setSizePolicy(sizePolicy)
+        editAmmoWidget.setMinimumSize(QtCore.QSize(0, 0))
+
+        self.name_box = QtWidgets.QGroupBox('Ammo name', self)
+        self.ammo_box = QtWidgets.QGroupBox('Properties', self)
+        self.zero_box = QtWidgets.QGroupBox('Zeroing', self)
+
+        self.vBoxLayout = QtWidgets.QVBoxLayout(self)
+        self.vBoxLayout.setObjectName("vBoxLayout")
+        self.vBoxLayout.setContentsMargins(0, 0, 0, 0)
+        self.vBoxLayout.setAlignment(QtCore.Qt.AlignTop)
+
+        self.name_boxLayout = QtWidgets.QFormLayout(self.name_box)
+        self.name_boxLayout.setObjectName("name_boxLayout")
+
+        self.ammo_boxLayout = QtWidgets.QVBoxLayout(self.ammo_box)
+        self.ammo_boxLayout.setObjectName("ammo_boxLayout")
+
+        self.zero_boxLayout = QtWidgets.QVBoxLayout(self.zero_box)
+        self.zero_boxLayout.setObjectName("zero_boxLayout")
+
+        self.header = AddAmmoHeader(self)
+        self.name_label = QtWidgets.QLabel('Name')
+        self.name = QtWidgets.QLineEdit()
+        self.name.setPlaceholderText('Name')
+
+        self.vBoxLayout.addWidget(self.header)
+        self.vBoxLayout.addWidget(self.name_box)
+        self.vBoxLayout.addWidget(self.ammo_box)
+        self.vBoxLayout.addWidget(self.zero_box)
+
+        self.retranslateUi(editAmmoWidget)
+        QtCore.QMetaObject.connectSlotsByName(editAmmoWidget)
+
+    def retranslateUi(self, editAmmoWidget: 'EditAmmoWidget'):
+        _translate = QtCore.QCoreApplication.translate
+        editAmmoWidget.setWindowTitle(_translate("editAmmoWidget", "Form"))
+
+    def connectUi(self, editAmmoWidget):
+        self.header.okButton.clicked.connect(self.save_ammo)
+
+    def save_ammo(self):
+
+        # self.ammo.name = self.name.text() if self.name.text() else self.name.placeholderText()
+        # self.ammo.diameter = self.diameter.value()
+        # self.ammo.weight = self.weight.value()
+        # self.ammo.length = self.length.value()
+        # self.ammo.muzzle_velocity = self.mv.value()
+        # self.ammo.temp_sens = self.powder_sens.value()
+        # self.ammo.powder_temp = self.powder_temp.value()
+        # self.ammo.drag_model = self.drag_model.currentData()
+        #
+        # self.ammo.zerodata.zero_range = self.zero_range.value()
+        # self.ammo.zerodata.zero_height = self.zero_height.value()
+        # self.ammo.zerodata.zero_offset = self.zero_offset.value()
+        # self.ammo.zerodata.is_zero_atmo = self.is_zero_atmo.isChecked()
+        # self.ammo.zerodata.altitude = self.altitude.value()
+        # self.ammo.zerodata.pressure = self.pressure.value()
+        # self.ammo.zerodata.temperature = self.temperature.value()
+        # self.ammo.zerodata.humidity = self.humidity.value()
+        #
+        # Worker.ammo_add_or_update(self.ammo)
+        self.ok_clicked.emit(self.rifle)
+
+    def display_data(self, rifle, ammo):
+
+        self.ammo = AmmoData('New Ammo', rifle=rifle) if not isinstance(ammo, AmmoData) else ammo
+
+        self.rifle = self.ammo.rifle
+        self.name.setText(self.ammo.name)
+        # self.diameter.setValue(self.ammo.diameter)
+        # self.weight.setValue(self.ammo.weight)
+        # self.length.setValue(self.ammo.length)
+        # self.mv.setValue(self.ammo.muzzle_velocity)
+        # self.powder_sens.setValue(self.ammo.temp_sens)
+        # self.powder_temp.setValue(self.ammo.powder_temp)
+        # self.drag_model.setCurrentIndex(self.drag_model.findData(self.ammo.drag_model))
+        #
+        # zerodata = self.ammo.zerodata
+        # self.zero_range.setValue(zerodata.zero_range)
+        # self.zero_height.setValue(zerodata.zero_height)
+        # self.zero_offset.setValue(zerodata.zero_offset)
+        # self.is_zero_atmo.setChecked(zerodata.is_zero_atmo)
+        # self.altitude.setValue(zerodata.altitude)
+        # self.pressure.setValue(zerodata.pressure)
+        # self.temperature.setValue(zerodata.temperature)
+        # self.humidity.setValue(zerodata.humidity)

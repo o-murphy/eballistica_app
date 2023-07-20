@@ -1,6 +1,8 @@
 from PySide6 import QtWidgets, QtCore, QtGui
 
-from .ammos import AmmosWidget, EditAmmoWidget
+from .ammos import AmmosWidget, EditAmmoWidget, EditShotWidget
+from .app_logo import AppHeader
+from .bot_app_bar import BotAppBar
 from .rifles import RiflesWidget, EditRifleWidget
 
 
@@ -26,12 +28,20 @@ class App(QtWidgets.QMainWindow):
         icon.addFile(u"Icon.ico", QtCore.QSize(), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
 
-        self.stacked = QtWidgets.QStackedWidget(MainWindow)
-        self.stacked.setObjectName(u"stacked")
-        MainWindow.setCentralWidget(self.stacked)
+        self.main_widget = QtWidgets.QWidget(MainWindow)
+        self.main_layout = QtWidgets.QVBoxLayout(self.main_widget)
+        self.main_layout.setContentsMargins(0, 0, 0, 0)
+        self.main_layout.setSpacing(0)
+        MainWindow.setCentralWidget(self.main_widget)
 
-        # self.toolbar = AppToolBar(self)
-        # self.addToolBar(self.toolbar)
+        self.header = AppHeader(self)
+        self.stacked = QtWidgets.QStackedWidget(self)
+        self.stacked.setObjectName(u"stacked")
+        self.botAppBar = BotAppBar(self)
+
+        self.main_layout.addWidget(self.header)
+        self.main_layout.addWidget(self.stacked)
+        self.main_layout.addWidget(self.botAppBar)
 
         self.rifles = RiflesWidget(self)
         self.edit_rifle = EditRifleWidget(self)
@@ -39,10 +49,13 @@ class App(QtWidgets.QMainWindow):
         self.ammos = AmmosWidget(self)
         self.edit_ammo = EditAmmoWidget(self)
 
+        self.edit_shot = EditShotWidget(self)
+
         self.stacked.addWidget(self.rifles)
         self.stacked.addWidget(self.edit_rifle)
         self.stacked.addWidget(self.ammos)
         self.stacked.addWidget(self.edit_ammo)
+        self.stacked.addWidget(self.edit_shot)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -53,12 +66,9 @@ class App(QtWidgets.QMainWindow):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtCore.QCoreApplication.translate("MainWindow", u"ArcherBC", None))
 
-    # def switch_screen(self, widget):
-    #     self.stacked.setCurrentWidget(widget)
-
     def switch_to_rifles(self):
-        self.stacked.setCurrentWidget(self.rifles)
         self.rifles.rifles_list.refresh()
+        self.stacked.setCurrentWidget(self.rifles)
 
     def switch_edit_rifle_screen(self, rifle=None):
         self.edit_rifle.display_data(rifle)
@@ -74,14 +84,45 @@ class App(QtWidgets.QMainWindow):
         self.edit_ammo.display_data(rifle, ammo)
         self.stacked.setCurrentWidget(self.edit_ammo)
 
+    def switch_edit_shot_screen(self, ammo=None):
+        rifle = self.ammos.ammos_list.filter.get('rifle')
+        self.edit_shot.display_data(rifle, ammo)
+        self.stacked.setCurrentWidget(self.edit_shot)
+
+    def go_back(self):
+        current_screen = self.stacked.currentWidget()
+        if current_screen == self.edit_rifle:
+            self.stacked.setCurrentWidget(self.rifles)
+        elif current_screen == self.edit_ammo:
+            self.stacked.setCurrentWidget(self.ammos)
+        elif current_screen == self.ammos:
+            self.stacked.setCurrentWidget(self.rifles)
+        elif current_screen == self.edit_shot:
+            self.stacked.setCurrentWidget(self.ammos)
+
+    def go_add(self):
+        current_screen = self.stacked.currentWidget()
+        if current_screen == self.rifles:
+            self.switch_edit_rifle_screen()
+        elif current_screen == self.ammos:
+            rifle = self.ammos.ammos_list.filter.get('rifle')
+            if rifle:
+                self.switch_edit_ammo_screen(rifle)
+
     def connectUi(self, MainWindow):
-        self.rifles.header.addButton.clicked.connect(self.switch_edit_rifle_screen)
+        # self.rifles.header.addButton.clicked.connect(self.switch_edit_rifle_screen)
         self.edit_rifle.ok_clicked.connect(self.switch_to_rifles)
         self.rifles.rifle_double_clicked_sig.connect(self.switch_edit_rifle_screen)
         self.rifles.rifle_clicked_sig.connect(self.switch_to_ammos)
 
-        self.ammos.header.addButton.clicked.connect(self.switch_edit_ammo_screen)
+        # self.ammos.header.addButton.clicked.connect(self.switch_edit_ammo_screen)
         self.edit_ammo.ok_clicked.connect(self.switch_to_ammos)
         self.ammos.ammo_double_clicked_sig.connect(self.switch_edit_ammo_screen)
+        self.ammos.ammo_clicked_sig.connect(self.switch_edit_shot_screen)
+        self.edit_shot.ok_clicked.connect(self.switch_to_ammos)
+
+        self.botAppBar.homeAct.triggered.connect(self.switch_to_rifles)
+        self.botAppBar.backAct.triggered.connect(self.go_back)
+        self.botAppBar.addAct.triggered.connect(self.go_add)
 
 

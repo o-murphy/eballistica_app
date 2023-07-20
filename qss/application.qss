@@ -289,7 +289,7 @@ QHeaderView::section {
 QTableWidget::item:selected, QTableView::item:selected, QListWidget::item:selected, QListView::item:selected
 {
     color: transparent; /*disables numpers of the row*/
-	background-color: rgb(51, 51, 51);
+	/*background-color: rgb(51, 51, 51); */
 }
 
 QTableCornerButton::section {
@@ -306,6 +306,8 @@ QPushButton, QCommandLinkButton {
 QToolButton {
     border: 0;
 	font-size: 14px;
+	width: 32;
+	height: 32;
 }
 
 QPushButton:hover, QToolButton:hover, QCommandLinkButton:hover {
@@ -771,7 +773,7 @@ QTableWidget, QTableView
 
 QTableWidget::item:selected, QTableView::item:selected, QListWidget::item:selected, QListView::item:selected
 {
-	background-color: rgb(40, 40, 40);
+	background-color: rgb(55, 52, 63);
 }
 
 QTableWidget::item:hover, QTableView::item:hover, QListWidget::item:hover, QListView::item:hover
@@ -783,3 +785,12 @@ QTableWidget::item, QTableView::item, QListWidget::item, QListView::item {
 	background-color: rgb(55, 52, 63);
 }
 
+QToolBar {
+    background: transparent;
+    spacing: 3px; /* spacing between items in the tool bar */
+    margin: bottom center;
+}
+
+QToolBar::handle {
+
+}

@@ -16,9 +16,9 @@ class AppLabel(QtWidgets.QLabel):
         self.setText("eBallistica")
 
 
-class AppToolBar(QtWidgets.QWidget):
+class AppHeader(QtWidgets.QWidget):
     def __init__(self, parent=None):
-        super(AppToolBar, self).__init__(parent)
+        super(AppHeader, self).__init__(parent)
         self.setupUi(self)
 
     def setupUi(self, appToolBar):
@@ -32,7 +32,7 @@ class AppToolBar(QtWidgets.QWidget):
         self.hBoxLayout.addWidget(self.logo)
         self.hBoxLayout.addWidget(self.label)
 
-    def retranslateUi(self, riflesHeader: 'appToolBar'):
+    def retranslateUi(self, riflesHeader: 'appHeader'):
         _translate = QtCore.QCoreApplication.translate
         riflesHeader.setWindowTitle(_translate("riflesHeader", "Form"))
 
