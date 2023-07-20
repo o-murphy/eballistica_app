@@ -265,12 +265,13 @@ class EditAmmoWidget(QtWidgets.QWidget):
         self.ammo_boxLayout = QtWidgets.QVBoxLayout(self.ammo_box)
         self.ammo_boxLayout.setObjectName("ammo_boxLayout")
 
-        self.zero_boxLayout = QtWidgets.QGridLayout(self.zero_box)
+        self.zero_boxLayout = QtWidgets.QVBoxLayout(self.zero_box)
         self.zero_boxLayout.setObjectName("zero_boxLayout")
 
         self.header = AddAmmoHeader(self)
         self.name_label = QtWidgets.QLabel('Name')
-        self.name = QtWidgets.QLineEdit('Template')
+        self.name = QtWidgets.QLineEdit()
+        self.name.setPlaceholderText('Name')
 
         self.diameter = FormSpinBox(self, 0.01, 155, 1, 'in', 'Diameter')
         self.weight = FormSpinBox(self, 0.01, 1000, 1, 'grn', 'Weight')
@@ -287,7 +288,7 @@ class EditAmmoWidget(QtWidgets.QWidget):
         self.drag_model.addItem('CDM', DragModel.CDM)
 
         self.zero_range = FormSpinBox(self, 1, 500, 1, 'mm', 'Zero range')
-        self.zero_height = FormSpinBox(self, 1, 500, 1, 'mm', 'Zero height')
+        self.zero_height = FormSpinBox(self, 1, 100, 0.5, 'mm', 'Zero height')
         self.zero_offset = FormSpinBox(self, 1, 500, 1, 'mm', 'Zero offset')
 
         self.is_zero_atmo = FormCheckBox(self, prefix='Zero atmosphere')
@@ -339,7 +340,7 @@ class EditAmmoWidget(QtWidgets.QWidget):
 
     def save_ammo(self):
 
-        self.ammo.name = self.name.text()
+        self.ammo.name = self.name.text() if self.name.text() else self.name.placeholderText()
         self.ammo.diameter = self.diameter.value()
         self.ammo.weight = self.weight.value()
         self.ammo.length = self.length.value()

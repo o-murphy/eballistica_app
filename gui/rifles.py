@@ -3,7 +3,7 @@ from PySide6 import QtWidgets, QtCore, QtGui
 # from datatypes.datatypes import RifleData
 from datatypes.dbworker import Worker, TwistDir, RifleData
 from .app_logo import AppLogo, AppLabel
-from .widgets import DSpinBoxHCenter
+from .widgets import FormSpinBox, FormCheckBox, FormComboBox
 
 
 class RifleItemWidget(QtWidgets.QWidget):
@@ -270,33 +270,26 @@ class EditRifleWidget(QtWidgets.QWidget):
         self.name_boxLayout = QtWidgets.QFormLayout(self.name_box)
         self.name_boxLayout.setObjectName("name_boxLayout")
 
-        self.props_boxLayout = QtWidgets.QGridLayout(self.props_box)
+        self.props_boxLayout = QtWidgets.QVBoxLayout(self.props_box)
         self.props_boxLayout.setObjectName("props_boxLayout")
 
         self.name_label = QtWidgets.QLabel('Name')
-        self.barrel_twist_label = QtWidgets.QLabel('Barel Twist')
-        self.barrel_twist_dir_label = QtWidgets.QLabel('Twist direction')
-        self.sight_height_label = QtWidgets.QLabel('Sight Height')
-        self.sight_offset_label = QtWidgets.QLabel('Sight Offset')
+        self.name = QtWidgets.QLineEdit()
+        self.name.setPlaceholderText('Name')
 
-        self.name = QtWidgets.QLineEdit('Template')
-        self.barrel_twist = DSpinBoxHCenter()
-        self.barrel_twist_dir = QtWidgets.QComboBox()
+        self.barrel_twist = FormSpinBox(self, 0.01, 20, 0.5, 'in', 'Barel Twist')
+        self.barrel_twist_dir = FormComboBox(self, prefix='Twist direction')
         self.barrel_twist_dir.addItem('Right', TwistDir.Right)
         self.barrel_twist_dir.addItem('Left', TwistDir.Left)
 
-        self.sight_height = DSpinBoxHCenter()
-        self.sight_offset = DSpinBoxHCenter()
+        self.sight_height = FormSpinBox(self, 1, 100, 0.5, 'mm', 'Sight height')
+        self.sight_offset = FormSpinBox(self, 1, 500, 1, 'mm', 'Sight offset')
 
         self.name_boxLayout.addRow(self.name_label, self.name)
 
-        self.props_boxLayout.addWidget(self.barrel_twist_label)
-        self.props_boxLayout.addWidget(self.barrel_twist, 0, 1)
-        self.props_boxLayout.addWidget(self.barrel_twist_dir_label)
+        self.props_boxLayout.addWidget(self.barrel_twist)
         self.props_boxLayout.addWidget(self.barrel_twist_dir)
-        self.props_boxLayout.addWidget(self.sight_height_label)
         self.props_boxLayout.addWidget(self.sight_height)
-        self.props_boxLayout.addWidget(self.sight_offset_label)
         self.props_boxLayout.addWidget(self.sight_offset)
 
         self.vBoxLayout.addWidget(self.header)
@@ -329,7 +322,7 @@ class EditRifleWidget(QtWidgets.QWidget):
     def save_rifle(self):
         Worker.rifle_add_or_update(
             id=self.uid,
-            name=self.name.text(),
+            name=self.name.text() if self.name.text() else self.name.placeholderText(),
             barrel_twist=self.barrel_twist.value(),
             barrel_twist_dir=self.barrel_twist_dir.currentData(),
             sight_height=self.sight_height.value(),
