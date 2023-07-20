@@ -222,6 +222,8 @@ class AddRifleHeader(QtWidgets.QWidget):
 
         editRifleWidgetHeader.setObjectName("editRifleWidgetHeader")
         self.okButton = QtWidgets.QPushButton('Ok')
+        self.okButton.setShortcut(QtGui.QKeySequence('Ctrl+S'))
+        self.okButton.setProperty('class', 'success')
 
         self.hBoxLayout.addWidget(self.okButton)
 
@@ -320,6 +322,7 @@ class EditRifleWidget(QtWidgets.QWidget):
         self.sight_offset.setValue(rifle.sight_offset)
 
     def save_rifle(self):
+        print(self.sender())
         Worker.rifle_add_or_update(
             id=self.uid,
             name=self.name.text() if self.name.text() else self.name.placeholderText(),

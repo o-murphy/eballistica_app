@@ -1,5 +1,47 @@
+from enum import IntFlag
+
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import *
+
+
+class Button(QPushButton):
+    class Type(IntFlag):
+        Elevated = 1
+        Filled = 2
+        Tonal = 4
+        Outlined = 8
+        Text = 16
+
+    Elevated = '''
+        QPushButton {
+            background-color: #3498db;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        QPushButton:hover {
+            background-color: #2980b9;
+        }
+
+        QPushButton:pressed {
+            background-color: #1f618d;
+        }
+    '''
+
+    def __init__(self, *args, flags: Type = Type.Elevated, **kwargs):
+        super(Button, self).__init__(*args, **kwargs)
+        self.compileStyle(flags)
+
+    def compileStyle(self, flags: Type):
+        if flags:
+            style = self.styleSheet()
+            if flags & Button.Type.Elevated:
+                style += Button.Elevated
+            print(style)
+            self.setStyleSheet(style)
 
 
 class Spacer(QWidget):

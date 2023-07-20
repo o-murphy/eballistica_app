@@ -76,8 +76,8 @@ class AmmoData(Base):
         print('init', self.id)
         self.rifle = rifle
         self.zerodata = ZeroData(ammo=self)
-        # self.target = Target(ammo=self)
-        # self.atmo = AtmoData(ammo=self)
+        self.target = Target(ammo=self)
+        self.atmo = AtmoData(ammo=self)
 
     def get_cd(self):
         return json.loads(self.cd)  # Deserialize the JSON to retrieve the list.
@@ -154,12 +154,12 @@ class Target(Base):
     def __repr__(self):
         return "<{0.__class__.__name__}(id={0.id!r})>".format(self)
 
-    @validates('ammo_id')
-    def validate_ammo_id(self, key, ammo_id):
-        with Session() as session:
-            if not session.query(AmmoData).filter_by(id=ammo_id).scalar():
-                raise ValueError(f"AmmoData with ID {ammo_id} does not exist in the database.")
-        return ammo_id
+    # @validates('ammo_id')
+    # def validate_ammo_id(self, key, ammo_id):
+    #     with Session() as session:
+    #         if ammo_id and not session.query(AmmoData).filter_by(id=ammo_id).scalar():
+    #             raise ValueError(f"AmmoData with ID {ammo_id} does not exist in the database.")
+    #     return ammo_id
 
 
 class AtmoData(Base):
@@ -179,12 +179,12 @@ class AtmoData(Base):
     def __repr__(self):
         return "<{0.__class__.__name__}(id={0.id!r})>".format(self)
 
-    @validates('ammo_id')
-    def validate_ammo_id(self, key, ammo_id):
-        with Session() as session:
-            if not session.query(AmmoData).filter_by(id=ammo_id).scalar():
-                raise ValueError(f"AmmoData with ID {ammo_id} does not exist in the database.")
-        return ammo_id
+    # @validates('ammo_id')
+    # def validate_ammo_id(self, key, ammo_id):
+    #     with Session() as session:
+    #         if ammo_id and not session.query(AmmoData).filter_by(id=ammo_id).scalar():
+    #             raise ValueError(f"AmmoData with ID {ammo_id} does not exist in the database.")
+    #     return ammo_id
 
 
 Base.metadata.create_all(engine)

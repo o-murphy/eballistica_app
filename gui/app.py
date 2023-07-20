@@ -109,6 +109,19 @@ class App(QtWidgets.QMainWindow):
             if rifle:
                 self.switch_edit_ammo_screen(rifle)
 
+    def screen_changed(self, *args):
+        current_screen = self.stacked.currentWidget()
+        if current_screen == self.rifles:
+            self.botAppBar.backAct.setDisabled(True)
+            self.botAppBar.addAct.setEnabled(True)
+        elif current_screen == self.ammos:
+            self.botAppBar.backAct.setEnabled(True)
+            self.botAppBar.addAct.setEnabled(True)
+        else:
+            self.botAppBar.backAct.setEnabled(True)
+            self.botAppBar.addAct.setDisabled(True)
+
+
     def connectUi(self, MainWindow):
         # self.rifles.header.addButton.clicked.connect(self.switch_edit_rifle_screen)
         self.edit_rifle.ok_clicked.connect(self.switch_to_rifles)
@@ -121,8 +134,10 @@ class App(QtWidgets.QMainWindow):
         self.ammos.ammo_clicked_sig.connect(self.switch_edit_shot_screen)
         self.edit_shot.ok_clicked.connect(self.switch_to_ammos)
 
-        self.botAppBar.homeAct.triggered.connect(self.switch_to_rifles)
-        self.botAppBar.backAct.triggered.connect(self.go_back)
-        self.botAppBar.addAct.triggered.connect(self.go_add)
+        self.botAppBar.homeAct.clicked.connect(self.switch_to_rifles)
+        self.botAppBar.backAct.clicked.connect(self.go_back)
+        self.botAppBar.addAct.clicked.connect(self.go_add)
+
+        self.stacked.currentChanged.connect(self.screen_changed)
 
 
