@@ -90,8 +90,11 @@ class RiflesLi(QtWidgets.QListWidget):
                 self.refresh()
 
     def setupUi(self, RiflesLi):
-        print(self.findChildren(QtWidgets.QWidget))
-
+        self.setObjectName('riflesLi')
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        self.setSizePolicy(sizePolicy)
 
     def create_item(self, rifle):
         widget = RifleItemWidget()
@@ -214,6 +217,7 @@ class AddRifleHeader(QtWidgets.QWidget):
 
         self.hBoxLayout = QtWidgets.QHBoxLayout(self)
         self.hBoxLayout.setObjectName("hBoxLayout")
+        self.hBoxLayout.setContentsMargins(0, 0, 0, 0)
 
         # self.logo = AppLogo()
         # self.label = AppLabel()
@@ -266,7 +270,7 @@ class EditRifleWidget(QtWidgets.QWidget):
 
         self.vBoxLayout = QtWidgets.QVBoxLayout(self)
         self.vBoxLayout.setObjectName("vBoxLayout")
-        self.vBoxLayout.setContentsMargins(0, 0, 0, 0)
+        # self.vBoxLayout.setContentsMargins(0, 0, 0, 0)
         self.vBoxLayout.setAlignment(QtCore.Qt.AlignTop)
 
         self.name_boxLayout = QtWidgets.QFormLayout(self.name_box)

@@ -212,6 +212,7 @@ class AddAmmoHeader(QtWidgets.QWidget):
 
         self.hBoxLayout = QtWidgets.QHBoxLayout(self)
         self.hBoxLayout.setObjectName("hBoxLayout")
+        self.hBoxLayout.setContentsMargins(0, 0, 0, 0)
 
         # self.logo = AppLogo()
         # self.label = AppLabel()
@@ -260,7 +261,7 @@ class EditAmmoWidget(QtWidgets.QWidget):
 
         self.vBoxLayout = QtWidgets.QVBoxLayout(self)
         self.vBoxLayout.setObjectName("vBoxLayout")
-        self.vBoxLayout.setContentsMargins(0, 0, 0, 0)
+        # self.vBoxLayout.setContentsMargins(0, 0, 0, 0)
         self.vBoxLayout.setAlignment(QtCore.Qt.AlignTop)
 
         self.name_boxLayout = QtWidgets.QFormLayout(self.name_box)
@@ -417,7 +418,7 @@ class EditShotWidget(QtWidgets.QWidget):
 
         self.vBoxLayout = QtWidgets.QVBoxLayout(self)
         self.vBoxLayout.setObjectName("vBoxLayout")
-        self.vBoxLayout.setContentsMargins(0, 0, 0, 0)
+        # self.vBoxLayout.setContentsMargins(0, 0, 0, 0)
         self.vBoxLayout.setAlignment(QtCore.Qt.AlignTop)
 
         # self.name_boxLayout = QtWidgets.QFormLayout(self.name_box)
@@ -463,6 +464,7 @@ class EditShotWidget(QtWidgets.QWidget):
 
         self.bottom_bar = QtWidgets.QWidget(self)
         self.bottom_bar_layout = QtWidgets.QHBoxLayout(self.bottom_bar)
+        self.bottom_bar_layout.setContentsMargins(0, 0, 0, 0)
         self.one_shot_btn = QtWidgets.QPushButton('One shot')
         self.traj_btn = QtWidgets.QPushButton('Trajectory')
         self.bottom_bar_layout.addWidget(self.one_shot_btn)

@@ -73,6 +73,7 @@ class App(QtWidgets.QMainWindow):
     def switch_to_rifles(self):
         self.rifles.rifles_list.refresh()
         self.stacked.setCurrentWidget(self.rifles)
+        self.screen_changed(self.stacked.currentIndex())
 
     def switch_edit_rifle_screen(self, rifle=None):
         self.edit_rifle.display_data(rifle)
@@ -115,19 +116,21 @@ class App(QtWidgets.QMainWindow):
 
     def screen_changed(self, index):
         current_screen = self.stacked.currentWidget()
+
         if current_screen == self.rifles:
-            self.botAppBar.backAct.setDisabled(True)
-            self.botAppBar.addAct.setEnabled(True)
+            self.botAppBar.backAct.setHidden(True)
+            self.botAppBar.addAct.setHidden(False)
         elif current_screen == self.ammos:
-            self.botAppBar.backAct.setEnabled(True)
-            self.botAppBar.addAct.setEnabled(True)
+            self.botAppBar.backAct.setHidden(True)
+            self.botAppBar.addAct.setHidden(False)
         else:
-            self.botAppBar.backAct.setEnabled(True)
-            self.botAppBar.addAct.setDisabled(True)
-        if 0 <= index < self.stackedWidget.count():
-            currentPage = self.stackedWidget.widget(index)
+            self.botAppBar.backAct.setHidden(False)
+            self.botAppBar.addAct.setHidden(True)
+        if 0 <= index < self.stacked.count():
+            currentPage = self.stacked.widget(index)
             self.stacked.resize(currentPage.sizeHint())
-            self.scroll_area.adjustSize()
+            self.scroll_area.scroll(0, 0)
+            # self.scroll_area.adjustSize()
 
     def connectUi(self, MainWindow):
         # self.rifles.header.addButton.clicked.connect(self.switch_edit_rifle_screen)
