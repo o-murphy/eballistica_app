@@ -162,7 +162,7 @@ class RiflesLi(QtWidgets.QListWidget):
 
 class RiflesWidget(QtWidgets.QWidget):
     rifle_clicked_sig = QtCore.Signal(object)
-    rifle_double_clicked_sig = QtCore.Signal(object)
+    rifle_edit_sig = QtCore.Signal(object)
 
     def __init__(self, parent=None):
         super(RiflesWidget, self).__init__(parent)
@@ -194,55 +194,21 @@ class RiflesWidget(QtWidgets.QWidget):
         riflesWidget.setWindowTitle(_translate("riflesWidget", "Form"))
 
     def connectUi(self, riflesWidget: 'RiflesWidget'):
-        self.rifles_list.itemDoubleClicked.connect(self.rifle_double_clicked)
+        # self.rifles_list.itemDoubleClicked.connect(self.rifle_edit_clicked)
         self.rifles_list.itemClicked.connect(self.rifle_clicked)
-        self.rifles_list.edit_context_action.connect(self.rifle_double_clicked)
+        self.rifles_list.edit_context_action.connect(self.rifle_edit_clicked)
 
     def rifle_clicked(self, item: QtWidgets.QListWidgetItem):
         widget: RifleItemWidget = self.rifles_list.itemWidget(item)
         self.rifle_clicked_sig.emit(widget.rifle_data)
 
-    def rifle_double_clicked(self, item: QtWidgets.QListWidgetItem):
+    def rifle_edit_clicked(self, item: QtWidgets.QListWidgetItem):
         widget: RifleItemWidget = self.rifles_list.itemWidget(item)
-        self.rifle_double_clicked_sig.emit(widget.rifle_data)
-
-
-class AddRifleHeader(QtWidgets.QWidget):
-    def __init__(self, parent=None):
-        super(AddRifleHeader, self).__init__(parent)
-        self.setupUi(self)
-
-    def setupUi(self, editRifleWidgetHeader):
-        editRifleWidgetHeader.setObjectName("editRifleWidgetHeader")
-
-        self.hBoxLayout = QtWidgets.QHBoxLayout(self)
-        self.hBoxLayout.setObjectName("hBoxLayout")
-        self.hBoxLayout.setContentsMargins(0, 0, 0, 0)
-
-        # self.logo = AppLogo()
-        # self.label = AppLabel()
-        # self.hBoxLayout.addWidget(self.logo)
-        # self.hBoxLayout.addWidget(self.label)
-
-        editRifleWidgetHeader.setObjectName("editRifleWidgetHeader")
-        self.okButton = QtWidgets.QPushButton('Ok')
-        self.okButton.setShortcut(QtGui.QKeySequence('Ctrl+S'))
-        self.okButton.setProperty('class', 'success')
-
-        self.hBoxLayout.addWidget(self.okButton)
-
-        self.retranslateUi(editRifleWidgetHeader)
-        QtCore.QMetaObject.connectSlotsByName(editRifleWidgetHeader)
-
-    def retranslateUi(self, editRifleWidgetHeader: 'AddRifleHeader'):
-        _translate = QtCore.QCoreApplication.translate
-        editRifleWidgetHeader.setWindowTitle(_translate("editRifleWidgetHeader", "Form"))
-        editRifleWidgetHeader.okButton.setText(_translate("editRifleWidgetHeader", "Ok"))
-        # editRifleWidgetHeader.menuButton.setText(_translate("editRifleWidgetHeader", "..."))
+        self.rifle_edit_sig.emit(widget.rifle_data)
 
 
 class EditRifleWidget(QtWidgets.QWidget):
-    ok_clicked = QtCore.Signal()
+    # ok_clicked = QtCore.Signal()
 
     def __init__(self, parent=None, uid: int = None, rifle: 'RifleData' = None):
         super(EditRifleWidget, self).__init__(parent)
@@ -262,7 +228,6 @@ class EditRifleWidget(QtWidgets.QWidget):
         editRifleWidget.setSizePolicy(sizePolicy)
         editRifleWidget.setMinimumSize(QtCore.QSize(0, 0))
 
-        self.header = AddRifleHeader(self)
 
         self.name_box = QtWidgets.QGroupBox('Rifle name', self)
         self.props_box = QtWidgets.QGroupBox('Properties', self)
@@ -270,7 +235,6 @@ class EditRifleWidget(QtWidgets.QWidget):
 
         self.vBoxLayout = QtWidgets.QVBoxLayout(self)
         self.vBoxLayout.setObjectName("vBoxLayout")
-        # self.vBoxLayout.setContentsMargins(0, 0, 0, 0)
         self.vBoxLayout.setAlignment(QtCore.Qt.AlignTop)
 
         self.name_boxLayout = QtWidgets.QFormLayout(self.name_box)
@@ -298,7 +262,6 @@ class EditRifleWidget(QtWidgets.QWidget):
         self.props_boxLayout.addWidget(self.sight_height)
         self.props_boxLayout.addWidget(self.sight_offset)
 
-        self.vBoxLayout.addWidget(self.header)
         self.vBoxLayout.addWidget(self.name_box)
         self.vBoxLayout.addWidget(self.props_box)
         self.vBoxLayout.addWidget(self.reticle_box)
@@ -311,7 +274,7 @@ class EditRifleWidget(QtWidgets.QWidget):
         editRifleWidget.setWindowTitle(_translate("editRifleWidget", "Form"))
 
     def connectUi(self, editRifleWidget):
-        self.header.okButton.clicked.connect(self.save_rifle)
+        ...
 
     def display_data(self, rifle: 'RifleData'):
         if not rifle:
@@ -326,7 +289,6 @@ class EditRifleWidget(QtWidgets.QWidget):
         self.sight_offset.setValue(rifle.sight_offset)
 
     def save_rifle(self):
-        print(self.sender())
         Worker.rifle_add_or_update(
             id=self.uid,
             name=self.name.text() if self.name.text() else self.name.placeholderText(),
@@ -335,4 +297,4 @@ class EditRifleWidget(QtWidgets.QWidget):
             sight_height=self.sight_height.value(),
             sight_offset=self.sight_offset.value(),
         )
-        self.ok_clicked.emit()
+        # self.ok_clicked.emit()

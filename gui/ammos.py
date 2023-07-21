@@ -157,7 +157,7 @@ class AmmosHeader(QtWidgets.QWidget):
 
 class AmmosWidget(QtWidgets.QWidget):
     ammo_clicked_sig = QtCore.Signal(object)
-    ammo_double_clicked_sig = QtCore.Signal(object)
+    ammo_edit_sig = QtCore.Signal(object)
 
     def __init__(self, parent=None):
         super(AmmosWidget, self).__init__(parent)
@@ -189,55 +189,21 @@ class AmmosWidget(QtWidgets.QWidget):
         ammosWidget.setWindowTitle(_translate("ammosWidget", "Form"))
 
     def connectUi(self, ammosWidget: 'AmmosWidget'):
-        self.ammos_list.itemDoubleClicked.connect(self.ammo_double_clicked)
+        # self.ammos_list.itemDoubleClicked.connect(self.ammo_edit_clicked)
         self.ammos_list.itemClicked.connect(self.ammo_clicked)
-        self.ammos_list.edit_context_action.connect(self.ammo_double_clicked)
+        self.ammos_list.edit_context_action.connect(self.ammo_edit_clicked)
 
     def ammo_clicked(self, item: QtWidgets.QListWidgetItem):
         widget: AmmoItemWidget = self.ammos_list.itemWidget(item)
         self.ammo_clicked_sig.emit(widget.ammo_data)
 
-    def ammo_double_clicked(self, item: QtWidgets.QListWidgetItem):
+    def ammo_edit_clicked(self, item: QtWidgets.QListWidgetItem):
         widget: AmmoItemWidget = self.ammos_list.itemWidget(item)
-        self.ammo_double_clicked_sig.emit(widget.ammo_data)
-
-
-class AddAmmoHeader(QtWidgets.QWidget):
-    def __init__(self, parent=None):
-        super(AddAmmoHeader, self).__init__(parent)
-        self.setupUi(self)
-
-    def setupUi(self, editAmmoWidgetHeader):
-        editAmmoWidgetHeader.setObjectName("editAmmoWidgetHeader")
-
-        self.hBoxLayout = QtWidgets.QHBoxLayout(self)
-        self.hBoxLayout.setObjectName("hBoxLayout")
-        self.hBoxLayout.setContentsMargins(0, 0, 0, 0)
-
-        # self.logo = AppLogo()
-        # self.label = AppLabel()
-        # self.hBoxLayout.addWidget(self.logo)
-        # self.hBoxLayout.addWidget(self.label)
-
-        editAmmoWidgetHeader.setObjectName("editAmmoWidgetHeader")
-        self.okButton = QPushButton('Ok')
-        self.okButton.setChecked(True)
-        self.okButton.setShortcut(QtGui.QKeySequence('Ctrl+S'))
-        # self.okButton.setProperty('class', 'success')
-
-        self.hBoxLayout.addWidget(self.okButton)
-
-        self.retranslateUi(editAmmoWidgetHeader)
-        QtCore.QMetaObject.connectSlotsByName(editAmmoWidgetHeader)
-
-    def retranslateUi(self, editAmmoWidgetHeader: 'AddAmmoHeader'):
-        _translate = QtCore.QCoreApplication.translate
-        editAmmoWidgetHeader.setWindowTitle(_translate("editAmmoWidgetHeader", "Form"))
-        editAmmoWidgetHeader.okButton.setText(_translate("editAmmoWidgetHeader", "Ok"))
+        self.ammo_edit_sig.emit(widget.ammo_data)
 
 
 class EditAmmoWidget(QtWidgets.QWidget):
-    ok_clicked = QtCore.Signal(object)
+    # ok_clicked = QtCore.Signal(object)
 
     def __init__(self, parent=None):
         super(EditAmmoWidget, self).__init__(parent)
@@ -273,7 +239,6 @@ class EditAmmoWidget(QtWidgets.QWidget):
         self.zero_boxLayout = QtWidgets.QVBoxLayout(self.zero_box)
         self.zero_boxLayout.setObjectName("zero_boxLayout")
 
-        self.header = AddAmmoHeader(self)
         self.name_label = QtWidgets.QLabel('Name')
         self.name = QtWidgets.QLineEdit()
         self.name.setPlaceholderText('Name')
@@ -328,7 +293,6 @@ class EditAmmoWidget(QtWidgets.QWidget):
         self.zero_boxLayout.addWidget(self.temperature)
         self.zero_boxLayout.addWidget(self.humidity)
 
-        self.vBoxLayout.addWidget(self.header)
         self.vBoxLayout.addWidget(self.name_box)
         self.vBoxLayout.addWidget(self.ammo_box)
         self.vBoxLayout.addWidget(self.zero_box)
@@ -341,7 +305,7 @@ class EditAmmoWidget(QtWidgets.QWidget):
         editAmmoWidget.setWindowTitle(_translate("editAmmoWidget", "Form"))
 
     def connectUi(self, editAmmoWidget):
-        self.header.okButton.clicked.connect(self.save_ammo)
+        ...
 
     def save_ammo(self):
         print(self.sender())
@@ -365,7 +329,7 @@ class EditAmmoWidget(QtWidgets.QWidget):
         self.ammo.zerodata.humidity = self.humidity.value()
 
         Worker.ammo_add_or_update(self.ammo)
-        self.ok_clicked.emit(self.rifle)
+        # self.ok_clicked.emit(self.rifle)
 
     def display_data(self, rifle, ammo):
 
@@ -393,7 +357,7 @@ class EditAmmoWidget(QtWidgets.QWidget):
 
 
 class EditShotWidget(QtWidgets.QWidget):
-    ok_clicked = QtCore.Signal(object)
+    # ok_clicked = QtCore.Signal(object)
 
     def __init__(self, parent=None):
         super(EditShotWidget, self).__init__(parent)
@@ -433,7 +397,7 @@ class EditShotWidget(QtWidgets.QWidget):
         # self.spin_boxLayout = QtWidgets.QVBoxLayout(self.spin_box)
         # self.spin_boxLayout.setObjectName("spin_boxLayout")
 
-        self.header = AddAmmoHeader(self)
+        # self.header = AddAmmoHeader(self)
         # self.name_label = QtWidgets.QLabel('Name')
         # self.name = QtWidgets.QLineEdit()
         # self.name.setPlaceholderText('Name')
@@ -466,11 +430,11 @@ class EditShotWidget(QtWidgets.QWidget):
         self.bottom_bar_layout = QtWidgets.QHBoxLayout(self.bottom_bar)
         self.bottom_bar_layout.setContentsMargins(0, 0, 0, 0)
         self.one_shot_btn = QtWidgets.QPushButton('One shot')
+        self.one_shot_btn.setProperty('class', 'danger')
         self.traj_btn = QtWidgets.QPushButton('Trajectory')
         self.bottom_bar_layout.addWidget(self.one_shot_btn)
         self.bottom_bar_layout.addWidget(self.traj_btn)
 
-        self.vBoxLayout.addWidget(self.header)
         # self.vBoxLayout.addWidget(self.name_box)
         self.vBoxLayout.addWidget(self.target_box)
         self.vBoxLayout.addWidget(self.atmo_box)
@@ -485,7 +449,7 @@ class EditShotWidget(QtWidgets.QWidget):
         editShotWidget.setWindowTitle(_translate("editShotWidget", "Form"))
 
     def connectUi(self, editShotWidget):
-        self.header.okButton.clicked.connect(self.save_ammo)
+        ...
 
     def save_ammo(self):
         print(self.sender())
@@ -501,7 +465,7 @@ class EditShotWidget(QtWidgets.QWidget):
         self.ammo.atmo.wind_angle = self.wind_angle.value()
 
         Worker.ammo_add_or_update(self.ammo)
-        self.ok_clicked.emit(self.rifle)
+        # self.ok_clicked.emit(self.rifle)
 
     def display_data(self, rifle, ammo):
 

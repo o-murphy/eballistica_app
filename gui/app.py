@@ -118,35 +118,58 @@ class App(QtWidgets.QMainWindow):
         current_screen = self.stacked.currentWidget()
 
         if current_screen == self.rifles:
-            self.botAppBar.backAct.setHidden(True)
-            self.botAppBar.addAct.setHidden(False)
+            self.botAppBar.okAct.setHidden(True)
+            self.botAppBar.addAct.setVisible(True)
+            self.botAppBar.setAct.setVisible(True)
+            self.botAppBar.homeAct.setHidden(True)
+
         elif current_screen == self.ammos:
-            self.botAppBar.backAct.setHidden(True)
-            self.botAppBar.addAct.setHidden(False)
-        else:
-            self.botAppBar.backAct.setHidden(False)
+            self.botAppBar.okAct.setHidden(True)
+            self.botAppBar.addAct.setVisible(True)
+            self.botAppBar.setAct.setVisible(False)
+            self.botAppBar.homeAct.setHidden(False)
+
+        elif current_screen == self.edit_rifle or current_screen == self.edit_ammo or current_screen == self.edit_shot:
+            self.botAppBar.okAct.setVisible(True)
             self.botAppBar.addAct.setHidden(True)
+            self.botAppBar.setAct.setVisible(False)
+            self.botAppBar.homeAct.setHidden(False)
+
+        else:
+            ...
+
         if 0 <= index < self.stacked.count():
             currentPage = self.stacked.widget(index)
             self.stacked.resize(currentPage.sizeHint())
             self.scroll_area.scroll(0, 0)
-            # self.scroll_area.adjustSize()
+            current_widget = self.stacked.currentWidget()
+            if current_widget:
+                target_height = current_widget.sizeHint().height()
+                self.stacked.setMinimumHeight(target_height)
+
+    def go_ok(self):
+        current_screen = self.stacked.currentWidget()
+
+        if current_screen == self.edit_rifle:
+            self.edit_rifle.save_rifle()
+            self.switch_to_rifles()
+        elif current_screen == self.edit_ammo:
+            self.edit_ammo.save_ammo()
+            self.switch_to_ammos(self.edit_ammo.rifle)
+        elif current_screen == self.edit_shot:
+            self.edit_shot.save_ammo()
+            self.switch_to_ammos(self.edit_shot.rifle)
 
     def connectUi(self, MainWindow):
-        # self.rifles.header.addButton.clicked.connect(self.switch_edit_rifle_screen)
-        self.edit_rifle.ok_clicked.connect(self.switch_to_rifles)
-        self.rifles.rifle_double_clicked_sig.connect(self.switch_edit_rifle_screen)
+        self.rifles.rifle_edit_sig.connect(self.switch_edit_rifle_screen)
         self.rifles.rifle_clicked_sig.connect(self.switch_to_ammos)
-
-        # self.ammos.header.addButton.clicked.connect(self.switch_edit_ammo_screen)
-        self.edit_ammo.ok_clicked.connect(self.switch_to_ammos)
-        self.ammos.ammo_double_clicked_sig.connect(self.switch_edit_ammo_screen)
+        self.ammos.ammo_edit_sig.connect(self.switch_edit_ammo_screen)
         self.ammos.ammo_clicked_sig.connect(self.switch_edit_shot_screen)
-        self.edit_shot.ok_clicked.connect(self.switch_to_ammos)
 
         self.botAppBar.homeAct.clicked.connect(self.switch_to_rifles)
         self.botAppBar.backAct.clicked.connect(self.go_back)
         self.botAppBar.addAct.clicked.connect(self.go_add)
+        self.botAppBar.okAct.clicked.connect(self.go_ok)
 
         self.stacked.currentChanged.connect(self.screen_changed)
 
