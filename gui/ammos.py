@@ -1,11 +1,9 @@
-from functools import reduce
-
 from PySide6 import QtWidgets, QtCore, QtGui
-from PySide6.QtWidgets import QPushButton
 
 from datatypes.dbworker import Worker, AmmoData, DragModel
 from gui.app_logo import AppLogo, AppLabel
-from gui.widgets import FormSpinBox, FormComboBox, FormCheckBox, FormButton
+from gui.drag_model import EditDragDataButton
+from gui.widgets import FormSpinBox, FormComboBox, FormCheckBox
 
 
 class AmmoItemWidget(QtWidgets.QWidget):
@@ -204,32 +202,6 @@ class AmmosWidget(QtWidgets.QWidget):
         self.ammo_edit_sig.emit(widget.ammo_data)
 
 
-class EditDragDataButton(FormButton):
-
-    def __init__(self, *args, **kwargs):
-        super(EditDragDataButton, self).__init__(*args, **kwargs)
-
-    @staticmethod
-    def count_nonzero_pairs(pair_list):
-        def count_valid_pairs(acc, pair):
-            if pair[0] != 0 and pair[1] != 0:
-                return acc + 1
-            return acc
-
-        return reduce(count_valid_pairs, pair_list, 0)
-
-    def update_df(self, drag_model: DragModel, ammo: AmmoData):
-        if drag_model == DragModel.G1:
-            count = self.count_nonzero_pairs(ammo.bc_list)
-        elif drag_model == DragModel.G7:
-            count = self.count_nonzero_pairs(ammo.bc7_list)
-        elif drag_model == DragModel.CDM:
-            count = self.count_nonzero_pairs(ammo.cdm_list)
-        else:
-            return
-        self.setText(f'{drag_model.name}({count})')
-
-
 class EditAmmoWidget(QtWidgets.QWidget):
     # ok_clicked = QtCore.Signal(object)
     editDrag = QtCore.Signal(object, object)
@@ -276,8 +248,12 @@ class EditAmmoWidget(QtWidgets.QWidget):
         self.weight = FormSpinBox(self, 0.01, 1000, 1, 'grn', 'Weight')
         self.length = FormSpinBox(self, 0.01, 10, 1, 'in', 'Length')
         self.mv = FormSpinBox(self, 1, 2000, 1, 'mps', 'Muzzle velocity')
-        self.powder_sens = FormSpinBox(self, 1, 100, 1, '%', 'Powder sensitivity')
+
+        self.powder_sens = FormSpinBox(self, 0, 100, 0.01, '%', 'Powder sensitivity')
         self.powder_temp = FormSpinBox(self, -50, +50, 1, 'C', 'Powder temp')
+
+        self.calc_powder_sens = QtWidgets.QPushButton('Calculate powder sensitivity')
+
         # self.drag_model_label = QtWidgets.QLabel('Drag model')
         self.drag_model = FormComboBox(prefix='Drag model')
         self.drag_data = EditDragDataButton(self, 'Edit', prefix='Drag data')
@@ -308,10 +284,14 @@ class EditAmmoWidget(QtWidgets.QWidget):
         self.ammo_boxLayout.addWidget(self.weight)
         self.ammo_boxLayout.addWidget(self.length)
         self.ammo_boxLayout.addWidget(self.mv)
-        self.ammo_boxLayout.addWidget(self.powder_sens)
-        self.ammo_boxLayout.addWidget(self.powder_temp)
+
         self.ammo_boxLayout.addWidget(self.drag_model)
         self.ammo_boxLayout.addWidget(self.drag_data)
+
+        self.ammo_boxLayout.addWidget(self.powder_sens)
+        self.ammo_boxLayout.addWidget(self.powder_temp)
+
+        self.ammo_boxLayout.addWidget(self.calc_powder_sens)
 
         self.zero_boxLayout.addWidget(self.zero_range)
         self.zero_boxLayout.addWidget(self.zero_height)
@@ -343,12 +323,10 @@ class EditAmmoWidget(QtWidgets.QWidget):
 
     def update_drag_data_btn(self, index):
         data = self.drag_model.currentData()
-        print(data)
         self.drag_data.update_df(data, self.ammo)
 
     def update_drag_data(self, drag_data):
         dm = self.drag_model.currentData()
-        print(dm)
         if dm == DragModel.G1:
             self.ammo.bc_list = drag_data
         elif dm == DragModel.G7:
@@ -504,7 +482,6 @@ class EditShotWidget(QtWidgets.QWidget):
         ...
 
     def save_ammo(self):
-
         self.ammo.target.distance = self.distance.value()
         self.ammo.target.look_angle = self.look_angle.value()
 
@@ -519,7 +496,6 @@ class EditShotWidget(QtWidgets.QWidget):
         # self.ok_clicked.emit(self.rifle)
 
     def display_data(self, rifle, ammo):
-
         self.ammo = AmmoData('New Ammo', rifle=rifle) if not isinstance(ammo, AmmoData) else ammo
 
         self.rifle = self.ammo.rifle

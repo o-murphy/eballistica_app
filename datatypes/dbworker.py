@@ -50,6 +50,7 @@ class AmmoData(Base):
     length = Column(Float, nullable=False, default=1.5)
     muzzle_velocity = Column(Float, nullable=False, default=800)
     temp_sens = Column(Float, nullable=False, default=1)
+
     powder_temp = Column(Float, nullable=False, default=15)
     drag_model = Column(Enum(DragModel), nullable=False, default=DragModel.G7)
 

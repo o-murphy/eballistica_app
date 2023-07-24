@@ -1,7 +1,9 @@
+from functools import reduce
+
 from PySide6 import QtWidgets, QtCore
 
-from datatypes.dbworker import DragModel
-from gui.widgets import SpinBox
+from datatypes.dbworker import DragModel, AmmoData
+from gui.widgets import SpinBox, FormButton
 
 
 class MultiBCWidget(QtWidgets.QWidget):
@@ -141,6 +143,37 @@ class CDMWidget(QtWidgets.QWidget):
                 ret_list.append([mach_sb.value(), cd_sb.value()])
         return ret_list
 
+
+class EditDragDataButton(FormButton):
+
+    def __init__(self, *args, **kwargs):
+        super(EditDragDataButton, self).__init__(*args, **kwargs)
+
+    @staticmethod
+    def count_nonzero_pairs(pair_list):
+        def count_valid_pairs(acc, pair):
+            if pair[0] != 0 and pair[1] != 0:
+                return acc + 1
+            return acc
+
+        return reduce(count_valid_pairs, pair_list, 0)
+
+    def update_df(self, drag_model: DragModel, ammo: AmmoData):
+        if drag_model == DragModel.G1:
+            count = self.count_nonzero_pairs(ammo.bc_list)
+            first = ammo.bc_list[0][1]
+        elif drag_model == DragModel.G7:
+            count = self.count_nonzero_pairs(ammo.bc7_list)
+            first = ammo.bc7_list[0][1]
+        elif drag_model == DragModel.CDM:
+            count = self.count_nonzero_pairs(ammo.cdm_list)
+            first = None
+        else:
+            return
+        if count == 0 or count > 1:
+            self.setText(f'{drag_model.name} ({count})')
+        else:
+            self.setText(f'{drag_model.name} (BC: {first})')
 
 if __name__ == '__main__':
     import sys

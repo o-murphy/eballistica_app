@@ -5,6 +5,7 @@ from .ammos import AmmosWidget, EditAmmoWidget, EditShotWidget
 from .app_logo import AppHeader
 from .bot_app_bar import BotAppBar
 from .drag_model import MultiBCWidget, CDMWidget
+from .powder_sens import PowderSensWindget
 from .rifles import RiflesWidget, EditRifleWidget
 
 
@@ -58,7 +59,9 @@ class App(QtWidgets.QMainWindow):
         self.edit_shot = EditShotWidget(self)
 
         self.multi_bc = MultiBCWidget(self)
-        self.cdm = CDMWidget()
+        self.cdm = CDMWidget(self)
+
+        self.powder_sens = PowderSensWindget(self)
 
         self.stacked.addWidget(self.rifles)
         self.stacked.addWidget(self.edit_rifle)
@@ -67,6 +70,7 @@ class App(QtWidgets.QMainWindow):
         self.stacked.addWidget(self.edit_shot)
         self.stacked.addWidget(self.multi_bc)
         self.stacked.addWidget(self.cdm)
+        self.stacked.addWidget(self.powder_sens)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -111,7 +115,7 @@ class App(QtWidgets.QMainWindow):
             self.stacked.setCurrentWidget(self.rifles)
         elif current_screen == self.edit_shot:
             self.stacked.setCurrentWidget(self.ammos)
-        elif current_screen == self.multi_bc or current_screen == self.cdm:
+        elif current_screen in (self.multi_bc, self.cdm, self.powder_sens):
             self.stacked.setCurrentWidget(self.edit_ammo)
 
     def go_add(self):
@@ -176,6 +180,11 @@ class App(QtWidgets.QMainWindow):
             drag_data = self.cdm.get_data()
             self.edit_ammo.update_drag_data(drag_data)
             self.stacked.setCurrentWidget(self.edit_ammo)
+        elif current_screen == self.powder_sens:
+            powder_sens_coeff = self.powder_sens.calculate()
+            if powder_sens_coeff is not None:
+                self.edit_ammo.powder_sens.setValue(powder_sens_coeff)
+            self.stacked.setCurrentWidget(self.edit_ammo)
 
     def switch_drag_edit_screen(self, dm, ammo):
         if dm != DragModel.CDM:
@@ -184,6 +193,10 @@ class App(QtWidgets.QMainWindow):
         else:
             self.cdm.display_data(dm, ammo)
             self.stacked.setCurrentWidget(self.cdm)
+
+    def switch_calc_sens(self):
+        self.powder_sens.display_data(self.edit_ammo.mv.value(), self.edit_ammo.temperature.value())
+        self.stacked.setCurrentWidget(self.powder_sens)
 
     def connectUi(self, MainWindow):
         self.rifles.rifle_edit_sig.connect(self.switch_edit_rifle_screen)
@@ -199,5 +212,6 @@ class App(QtWidgets.QMainWindow):
         self.stacked.currentChanged.connect(self.screen_changed)
 
         self.edit_ammo.editDrag.connect(self.switch_drag_edit_screen)
+        self.edit_ammo.calc_powder_sens.clicked.connect(self.switch_calc_sens)
 
 
