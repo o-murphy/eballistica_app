@@ -1,4 +1,5 @@
 from PySide6 import QtWidgets, QtCore, QtGui
+from qt_material import QtStyleTools
 
 from datatypes.dbworker import DragModel
 from .ammos import AmmosWidget, EditAmmoWidget, EditShotWidget
@@ -14,9 +15,10 @@ from .rifles import RiflesWidget, EditRifleWidget
 #         super(AppState, self).__init__(parent)
 #         self.rifle_id = None
 #         self.ammo_id = None
+from .settings import SettingsWidget
 
 
-class App(QtWidgets.QMainWindow):
+class App(QtWidgets.QMainWindow, QtStyleTools):
 
     def __init__(self, app=None):
         super(App, self).__init__(app)
@@ -63,6 +65,8 @@ class App(QtWidgets.QMainWindow):
 
         self.powder_sens = PowderSensWindget(self)
 
+        self.settings = SettingsWidget(self)
+
         self.stacked.addWidget(self.rifles)
         self.stacked.addWidget(self.edit_rifle)
         self.stacked.addWidget(self.ammos)
@@ -71,6 +75,7 @@ class App(QtWidgets.QMainWindow):
         self.stacked.addWidget(self.multi_bc)
         self.stacked.addWidget(self.cdm)
         self.stacked.addWidget(self.powder_sens)
+        self.stacked.addWidget(self.settings)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -117,6 +122,8 @@ class App(QtWidgets.QMainWindow):
             self.stacked.setCurrentWidget(self.ammos)
         elif current_screen in (self.multi_bc, self.cdm, self.powder_sens):
             self.stacked.setCurrentWidget(self.edit_ammo)
+        elif current_screen == self.settings:
+            self.stacked.setCurrentWidget(self.rifles)
 
     def go_add(self):
         current_screen = self.stacked.currentWidget()
@@ -147,6 +154,12 @@ class App(QtWidgets.QMainWindow):
             self.botAppBar.addAct.setHidden(True)
             self.botAppBar.setAct.setVisible(False)
             self.botAppBar.homeAct.setHidden(False)
+
+        elif current_screen == self.settings:
+            self.botAppBar.okAct.setVisible(True)
+            self.botAppBar.addAct.setVisible(False)
+            self.botAppBar.setAct.setVisible(False)
+            self.botAppBar.homeAct.setHidden(True)
 
         else:
             ...
@@ -185,6 +198,9 @@ class App(QtWidgets.QMainWindow):
             if powder_sens_coeff is not None:
                 self.edit_ammo.powder_sens.setValue(powder_sens_coeff)
             self.stacked.setCurrentWidget(self.edit_ammo)
+        elif current_screen == self.settings:
+            self.settings.update_settings()
+            self.stacked.setCurrentWidget(self.rifles)
 
     def switch_drag_edit_screen(self, dm, ammo):
         if dm != DragModel.CDM:
@@ -198,6 +214,10 @@ class App(QtWidgets.QMainWindow):
         self.powder_sens.display_data(self.edit_ammo.mv.value(), self.edit_ammo.temperature.value())
         self.stacked.setCurrentWidget(self.powder_sens)
 
+    def switch_to_settings(self):
+        self.settings.get_settings()
+        self.stacked.setCurrentWidget(self.settings)
+
     def connectUi(self, MainWindow):
         self.rifles.rifle_edit_sig.connect(self.switch_edit_rifle_screen)
         self.rifles.rifle_clicked_sig.connect(self.switch_to_ammos)
@@ -208,6 +228,7 @@ class App(QtWidgets.QMainWindow):
         self.botAppBar.backAct.clicked.connect(self.go_back)
         self.botAppBar.addAct.clicked.connect(self.go_add)
         self.botAppBar.okAct.clicked.connect(self.go_ok)
+        self.botAppBar.setAct.clicked.connect(self.switch_to_settings)
 
         self.stacked.currentChanged.connect(self.screen_changed)
 

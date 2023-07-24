@@ -1,8 +1,6 @@
 from enum import IntFlag
 
-from PySide6 import QtCore
 from PySide6.QtCore import Qt
-from PySide6.QtGui import QRegularExpressionValidator, QValidator
 from PySide6.QtWidgets import *
 
 
@@ -153,6 +151,9 @@ class FormComboBox(QWidget):
 
     def addItem(self, *args, **kwargs):
         self.value_field.addItem(*args, **kwargs)
+
+    def addItems(self, data):
+        self.value_field.addItems(data)
 
     def findData(self, *args, **kwargs):
         return self.value_field.findData(*args, **kwargs)
