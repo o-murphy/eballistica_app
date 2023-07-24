@@ -53,10 +53,9 @@ class AmmoData(Base):
     powder_temp = Column(Float, nullable=False, default=15)
     drag_model = Column(Enum(DragModel), nullable=False, default=DragModel.G7)
 
-    bc = Column(Float, nullable=True, default=0.600)
-    bc7 = Column(Float, nullable=True, default=0.381)
-    cd = Column(String, nullable=True, default='[]')
-    mach = Column(String, nullable=True, default='[]')
+    bc = Column(String, nullable=True, default='[[0, 0]]')
+    bc7 = Column(String, nullable=True, default='[[0, 0]]')
+    cdm = Column(String, nullable=True, default='[[0, 0]]')
 
     rifle_id = mapped_column(ForeignKey("rifle.id", ondelete="CASCADE"), nullable=False)
     rifle = relationship("RifleData", back_populates="ammo")
@@ -79,20 +78,27 @@ class AmmoData(Base):
         self.target = Target(ammo=self)
         self.atmo = AtmoData(ammo=self)
 
-    def get_cd(self):
-        return json.loads(self.cd)  # Deserialize the JSON to retrieve the list.
+    def get_bc(self):
+        return json.loads(self.bc)
 
-    def set_cd(self, value):
-        self.cd = json.dumps(value)  # Serialize the list to JSON.
+    def set_bc(self, value):
+        self.bc = json.dumps(value)
 
-    def get_mach(self):
-        return json.loads(self.mach)  # Deserialize the JSON to retrieve the list.
+    def get_bc7(self):
+        return json.loads(self.bc7)
 
-    def set_mach(self, value):
-        self.mach = json.dumps(value)  # Serialize the list to JSON.
+    def set_bc7(self, value):
+        self.bc7 = json.dumps(value)
 
-    cd_list = property(get_cd, set_cd)
-    mach_list = property(get_mach, set_mach)
+    def get_cdm(self):
+        return json.loads(self.cdm)  # Deserialize the JSON to retrieve the list.
+
+    def set_cdm(self, value):
+        self.cdm = json.dumps(value)  # Serialize the list to JSON.
+
+    bc_list = property(get_bc, set_bc)
+    bc7_list = property(get_bc7, set_bc7)
+    cdm_list = property(get_cdm, set_cdm)
 
     @validates('rifle_id')
     def validate_rifle_id(self, key, rifle_id):

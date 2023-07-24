@@ -1,8 +1,10 @@
 from PySide6 import QtWidgets, QtCore, QtGui
 
+from datatypes.dbworker import DragModel
 from .ammos import AmmosWidget, EditAmmoWidget, EditShotWidget
 from .app_logo import AppHeader
 from .bot_app_bar import BotAppBar
+from .drag_model import MultiBCWidget, CDMWidget
 from .rifles import RiflesWidget, EditRifleWidget
 
 
@@ -55,11 +57,16 @@ class App(QtWidgets.QMainWindow):
 
         self.edit_shot = EditShotWidget(self)
 
+        self.multi_bc = MultiBCWidget(self)
+        self.cdm = CDMWidget()
+
         self.stacked.addWidget(self.rifles)
         self.stacked.addWidget(self.edit_rifle)
         self.stacked.addWidget(self.ammos)
         self.stacked.addWidget(self.edit_ammo)
         self.stacked.addWidget(self.edit_shot)
+        self.stacked.addWidget(self.multi_bc)
+        self.stacked.addWidget(self.cdm)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -104,6 +111,8 @@ class App(QtWidgets.QMainWindow):
             self.stacked.setCurrentWidget(self.rifles)
         elif current_screen == self.edit_shot:
             self.stacked.setCurrentWidget(self.ammos)
+        elif current_screen == self.multi_bc or current_screen == self.cdm:
+            self.stacked.setCurrentWidget(self.edit_ammo)
 
     def go_add(self):
         current_screen = self.stacked.currentWidget()
@@ -159,6 +168,22 @@ class App(QtWidgets.QMainWindow):
         elif current_screen == self.edit_shot:
             self.edit_shot.save_ammo()
             self.switch_to_ammos(self.edit_shot.rifle)
+        elif current_screen == self.multi_bc:
+            drag_data = self.multi_bc.get_data()
+            self.edit_ammo.update_drag_data(drag_data)
+            self.stacked.setCurrentWidget(self.edit_ammo)
+        elif current_screen == self.cdm:
+            drag_data = self.cdm.get_data()
+            self.edit_ammo.update_drag_data(drag_data)
+            self.stacked.setCurrentWidget(self.edit_ammo)
+
+    def switch_drag_edit_screen(self, dm, ammo):
+        if dm != DragModel.CDM:
+            self.multi_bc.display_data(dm, ammo)
+            self.stacked.setCurrentWidget(self.multi_bc)
+        else:
+            self.cdm.display_data(dm, ammo)
+            self.stacked.setCurrentWidget(self.cdm)
 
     def connectUi(self, MainWindow):
         self.rifles.rifle_edit_sig.connect(self.switch_edit_rifle_screen)
@@ -172,5 +197,7 @@ class App(QtWidgets.QMainWindow):
         self.botAppBar.okAct.clicked.connect(self.go_ok)
 
         self.stacked.currentChanged.connect(self.screen_changed)
+
+        self.edit_ammo.editDrag.connect(self.switch_drag_edit_screen)
 
 

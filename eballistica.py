@@ -23,7 +23,7 @@ def main(argv):
     # 'QDoubleSpinBox {color: white;}'
     # /*'QLabel {color: white;}'*/
     # """
-    app.setStyleSheet(app.styleSheet())
+    # app.setStyleSheet(app.styleSheet())
 
     window = App()
     desktop = QtGui.QGuiApplication.screenAt(window.geometry().center())

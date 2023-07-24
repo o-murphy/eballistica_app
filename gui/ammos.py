@@ -1,9 +1,11 @@
+from functools import reduce
+
 from PySide6 import QtWidgets, QtCore, QtGui
 from PySide6.QtWidgets import QPushButton
 
 from datatypes.dbworker import Worker, AmmoData, DragModel
 from gui.app_logo import AppLogo, AppLabel
-from gui.widgets import FormSpinBox, FormComboBox, FormCheckBox
+from gui.widgets import FormSpinBox, FormComboBox, FormCheckBox, FormButton
 
 
 class AmmoItemWidget(QtWidgets.QWidget):
@@ -202,8 +204,35 @@ class AmmosWidget(QtWidgets.QWidget):
         self.ammo_edit_sig.emit(widget.ammo_data)
 
 
+class EditDragDataButton(FormButton):
+
+    def __init__(self, *args, **kwargs):
+        super(EditDragDataButton, self).__init__(*args, **kwargs)
+
+    @staticmethod
+    def count_nonzero_pairs(pair_list):
+        def count_valid_pairs(acc, pair):
+            if pair[0] != 0 and pair[1] != 0:
+                return acc + 1
+            return acc
+
+        return reduce(count_valid_pairs, pair_list, 0)
+
+    def update_df(self, drag_model: DragModel, ammo: AmmoData):
+        if drag_model == DragModel.G1:
+            count = self.count_nonzero_pairs(ammo.bc_list)
+        elif drag_model == DragModel.G7:
+            count = self.count_nonzero_pairs(ammo.bc7_list)
+        elif drag_model == DragModel.CDM:
+            count = self.count_nonzero_pairs(ammo.cdm_list)
+        else:
+            return
+        self.setText(f'{drag_model.name}({count})')
+
+
 class EditAmmoWidget(QtWidgets.QWidget):
     # ok_clicked = QtCore.Signal(object)
+    editDrag = QtCore.Signal(object, object)
 
     def __init__(self, parent=None):
         super(EditAmmoWidget, self).__init__(parent)
@@ -251,7 +280,7 @@ class EditAmmoWidget(QtWidgets.QWidget):
         self.powder_temp = FormSpinBox(self, -50, +50, 1, 'C', 'Powder temp')
         # self.drag_model_label = QtWidgets.QLabel('Drag model')
         self.drag_model = FormComboBox(prefix='Drag model')
-        self.bc = FormSpinBox(self, 0.001, 2, 0.01, prefix='Ballistic coefficient')
+        self.drag_data = EditDragDataButton(self, 'Edit', prefix='Drag data')
 
         self.drag_model.addItem('G1', DragModel.G1)
         self.drag_model.addItem('G7', DragModel.G7)
@@ -282,7 +311,7 @@ class EditAmmoWidget(QtWidgets.QWidget):
         self.ammo_boxLayout.addWidget(self.powder_sens)
         self.ammo_boxLayout.addWidget(self.powder_temp)
         self.ammo_boxLayout.addWidget(self.drag_model)
-        self.ammo_boxLayout.addWidget(self.bc)
+        self.ammo_boxLayout.addWidget(self.drag_data)
 
         self.zero_boxLayout.addWidget(self.zero_range)
         self.zero_boxLayout.addWidget(self.zero_height)
@@ -305,10 +334,30 @@ class EditAmmoWidget(QtWidgets.QWidget):
         editAmmoWidget.setWindowTitle(_translate("editAmmoWidget", "Form"))
 
     def connectUi(self, editAmmoWidget):
-        ...
+        self.drag_model.currentIndexChanged.connect(self.update_drag_data_btn)
+        self.drag_data.clicked.connect(self.edit_drag_data)
+
+    def edit_drag_data(self):
+        dm = self.drag_model.currentData()
+        self.editDrag.emit(dm, self.ammo)
+
+    def update_drag_data_btn(self, index):
+        data = self.drag_model.currentData()
+        print(data)
+        self.drag_data.update_df(data, self.ammo)
+
+    def update_drag_data(self, drag_data):
+        dm = self.drag_model.currentData()
+        print(dm)
+        if dm == DragModel.G1:
+            self.ammo.bc_list = drag_data
+        elif dm == DragModel.G7:
+            self.ammo.bc7_list = drag_data
+        else:
+            self.ammo.cdm_list = drag_data
+        self.drag_data.update_df(dm, self.ammo)
 
     def save_ammo(self):
-        print(self.sender())
 
         self.ammo.name = self.name.text() if self.name.text() else self.name.placeholderText()
         self.ammo.diameter = self.diameter.value()
@@ -344,6 +393,9 @@ class EditAmmoWidget(QtWidgets.QWidget):
         self.powder_sens.setValue(self.ammo.temp_sens)
         self.powder_temp.setValue(self.ammo.powder_temp)
         self.drag_model.setCurrentIndex(self.drag_model.findData(self.ammo.drag_model))
+
+        dm = self.drag_model.currentData()
+        self.drag_data.update_df(dm, self.ammo)
 
         zerodata = self.ammo.zerodata
         self.zero_range.setValue(zerodata.zero_range)
@@ -452,7 +504,6 @@ class EditShotWidget(QtWidgets.QWidget):
         ...
 
     def save_ammo(self):
-        print(self.sender())
 
         self.ammo.target.distance = self.distance.value()
         self.ammo.target.look_angle = self.look_angle.value()

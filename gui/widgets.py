@@ -1,7 +1,29 @@
 from enum import IntFlag
 
+from PySide6 import QtCore
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QRegularExpressionValidator, QValidator
 from PySide6.QtWidgets import *
+
+
+class SpinBox(QDoubleSpinBox):
+    def __init__(self, parent=None, vmin=0, vmax=100, step=1, suffix=None, prefix=None, decimals=2, *args, **kwargs):
+        super(SpinBox, self).__init__(parent, *args, **kwargs)
+        self.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.setMinimum(vmin)
+        self.setMaximum(vmax)
+        self.setSingleStep(step)
+        self.setSuffix(suffix)
+        self.setPrefix(prefix)
+        self.setDecimals(decimals)
+
+    def validate(self, text: str, pos: int) -> object:
+        text = text.replace(".", ",")
+        return QDoubleSpinBox.validate(self, text, pos)
+
+    def valueFromText(self, text: str) -> float:
+        text = text.replace(",", ".")
+        return float(text)
 
 
 class Button(QPushButton):
@@ -58,18 +80,6 @@ class Spacer(QWidget):
             raise ValueError(direction)
 
 
-class DSpinBoxHCenter(QDoubleSpinBox):
-
-    def __init__(self, vmin=0, vmax=100, step=1, suffix=None, prefix=None, *args, **kwargs):
-        super(DSpinBoxHCenter, self).__init__(*args, **kwargs)
-        self.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        self.setMinimum(vmin)
-        self.setMaximum(vmax)
-        self.setSingleStep(step)
-        self.setSuffix(suffix)
-        self.setPrefix(prefix)
-
-
 class ComboBoxHCenter(QComboBox):
     class Delegate(QStyledItemDelegate):
         def initStyleOption(self, option, index):
@@ -82,7 +92,7 @@ class ComboBoxHCenter(QComboBox):
 
 
 class FormSpinBox(QWidget):
-    def __init__(self, parent=None, vmin=0, vmax=100, step=1, suffix=None, prefix=None, *args, **kwargs):
+    def __init__(self, parent=None, vmin=0, vmax=100, step=1, suffix=None, prefix=None, decimals=2, *args, **kwargs):
         super(FormSpinBox, self).__init__(parent, *args, **kwargs)
         self.init_ui(self)
         self.value_field.setMinimum(vmin)
@@ -90,6 +100,7 @@ class FormSpinBox(QWidget):
         self.value_field.setSingleStep(step)
         self.suffix.setText(suffix)
         self.prefix.setText(prefix)
+        self.value_field.setDecimals(decimals)
 
     def init_ui(self, form):
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
@@ -97,7 +108,7 @@ class FormSpinBox(QWidget):
         self.rowLayout.setContentsMargins(0, 0, 0, 0)
 
         self.prefix = QLabel()
-        self.value_field = DSpinBoxHCenter()
+        self.value_field = SpinBox()
         self.suffix = QLabel()
         self.suffix.setAlignment(Qt.AlignmentFlag.AlignRight)
 
@@ -152,6 +163,14 @@ class FormComboBox(QWidget):
     def currentData(self, *args, **kwargs):
         return self.value_field.currentData(*args, **kwargs)
 
+    @property
+    def currentIndex(self):
+        return self.value_field.currentIndex
+
+    @property
+    def currentIndexChanged(self):
+        return self.value_field.currentIndexChanged
+
 
 class FormCheckBox(QWidget):
     def __init__(self, parent=None, suffix=None, prefix=None, *args, **kwargs):
@@ -182,3 +201,40 @@ class FormCheckBox(QWidget):
 
     def setChecked(self, value: bool):
         self.value_field.setChecked(value)
+
+
+class FormButton(QWidget):
+    def __init__(self, parent=None, text='', suffix=None, prefix=None, *args, **kwargs):
+        super(FormButton, self).__init__(parent, *args, **kwargs)
+        self.init_ui(self)
+        self.value_field.setText(text)
+        self.suffix.setText(suffix)
+        self.prefix.setText(prefix)
+
+    @property
+    def clicked(self):
+        return self.value_field.clicked
+
+    def text(self):
+        return self.value_field.text()
+
+    def setText(self, text):
+        self.value_field.setText(text)
+
+    def init_ui(self, form):
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        self.rowLayout = QHBoxLayout(self)
+        self.rowLayout.setContentsMargins(0, 0, 0, 0)
+
+        self.prefix = QLabel()
+        self.value_field = QPushButton()
+        self.suffix = QLabel()
+        self.suffix.setAlignment(Qt.AlignmentFlag.AlignRight)
+
+        self.rowLayout.addWidget(self.prefix)
+        self.rowLayout.addWidget(self.value_field)
+        self.rowLayout.addWidget(self.suffix)
+
+        self.rowLayout.setStretchFactor(self.prefix, 6)
+        self.rowLayout.setStretchFactor(self.value_field, 3)
+        self.rowLayout.setStretchFactor(self.suffix, 1)
