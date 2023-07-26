@@ -1,8 +1,10 @@
+import json
+
 from PySide6 import QtWidgets, QtCore
-from units import Distance, Pressure, Weight
-from gui.widgets import FormComboBox, FormCheckBox
 from PySide6.QtCore import QSettings
 
+from gui.widgets import FormComboBox, FormCheckBox
+from units import Distance, Pressure, Weight, Temperature, Velocity, Angular
 
 SIGHT_HEIGHT = (
     ('mm', Distance.Millimeter),
@@ -52,23 +54,41 @@ WEIGHT = (
     ('lb', Weight.Pound),
 )
 
-"""
-        self.ln = (_translate('AppSettings', ' ln'), DistanceLine)
-        self.yd = (_translate('AppSettings', ' yd'), DistanceYard)
-        self.ft = (_translate('AppSettings', ' ft'), DistanceFoot)
-        self.mm = (_translate('AppSettings', ' mm'), DistanceMillimeter)
-        self.cm = (_translate('AppSettings', ' cm'), DistanceCentimeter)
-        self.m = (_translate('AppSettings', ' m'), DistanceMeter)
-        self.km = (_translate('AppSettings', ' km'), DistanceKilometer)
-        self.mi = (_translate('AppSettings', ' mi'), DistanceMile)
-        self.nm = (_translate('AppSettings', ' nm'), DistanceNauticalMile)
-"""
+TEMPERATURE = (
+    ('°C', Temperature.Celsius),
+    ('°F', Temperature.Fahrenheit),
+    ('°R', Temperature.Rankin),
+    ('°K', Temperature.Kelvin),
+)
+
+VELOCITY = (
+    ("m/s", Velocity.MPS),
+    ("km/h", Velocity.KMH),
+    ("ft/s", Velocity.FPS),
+    ("mph", Velocity.MPH),
+    ("kt", Velocity.KT)
+)
+
+ANGULAR = (
+    ('°', Angular.Degree),
+    ('rad', Angular.Radian),
+    ('mrad', Angular.MRad),
+    ('ths', Angular.Thousand),
+)
+
+PATH = (
+    ('mil', Angular.Mil),
+    ('moa', Angular.MOA),
+    ('mrad', Angular.MRad),
+    ('ths', Angular.Thousand),
+    ('cm/100m', Angular.CmPer100M),
+    ('in/100yd', Angular.InchesPer100Yd)
+)
 
 
 class Settings(QtCore.QObject):
     def __init__(self, parent=None):
         super(Settings, self).__init__(parent)
-
 
 
 class SettingsWidget(QtWidgets.QWidget):
@@ -118,25 +138,25 @@ class SettingsWidget(QtWidgets.QWidget):
         self.twistUnits = FormComboBox(self, prefix='Twist')
         self.twistUnits.setObjectName('twistUnits')
         self.vUnits = FormComboBox(self, prefix='Velocity')
-        self.vUnits.setObjectName('Velocity')
+        self.vUnits.setObjectName('vUnits')
         self.distUnits = FormComboBox(self, prefix='Distance')
-        self.distUnits.setObjectName('Distance')
+        self.distUnits.setObjectName('distUnits')
         self.tempUnits = FormComboBox(self, prefix='Temperature')
-        self.tempUnits.setObjectName('Temperature')
+        self.tempUnits.setObjectName('tempUnits')
         self.wUnits = FormComboBox(self, prefix='Weight')
-        self.wUnits.setObjectName('Weight')
+        self.wUnits.setObjectName('wUnits')
         self.lnUnits = FormComboBox(self, prefix='Length')
-        self.lnUnits.setObjectName('Length')
+        self.lnUnits.setObjectName('lnUnits')
         self.dUnits = FormComboBox(self, prefix='Diameter')
-        self.dUnits.setObjectName('Diameter')
+        self.dUnits.setObjectName('dUnits')
         self.pUnits = FormComboBox(self, prefix='Pressure')
-        self.pUnits.setObjectName('Pressure')
+        self.pUnits.setObjectName('pUnits')
         self.dropUnits = FormComboBox(self, prefix='Drop')
-        self.dropUnits.setObjectName('Drop')
+        self.dropUnits.setObjectName('dropUnits')
         self.angleUnits = FormComboBox(self, prefix='Angular')
-        self.angleUnits.setObjectName('Angular')
+        self.angleUnits.setObjectName('angleUnits')
         self.pathUnits = FormComboBox(self, prefix='Path')
-        self.pathUnits.setObjectName('Path')
+        self.pathUnits.setObjectName('pathUnits')
         # self.eUnits = FormComboBox(self, prefix='Energy')
 
         [self.shUnits.addItem(k, v) for k, v in SIGHT_HEIGHT]
@@ -147,6 +167,10 @@ class SettingsWidget(QtWidgets.QWidget):
         [self.pUnits.addItem(k, v) for k, v in PRESSURE]
         [self.wUnits.addItem(k, v) for k, v in WEIGHT]
         [self.lnUnits.addItem(k, v) for k, v in LENGTH]
+        [self.tempUnits.addItem(k, v) for k, v in TEMPERATURE]
+        [self.vUnits.addItem(k, v) for k, v in VELOCITY]
+        [self.pathUnits.addItem(k, v) for k, v in PATH]
+        [self.angleUnits.addItem(k, v) for k, v in ANGULAR]
 
         self.unitLayout.addWidget(self.shUnits)
         self.unitLayout.addWidget(self.twistUnits)
@@ -193,16 +217,37 @@ class SettingsWidget(QtWidgets.QWidget):
                 main.apply_stylesheet(main, theme='default.xml')
 
     def update_settings(self):
-        for obj in self.findChildren(FormComboBox):
-            # print(obj.objectName())
-            if hasattr(obj, 'currentIndex'):
-                print(obj.objectName(), obj.currentIndex())
+        settings = {}
+
+        for obj in self.findChildren(FormComboBox) + self.findChildren(QtWidgets.QComboBox):
+            settings[obj.objectName()] = obj.currentData()
+        for obj in self.findChildren(FormCheckBox) + self.findChildren(QtWidgets.QCheckBox):
+            settings[obj.objectName()] = obj.isChecked()
+
+        try:
+            with open('settings.json', 'w') as fp:
+                json.dump(settings, fp)
+        except Exception as err:
+            print(err)
+
         # main = self.window()
         # if main:
         #     self.apply_theme()
 
     def get_settings(self):
-        ...
+
+        try:
+            with open('settings.json', 'r') as fp:
+                settings = json.load(fp)
+                for k, v in settings.items():
+                    ch = self.findChild(QtWidgets.QWidget, k)
+                    if isinstance(ch, (FormComboBox, QtWidgets.QComboBox)):
+                        ch.setCurrentIndex(ch.findData(v))
+                    elif isinstance(ch, (FormCheckBox, QtWidgets.QCheckBox)):
+                        ch.setChecked(v)
+
+        except Exception as exc:
+            print(exc)
 
     def connectUi(self):
         # self.scale.valueChanged.connect(self.apply_theme)
