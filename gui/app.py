@@ -215,7 +215,7 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         self.stacked.setCurrentWidget(self.powder_sens)
 
     def switch_to_settings(self):
-        self.settings.get_settings()
+        # self.settings.get_settings()
         self.stacked.setCurrentWidget(self.settings)
 
     def connectUi(self, MainWindow):

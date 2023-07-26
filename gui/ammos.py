@@ -3,7 +3,7 @@ from PySide6 import QtWidgets, QtCore, QtGui
 from datatypes.dbworker import Worker, AmmoData, DragModel
 from gui.app_logo import AppLogo, AppLabel
 from gui.drag_model import EditDragDataButton
-from gui.widgets import FormSpinBox, FormComboBox, FormCheckBox
+from gui.widgets import FormRow3, SpinBox, ComboBox
 
 
 class AmmoItemWidget(QtWidgets.QWidget):
@@ -244,39 +244,75 @@ class EditAmmoWidget(QtWidgets.QWidget):
         self.name = QtWidgets.QLineEdit()
         self.name.setPlaceholderText('Name')
 
-        self.diameter = FormSpinBox(self, 0.01, 155, 1, 'in', 'Diameter')
-        self.weight = FormSpinBox(self, 0.01, 1000, 1, 'grn', 'Weight')
-        self.length = FormSpinBox(self, 0.01, 10, 1, 'in', 'Length')
-        self.mv = FormSpinBox(self, 1, 2000, 1, 'mps', 'Muzzle velocity')
+        diameter = SpinBox(self, 0.01, 155, 1)
+        weight = SpinBox(self, 0.01, 1000, 1)
+        length = SpinBox(self, 0.01, 10, 1)
+        mv = SpinBox(self, 1, 2000, 1)
+        powder_sens = SpinBox(self, 0, 100, 0.01)
+        powder_temp = SpinBox(self, -50, +50, 1)
 
-        self.powder_sens = FormSpinBox(self, 0, 100, 0.01, '%', 'Powder sensitivity')
-        self.powder_temp = FormSpinBox(self, -50, +50, 1, 'C', 'Powder temp')
+        self.diameter = FormRow3(diameter, 'Diameter', 'in')
+        self.weight = FormRow3(weight, 'Weight', 'grn')
+        self.length = FormRow3(length, 'Length', 'in')
+        self.mv = FormRow3(mv, 'Muzzle velocity', 'mps')
+        self.powder_sens = FormRow3(powder_sens, 'Powder sensitivity', '%')
+        self.powder_temp = FormRow3(powder_temp, 'Powder temp', 'C')
+
+        # self.weight = FormSpinBox(self, 0.01, 1000, 1, 'grn', 'Weight')
+        # self.length = FormSpinBox(self, 0.01, 10, 1, 'in', 'Length')
+        # self.mv = FormSpinBox(self, 1, 2000, 1, 'mps', 'Muzzle velocity')
+
+        # self.powder_sens = FormSpinBox(self, 0, 100, 0.01, '%', 'Powder sensitivity')
+        # self.powder_temp = FormSpinBox(self, -50, +50, 1, 'C', 'Powder temp')
 
         self.calc_powder_sens = QtWidgets.QPushButton('Calculate powder sensitivity')
 
+        drag_model = ComboBox(self, items=(
+            ('G1', DragModel.G1),
+            ('G7', DragModel.G7),
+            ('CDM', DragModel.CDM)
+        ))
+        self.drag_model = FormRow3(drag_model, 'Drag model', parent=self)
+
+
         # self.drag_model_label = QtWidgets.QLabel('Drag model')
-        self.drag_model = FormComboBox(prefix='Drag model')
-        self.drag_data = EditDragDataButton(self, 'Edit', prefix='Drag data')
+        # self.drag_model = FormComboBox(prefix='Drag model')
 
-        self.drag_model.addItem('G1', DragModel.G1)
-        self.drag_model.addItem('G7', DragModel.G7)
-        self.drag_model.addItem('CDM', DragModel.CDM)
+        drag_data = EditDragDataButton(self, 'Edit')
+        self.drag_data = FormRow3(drag_data, 'Drag data', parent=self)
 
-        self.zero_range = FormSpinBox(self, 1, 500, 1, 'mm', 'Zero range')
-        self.zero_height = FormSpinBox(self, 1, 100, 0.5, 'mm', 'Zero height')
-        self.zero_offset = FormSpinBox(self, 1, 500, 1, 'mm', 'Zero offset')
+        # self.drag_model.addItem('G1', DragModel.G1)
+        # self.drag_model.addItem('G7', DragModel.G7)
+        # self.drag_model.addItem('CDM', DragModel.CDM)
 
-        self.is_zero_atmo = FormCheckBox(self, prefix='Zero atmosphere')
+        zero_range = SpinBox(self, 1, 500, 1)
+        zero_height = SpinBox(self, 1, 100, 0.5)
+        zero_offset = SpinBox(self, 1, 500, 1)
+        is_zero_atmo = QtWidgets.QCheckBox(self)
+        altitude = SpinBox(self, 0, 359, 1)
+        pressure = SpinBox(self, 0, 1100, 1)
+        temperature = SpinBox(self, -50, 50, 1)
+        humidity = SpinBox(self, 0, 100, 1)
+        self.zero_range = FormRow3(zero_range, 'Zero range', 'mm')
+        self.zero_height = FormRow3(zero_height, 'Zero height', 'mm')
+        self.zero_offset = FormRow3(zero_offset, 'Zero offset', 'mm')
+        self.is_zero_atmo = FormRow3(is_zero_atmo, 'Zero atmosphere')
+        self.altitude = FormRow3(altitude, 'Altitude', 'degree')
+        self.pressure = FormRow3(pressure, 'Pressure', 'kpa')
+        self.temperature = FormRow3(temperature, 'Temperature', 'C')
+        self.humidity = FormRow3(humidity, 'Humidity', '%')
 
-        self.altitude = FormSpinBox(self, 0, 359, 1, 'degree', 'Altitude')
-        self.pressure = FormSpinBox(self, 0, 1100, 1, 'kpa', 'Pressure')
-        self.temperature = FormSpinBox(self, -50, 50, 1, 'C', 'Temperature')
-        self.humidity = FormSpinBox(self, 0, 100, 1, '%', 'Humidity')
 
-        # for ch in self.ammo_box.findChildren(DSpinBoxHCenter):
-        #     ch.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Preferred)
-        # for ch in self.ammo_box.findChildren(ComboBoxHCenter):
-        #     ch.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Preferred)
+        # self.zero_range = FormSpinBox(self, 1, 500, 1, 'mm', 'Zero range')
+        # self.zero_height = FormSpinBox(self, 1, 100, 0.5, 'mm', 'Zero height')
+        # self.zero_offset = FormSpinBox(self, 1, 500, 1, 'mm', 'Zero offset')
+
+        # self.is_zero_atmo = FormCheckBox(self, prefix='Zero atmosphere')
+
+        # self.altitude = FormSpinBox(self, 0, 359, 1, 'degree', 'Altitude')
+        # self.pressure = FormSpinBox(self, 0, 1100, 1, 'kpa', 'Pressure')
+        # self.temperature = FormSpinBox(self, -50, 50, 1, 'C', 'Temperature')
+        # self.humidity = FormSpinBox(self, 0, 100, 1, '%', 'Humidity')
 
         self.name_boxLayout.addRow(self.name_label, self.name)
 
@@ -432,18 +468,28 @@ class EditShotWidget(QtWidgets.QWidget):
         # self.name = QtWidgets.QLineEdit()
         # self.name.setPlaceholderText('Name')
 
-        self.distance = FormSpinBox(self, 1, 5000, 1, 'm', 'Distance')
-        self.look_angle = FormSpinBox(self, 0, 359, 1, 'degree', 'Look Angle')
+        distance = SpinBox(self, 1, 5000, 1)
+        look_angle = SpinBox(self, 0, 359, 1)
+        altitude = SpinBox(self, 0, 359, 1)
+        pressure = SpinBox(self, 0, 1100, 1)
+        temperature = SpinBox(self, -50, 50, 1)
+        humidity = SpinBox(self, 0, 100, 1)
+        wind_speed = SpinBox(self, 0, 100, 1)
+        wind_angle = SpinBox(self, 0, 359, 1)
+
+        self.distance = FormRow3(distance,  'Distance', 'm')
+        self.look_angle = FormRow3(look_angle, 'Look Angle', 'degree')
+        self.altitude = FormRow3(altitude, 'Look Angle', 'Altitude')
+        self.pressure = FormRow3(pressure, 'Look Angle', 'Pressure')
+        self.temperature = FormRow3(temperature, 'Temperature', 'C')
+        self.humidity = FormRow3(humidity, 'Humidity', '%')
+        self.wind_speed = FormRow3(wind_speed, 'Wind speed', 'mps')
+        self.wind_angle = FormRow3(wind_angle, 'Wind angle', 'degree')
 
         self.target_boxLayout.addWidget(self.distance)
         self.target_boxLayout.addWidget(self.look_angle)
 
-        self.altitude = FormSpinBox(self, 0, 359, 1, 'degree', 'Altitude')
-        self.pressure = FormSpinBox(self, 0, 1100, 1, 'kpa', 'Pressure')
-        self.temperature = FormSpinBox(self, -50, 50, 1, 'C', 'Temperature')
-        self.humidity = FormSpinBox(self, 0, 100, 1, '%', 'Humidity')
-        self.wind_speed = FormSpinBox(self, 0, 100, 1, 'mps', 'Wind speed')
-        self.wind_angle = FormSpinBox(self, 0, 359, 1, 'degree', 'Wind angle')
+
 
         self.atmo_boxLayout.addWidget(self.altitude)
         self.atmo_boxLayout.addWidget(self.pressure)

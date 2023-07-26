@@ -3,7 +3,7 @@ from functools import reduce
 from PySide6 import QtWidgets, QtCore
 
 from datatypes.dbworker import DragModel, AmmoData
-from gui.widgets import SpinBox, FormButton
+from gui.widgets import SpinBox
 
 
 class MultiBCWidget(QtWidgets.QWidget):
@@ -144,7 +144,7 @@ class CDMWidget(QtWidgets.QWidget):
         return ret_list
 
 
-class EditDragDataButton(FormButton):
+class EditDragDataButton(QtWidgets.QPushButton):
 
     def __init__(self, *args, **kwargs):
         super(EditDragDataButton, self).__init__(*args, **kwargs)

@@ -3,7 +3,7 @@ import json
 from PySide6 import QtWidgets, QtCore
 from PySide6.QtCore import QSettings
 
-from gui.widgets import FormComboBox, FormCheckBox
+from gui.widgets import FormRow2
 from units import Distance, Pressure, Weight, Temperature, Velocity, Angular
 
 SIGHT_HEIGHT = (
@@ -97,6 +97,7 @@ class SettingsWidget(QtWidgets.QWidget):
         self.set = QSettings(QSettings.IniFormat, QSettings.UserScope, 'settings.ini')
         self.init_ui(self)
         self.connectUi()
+        self.get_settings()
 
     def init_ui(self, settingsWidget):
 
@@ -114,7 +115,7 @@ class SettingsWidget(QtWidgets.QWidget):
         self.infoBox.setTitle('Info')
 
         self.viewLayout = QtWidgets.QFormLayout(self.viewBox)
-        self.unitLayout = QtWidgets.QGridLayout(self.unitsBox)
+        self.unitLayout = QtWidgets.QVBoxLayout(self.unitsBox)
         self.calcLayout = QtWidgets.QVBoxLayout(self.calcBox)
 
         self.theme_label = QtWidgets.QLabel('Theme')
@@ -133,29 +134,42 @@ class SettingsWidget(QtWidgets.QWidget):
         self.viewLayout.addRow(self.theme_label, self.theme)
         self.viewLayout.addRow(self.scale_label, self.scale)
 
-        self.shUnits = FormComboBox(self, prefix='Sight height')
+        shUnits = QtWidgets.QComboBox(self)
+        twistUnits = QtWidgets.QComboBox(self)
+        vUnits = QtWidgets.QComboBox(self)
+        distUnits = QtWidgets.QComboBox(self)
+        tempUnits = QtWidgets.QComboBox(self)
+        wUnits = QtWidgets.QComboBox(self)
+        lnUnits = QtWidgets.QComboBox(self)
+        dUnits = QtWidgets.QComboBox(self)
+        pUnits = QtWidgets.QComboBox(self)
+        dropUnits = QtWidgets.QComboBox(self)
+        angleUnits = QtWidgets.QComboBox(self)
+        pathUnits = QtWidgets.QComboBox(self)
+
+        self.shUnits = FormRow2(QtWidgets.QLabel('Sight height'), shUnits)
         self.shUnits.setObjectName('shUnits')
-        self.twistUnits = FormComboBox(self, prefix='Twist')
+        self.twistUnits = FormRow2(QtWidgets.QLabel('Twist'), twistUnits)
         self.twistUnits.setObjectName('twistUnits')
-        self.vUnits = FormComboBox(self, prefix='Velocity')
+        self.vUnits = FormRow2(QtWidgets.QLabel('Velocity'), vUnits)
         self.vUnits.setObjectName('vUnits')
-        self.distUnits = FormComboBox(self, prefix='Distance')
+        self.distUnits = FormRow2(QtWidgets.QLabel('Distance'), distUnits)
         self.distUnits.setObjectName('distUnits')
-        self.tempUnits = FormComboBox(self, prefix='Temperature')
+        self.tempUnits = FormRow2(QtWidgets.QLabel('Temperature'), tempUnits)
         self.tempUnits.setObjectName('tempUnits')
-        self.wUnits = FormComboBox(self, prefix='Weight')
+        self.wUnits = FormRow2(QtWidgets.QLabel('Weight'), wUnits)
         self.wUnits.setObjectName('wUnits')
-        self.lnUnits = FormComboBox(self, prefix='Length')
+        self.lnUnits = FormRow2(QtWidgets.QLabel('Length'), lnUnits)
         self.lnUnits.setObjectName('lnUnits')
-        self.dUnits = FormComboBox(self, prefix='Diameter')
+        self.dUnits = FormRow2(QtWidgets.QLabel('Diameter'), dUnits)
         self.dUnits.setObjectName('dUnits')
-        self.pUnits = FormComboBox(self, prefix='Pressure')
+        self.pUnits = FormRow2(QtWidgets.QLabel('Pressure'), pUnits)
         self.pUnits.setObjectName('pUnits')
-        self.dropUnits = FormComboBox(self, prefix='Drop')
+        self.dropUnits = FormRow2(QtWidgets.QLabel('Drop'), dropUnits)
         self.dropUnits.setObjectName('dropUnits')
-        self.angleUnits = FormComboBox(self, prefix='Angular')
+        self.angleUnits = FormRow2(QtWidgets.QLabel('Angular'), angleUnits)
         self.angleUnits.setObjectName('angleUnits')
-        self.pathUnits = FormComboBox(self, prefix='Path')
+        self.pathUnits = FormRow2(QtWidgets.QLabel('Path'), pathUnits)
         self.pathUnits.setObjectName('pathUnits')
         # self.eUnits = FormComboBox(self, prefix='Energy')
 
@@ -186,7 +200,8 @@ class SettingsWidget(QtWidgets.QWidget):
         self.unitLayout.addWidget(self.pathUnits)
         # self.unitLayout.addWidget(self.eUnits)
 
-        self.is_calc_drag = FormCheckBox(self, prefix='Calculate drag')
+        is_calc_drag = QtWidgets.QCheckBox(self)
+        self.is_calc_drag = FormRow2(QtWidgets.QLabel('QtWidgets.QLabel'), is_calc_drag)
         self.calcLayout.addWidget(self.is_calc_drag)
 
         self.boxLayout.addWidget(self.viewBox)
@@ -219,9 +234,9 @@ class SettingsWidget(QtWidgets.QWidget):
     def update_settings(self):
         settings = {}
 
-        for obj in self.findChildren(FormComboBox) + self.findChildren(QtWidgets.QComboBox):
+        for obj in self.findChildren(QtWidgets.QComboBox):
             settings[obj.objectName()] = obj.currentData()
-        for obj in self.findChildren(FormCheckBox) + self.findChildren(QtWidgets.QCheckBox):
+        for obj in self.findChildren(QtWidgets.QCheckBox):
             settings[obj.objectName()] = obj.isChecked()
 
         try:
@@ -241,9 +256,9 @@ class SettingsWidget(QtWidgets.QWidget):
                 settings = json.load(fp)
                 for k, v in settings.items():
                     ch = self.findChild(QtWidgets.QWidget, k)
-                    if isinstance(ch, (FormComboBox, QtWidgets.QComboBox)):
+                    if isinstance(ch, (QtWidgets.QComboBox)):
                         ch.setCurrentIndex(ch.findData(v))
-                    elif isinstance(ch, (FormCheckBox, QtWidgets.QCheckBox)):
+                    elif isinstance(ch, (QtWidgets.QCheckBox)):
                         ch.setChecked(v)
 
         except Exception as exc:

@@ -1,12 +1,61 @@
+from abc import ABC
+from enum import Enum
 from math import pi, atan, tan
 
 
-class Distance:
+class Unit(Enum):
+    Inch = 'in'
+    Foot = 'ft'
+    Yard = 'yd'
+    Mile = 'mi'
+    NauticalMile = 'nm'
+    Millimeter = 'mm'
+    Centimeter = 'cm'
+    Meter = 'm'
+    Kilometer = 'lm'
+    Line = 'ln'
+
+
+class AbstractUnit(ABC):
 
     def __init__(self, value: float, units: int):
-        self.__name__ = 'Distance.'
         self._value = self.to_default(value, units)
-        self._default_units = units
+        self._defined_units = units
+
+    def __str__(self):
+        default = self._defined_units
+        v = self.from_default(self._value, default)
+        name = '?'
+        accuracy = 6
+        return f'{round(v, accuracy)} {name}'
+
+    def __repr__(self):
+        return f'<{self.__class__.__name__}>'
+
+    def to_default(self, value: float, units: int):
+        raise KeyError(f'{self.__class__.__name__}: unit {units} is not supported')
+
+    def from_default(self, value: float, units: int):
+        raise KeyError(f'{self.__class__.__name__}: unit {units} is not supported')
+
+    def value(self, units: int):
+        return self.from_default(self._value, units)
+
+    def convert(self, units: int):
+        value = self.get_in(units)
+        return Distance(value, units)
+
+    def get_in(self, units: int):
+        return self.from_default(self._value, units)
+
+    def units(self):
+        return self._defined_units
+
+    def default_value(self):
+        return self._value
+
+
+class Distance(AbstractUnit):
 
     def to_default(self, value: float, units: int):
         if units == Distance.Inch:
@@ -29,8 +78,7 @@ class Distance:
             return value / 25.4 * 1000
         elif units == Distance.Kilometer:
             return value / 25.4 * 1000000
-        else:
-            raise KeyError(f'{self.__name__}: unit {units} is not supported')
+        super(Distance, self).to_default(value, units)
 
     def from_default(self, value: float, units: int):
         if units == Distance.Inch:
@@ -53,22 +101,11 @@ class Distance:
             return value * 25.4 / 1000
         elif units == Distance.Kilometer:
             return value * 25.4 / 1000000
-        else:
-            raise KeyError(f'KeyError: {self.__name__}: unit {units} is not supported')
-
-    def value(self, units: int):
-        return self.from_default(self._value, units)
-
-    def convert(self, units: int):
-        value = self.get_in(units)
-        return Distance(value, units)
-
-    def get_in(self, units: int):
-        return self.from_default(self._value, units)
+        super(Distance, self).from_default(value, units)
 
     def __str__(self):
 
-        default = self._default_units
+        default = self._defined_units
         v = self.from_default(self._value, default)
         if default == Distance.Inch:
             name = 'in'
@@ -106,42 +143,32 @@ class Distance:
 
         return f'{round(v, accuracy)} {name}'
 
-    def units(self):
-        return self._default_units
+    Inch = Unit.Inch
+    Foot = Unit.Foot
+    Yard = Unit.Yard
+    Mile = Unit.Mile
+    NauticalMile = Unit.NauticalMile
+    Millimeter = Unit.Millimeter
+    Centimeter = Unit.Centimeter
+    Meter = Unit.Meter
+    Kilometer = Unit.Kilometer
+    Line = Unit.Line
 
-    Inch = 10
-    Foot = 11
-    Yard = 12
-    Mile = 13
-    NauticalMile = 14
-    Millimeter = 15
-    Centimeter = 16
-    Meter = 17
-    Kilometer = 18
-    Line = 19
 
-    
-    
-class Pressure:
-
-    def __init__(self, value: float, units: int):
-        self.__name__ = 'Pressure'
-        self._value = self.to_default(value, units)
-        self._default_units = units
+class Pressure(AbstractUnit):
 
     def to_default(self, value: float, units: int):
-            if units == Pressure.MmHg:
-                return value
-            elif units == Pressure.InHg:
-                return value * 25.4
-            elif units == Pressure.Bar:
-                return value * 750.061683
-            elif units == Pressure.HP:
-                return value * 750.061683 / 1000
-            elif units == Pressure.PSI:
-                return value * 51.714924102396
-            else:
-                raise KeyError(f'{self.__name__}: unit {units} is not supported')
+        if units == Pressure.MmHg:
+            return value
+        elif units == Pressure.InHg:
+            return value * 25.4
+        elif units == Pressure.Bar:
+            return value * 750.061683
+        elif units == Pressure.HP:
+            return value * 750.061683 / 1000
+        elif units == Pressure.PSI:
+            return value * 51.714924102396
+        super(Pressure, self).to_default(value, units)
 
     def from_default(self, value: float, units: int):
         if units == Pressure.MmHg:
@@ -154,21 +181,10 @@ class Pressure:
             return value / 750.061683 * 1000
         elif units == Pressure.PSI:
             return value / 51.714924102396
-        else:
-            raise KeyError(f'KeyError: {self.__name__}: unit {units} is not supported')
-
-    def value(self, units: int):
-        return self.from_default(self._value, units)
-
-    def convert(self, units: int):
-        value = self.get_in(units)
-        return Pressure(value, units)
-
-    def get_in(self, units: int):
-        return self.from_default(self._value, units)
+        super(Pressure, self).from_default()
 
     def __str__(self):
-        default = self._default_units
+        default = self._defined_units
         v = self.from_default(self._value, default)
         if default == Pressure.MmHg:
             name = 'mmHg'
@@ -191,22 +207,14 @@ class Pressure:
 
         return f'{round(v, accuracy)} {name}'
 
-    def units(self):
-        return self._default_units
-
     MmHg = 40
     InHg = 41
     Bar = 42
     HP = 43
     PSI = 44
-    
-    
-class Weight:
 
-    def __init__(self, value: float, units: int):
-        self.__name__ = 'Weight'
-        self._value = self.to_default(value, units)
-        self._default_units = units
+
+class Weight(AbstractUnit):
 
     def to_default(self, value: float, units: int):
         if units == Weight.Grain:
@@ -221,8 +229,7 @@ class Weight:
             return value / 0.000142857143
         elif units == Weight.Ounce:
             return value * 437.5
-        else:
-            raise KeyError(f'{self.__name__}: unit {units} is not supported')
+        super(Weight, self).to_default(value, units)
 
     def from_default(self, value: float, units: int):
         if units == Weight.Grain:
@@ -237,22 +244,11 @@ class Weight:
             return value * 0.000142857143
         elif units == Weight.Ounce:
             return value / 437.5
-        else:
-            raise KeyError(f'KeyError: {self.__name__}: unit {units} is not supported')
-
-    def value(self, units: int):
-        return self.from_default(self._value, units)
-
-    def convert(self, units: int):
-        value = self.get_in(units)
-        return Weight(value, units)
-
-    def get_in(self, units: int):
-        return self.from_default(self._value, units)
+        super(Weight, self).from_default(value, units)
 
     def __str__(self):
 
-        default = self._default_units
+        default = self._defined_units
         v = self.from_default(self._value, default)
         if default == Weight.Grain:
             name = 'gr'
@@ -278,9 +274,6 @@ class Weight:
 
         return f'{round(v, accuracy)} {name}'
 
-    def units(self):
-        return self._default_units
-
     Grain = 70
     Ounce = 71
     Gram = 72
@@ -289,24 +282,18 @@ class Weight:
     Newton = 75
 
 
-class Temperature:
-
-    def __init__(self, value: float, units: int):
-        self.__name__ = 'Temperature'
-        self._value = self.to_default(value, units)
-        self._default_units = units
+class Temperature(AbstractUnit):
 
     def to_default(self, value: float, units: int):
-            if units == Temperature.Fahrenheit:
-                return value
-            elif units == Temperature.Rankin:
-                return value - 459.67
-            elif units == Temperature.Celsius:
-                return value * 9 / 5 + 32
-            elif units == Temperature.Kelvin:
-                return (value - 273.15) * 9 / 5 + 32
-            else:
-                raise KeyError(f'{self.__name__}: unit {units} is not supported')
+        if units == Temperature.Fahrenheit:
+            return value
+        elif units == Temperature.Rankin:
+            return value - 459.67
+        elif units == Temperature.Celsius:
+            return value * 9 / 5 + 32
+        elif units == Temperature.Kelvin:
+            return (value - 273.15) * 9 / 5 + 32
+        super(Temperature, self).to_default(value, units)
 
     def from_default(self, value: float, units: int):
         if units == Temperature.Fahrenheit:
@@ -317,21 +304,10 @@ class Temperature:
             return (value - 32) * 5 / 9
         elif units == Temperature.Kelvin:
             return (value - 32) * 5 / 9 + 273.15
-        else:
-            raise KeyError(f'KeyError: {self.__name__}: unit {units} is not supported')
-
-    def value(self, units: int):
-        return self.from_default(self._value, units)
-
-    def convert(self, units: int):
-        value = self.get_in(units)
-        return Temperature(value, units)
-
-    def get_in(self, units: int):
-        return self.from_default(self._value, units)
+        super(Temperature, self).from_default(value, units)
 
     def __str__(self):
-        default = self._default_units
+        default = self._defined_units
         v = self.from_default(self._value, default)
         if default == Temperature.Fahrenheit:
             name = '°F'
@@ -350,21 +326,13 @@ class Temperature:
             accuracy = 6
         return f'{round(v, accuracy)} {name}'
 
-    def units(self):
-        return self._default_units
-
     Fahrenheit: int = 50
     Celsius: int = 51
     Kelvin: int = 52
     Rankin: int = 53
 
 
-class Angular:
-
-    def __init__(self, value: float, units: int):
-        self.__name__ = 'Angular.'
-        self._value = self.to_default(value, units)
-        self._default_units = units
+class Angular(AbstractUnit):
 
     def to_default(self, value: float, units: int):
         if units == Angular.Radian:
@@ -383,8 +351,7 @@ class Angular:
             return atan(value / 3600)
         elif units == Angular.CmPer100M:
             return atan(value / 10000)
-        else:
-            raise KeyError(f'{self.__name__}: unit {units} is not supported')
+        super(Angular, self).to_default(value, units)
 
     def from_default(self, value: float, units: int):
         if units == Angular.Radian:
@@ -403,22 +370,11 @@ class Angular:
             return tan(value) * 3600
         elif units == Angular.CmPer100M:
             return tan(value) * 10000
-        else:
-            raise KeyError(f'KeyError: {self.__name__}: unit {units} is not supported')
-
-    def value(self, units: int):
-        return self.from_default(self._value, units)
-
-    def convert(self, units: int):
-        value = self.get_in(units)
-        return Angular(value, units)
-
-    def get_in(self, units: int):
-        return self.from_default(self._value, units)
+        super(Angular, self).from_default(value, units)
 
     def __str__(self):
 
-        default = self._default_units
+        default = self._defined_units
         v = self.from_default(self._value, default)
         if default == Angular.Radian:
             name = 'rad'
@@ -450,9 +406,6 @@ class Angular:
 
         return f'{round(v, accuracy)} {name}'
 
-    def units(self):
-        return self._default_units
-
     Radian = 0
     Degree = 1
     MOA = 2
@@ -463,12 +416,7 @@ class Angular:
     CmPer100M = 7
 
 
-class Velocity:
-
-    def __init__(self, value: float, units: int):
-        self.__name__ = 'Energy'
-        self._value = self.to_default(value, units)
-        self._default_units = units
+class Velocity(AbstractUnit):
 
     def to_default(self, value: float, units: int):
         if units == Velocity.MPS:
@@ -481,8 +429,7 @@ class Velocity:
             return value / 2.23693629
         elif units == Velocity.KT:
             return value / 1.94384449
-        else:
-            raise KeyError(f'{self.__name__}: unit {units} is not supported')
+        super(Velocity, self).to_default(value, units)
 
     def from_default(self, value: float, units: int):
         if units == Velocity.MPS:
@@ -495,24 +442,10 @@ class Velocity:
             return value * 2.23693629
         elif units == Velocity.KT:
             return value * 1.94384449
-        else:
-            raise KeyError(f'KeyError: {self.__name__}: unit {units} is not supported')
-
-    def value(self, units: int):
-        return self.from_default(self._value, units)
-
-    def convert(self, units: int):
-        value = self.get_in(units)
-        return Velocity(value, units)
-
-    def get_in(self, units: int):
-        return self.from_default(self._value, units)
+        super(Velocity, self).from_default(value, units)
 
     def __str__(self):
-        return self.string()
-
-    def string(self):
-        default = self._default_units
+        default = self._defined_units
         v = self.from_default(self._value, default)
         if default == Velocity.MPS:
             name = "m/s"
@@ -533,9 +466,6 @@ class Velocity:
             name = '?'
             accuracy = 6
         return f'{round(v, accuracy)} {name}'
-
-    def units(self):
-        return self._default_units
 
     MPS = 60
     KMH = 61
