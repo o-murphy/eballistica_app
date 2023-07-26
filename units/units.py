@@ -18,34 +18,32 @@ class Unit(Enum):
 
 class AbstractUnit(ABC):
 
-    def __init__(self, value: float, units: int):
+    def __init__(self, value: float, units: Unit):
         self._value = self.to_default(value, units)
         self._defined_units = units
 
     def __str__(self):
         default = self._defined_units
         v = self.from_default(self._value, default)
-        name = '?'
-        accuracy = 6
-        return f'{round(v, accuracy)} {name}'
+        return f'{round(v, self.accuracy(default))} {default.value()}'
 
     def __repr__(self):
         return f'<{self.__class__.__name__}>'
 
-    def to_default(self, value: float, units: int):
+    def to_default(self, value: float, units: Unit):
         raise KeyError(f'{self.__class__.__name__}: unit {units} is not supported')
 
-    def from_default(self, value: float, units: int):
+    def from_default(self, value: float, units: Unit):
         raise KeyError(f'{self.__class__.__name__}: unit {units} is not supported')
 
-    def value(self, units: int):
+    def value(self, units: Unit):
         return self.from_default(self._value, units)
 
-    def convert(self, units: int):
+    def convert(self, units: Unit):
         value = self.get_in(units)
         return Distance(value, units)
 
-    def get_in(self, units: int):
+    def get_in(self, units: Unit):
         return self.from_default(self._value, units)
 
     def units(self):
@@ -54,10 +52,13 @@ class AbstractUnit(ABC):
     def default_value(self):
         return self._value
 
+    def accuracy(self, units):
+        return 6
+
 
 class Distance(AbstractUnit):
 
-    def to_default(self, value: float, units: int):
+    def to_default(self, value: float, units: Unit):
         if units == Distance.Inch:
             return value
         elif units == Distance.Foot:
@@ -80,7 +81,7 @@ class Distance(AbstractUnit):
             return value / 25.4 * 1000000
         super(Distance, self).to_default(value, units)
 
-    def from_default(self, value: float, units: int):
+    def from_default(self, value: float, units: Unit):
         if units == Distance.Inch:
             return value
         elif units == Distance.Foot:
@@ -103,45 +104,30 @@ class Distance(AbstractUnit):
             return value * 25.4 / 1000000
         super(Distance, self).from_default(value, units)
 
-    def __str__(self):
-
-        default = self._defined_units
-        v = self.from_default(self._value, default)
-        if default == Distance.Inch:
-            name = 'in'
+    def accuracy(self, units):
+        if units == Distance.Inch:
             accuracy = 1
-        elif default == Distance.Foot:
-            name = 'ft'
+        elif units == Distance.Foot:
             accuracy = 2
-        elif default == Distance.Yard:
-            name = 'yd'
+        elif units == Distance.Yard:
             accuracy = 3
-        elif default == Distance.Mile:
-            name = 'mi'
+        elif units == Distance.Mile:
             accuracy = 3
-        elif default == Distance.NauticalMile:
-            name = 'nm'
+        elif units == Distance.NauticalMile:
             accuracy = 3
-        elif default == Distance.Line:
-            name = 'ln'
+        elif units == Distance.Line:
             accuracy = 1
-        elif default == Distance.Millimeter:
-            name = 'mm'
+        elif units == Distance.Millimeter:
             accuracy = 0
-        elif default == Distance.Centimeter:
-            name = 'cm'
+        elif units == Distance.Centimeter:
             accuracy = 1
-        elif default == Distance.Meter:
-            name = 'm'
+        elif units == Distance.Meter:
             accuracy = 2
-        elif default == Distance.Kilometer:
-            name = 'km'
+        elif units == Distance.Kilometer:
             accuracy = 3
         else:
-            name = '?'
             accuracy = 6
-
-        return f'{round(v, accuracy)} {name}'
+        return accuracy
 
     Inch = Unit.Inch
     Foot = Unit.Foot

@@ -4,7 +4,7 @@ from PySide6 import QtWidgets, QtCore
 from PySide6.QtCore import QSettings
 
 from gui.widgets import FormRow2
-from units import Distance, Pressure, Weight, Temperature, Velocity, Angular
+from units import Distance, Pressure, Weight, Temperature, Velocity, Angular, Unit
 
 SIGHT_HEIGHT = (
     ('mm', Distance.Millimeter),
@@ -84,6 +84,19 @@ PATH = (
     ('cm/100m', Angular.CmPer100M),
     ('in/100yd', Angular.InchesPer100Yd)
 )
+
+
+class Convertor:
+    def __init__(self, measure=None, unit: int = 0, default_unit: int = 0):
+        self.measure = measure
+        self.unit = unit
+        self.default_unit = default_unit
+
+    def fromRaw(self, value):
+        return self.measure(value, self.default_unit).get_in(self.unit)
+
+    def toRaw(self, value):
+        return self.measure(value, self.unit).get_in(self.default_unit)
 
 
 class Settings(QtCore.QObject):
@@ -234,10 +247,20 @@ class SettingsWidget(QtWidgets.QWidget):
     def update_settings(self):
         settings = {}
 
-        for obj in self.findChildren(QtWidgets.QComboBox):
-            settings[obj.objectName()] = obj.currentData()
-        for obj in self.findChildren(QtWidgets.QCheckBox):
-            settings[obj.objectName()] = obj.isChecked()
+        # for obj in self.findChildren(QtWidgets.QWidget):
+        #     if obj.objectName():
+        #         if hasattr(obj, 'currentData'):
+        #             print(obj.objectName(), obj.currentData())
+        #             if isinstance(obj.currentData(), Unit):
+        #                 settings[obj.objectName()] = obj.currentData().value
+        #             else:
+        #                 settings[obj.objectName()] = obj.currentData()
+        #         elif hasattr(obj, 'value'):
+        #             print(obj.objectName(), obj.value())
+        #             settings[obj.objectName()] = obj.value()
+        #         elif hasattr(obj, 'isChecked'):
+        #             print(obj.objectName(), obj.isChecked())
+        #             settings[obj.objectName()] = obj.isChecked()
 
         try:
             with open('settings.json', 'w') as fp:
@@ -248,6 +271,21 @@ class SettingsWidget(QtWidgets.QWidget):
         # main = self.window()
         # if main:
         #     self.apply_theme()
+        self.update_measure_units()
+
+    def update_measure_units(self):
+        main = self.window()
+        if main:
+            ch = main.findChild(QtWidgets.QWidget, 'barrel_twist')
+            if ch:
+                ch.setConvertor(Convertor(Distance, self.twistUnits.currentData(), Distance.Inch))
+            ch = main.findChild(QtWidgets.QWidget, 'sight_height')
+            if ch:
+                ch.setConvertor(Convertor(Distance, self.shUnits.currentData(), Distance.Millimeter))
+            ch = main.findChild(QtWidgets.QWidget, 'barrel_offset')
+            if ch:
+                ch.setConvertor(Convertor(Distance, self.shUnits.currentData(), Distance.Millimeter))
+
 
     def get_settings(self):
 
@@ -263,6 +301,8 @@ class SettingsWidget(QtWidgets.QWidget):
 
         except Exception as exc:
             print(exc)
+
+        self.update_measure_units()
 
     def connectUi(self):
         # self.scale.valueChanged.connect(self.apply_theme)

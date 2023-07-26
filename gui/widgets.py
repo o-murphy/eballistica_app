@@ -30,50 +30,39 @@ class SpinBox(QDoubleSpinBox):
         return float(text)
 
 
-class MeasureSpinBox(QDoubleSpinBox):
-    def __init__(self, parent=None, vmin=0, vmax=100, step=1, decimals=2,
-                 measure=None, units: int = 0, default_units: int = 0,
+class ConverSpinBox(QDoubleSpinBox):
+    def __init__(self, parent=None, vmin=0, vmax=100, step=1, decimals=2, name: str = None,
+                 # measure=None, units: int = 0, default_units: int = 0,
                  *args, **kwargs):
-        super(MeasureSpinBox, self).__init__(parent, *args, **kwargs)
+        super(ConverSpinBox, self).__init__(parent, *args, **kwargs)
 
-        self._measure = measure
-        self._units = units
-        self._default_units = default_units
-
-        self._value = self._measure(0, self._units)
-
+        if name:
+            self.setObjectName(name)
         self.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.setMinimum(vmin)
         self.setMaximum(vmax)
         self.setSingleStep(step)
         self.setDecimals(decimals)
 
-        self.valueChanged.connect(self.on_change)
+        self._convertor: 'Convertor' = None
 
-    def validate(self, text: str, pos: int) -> object:
-        text = text.replace(".", ",")
-        return QDoubleSpinBox.validate(self, text, pos)
+    def convertor(self) -> 'Convertor':
+        return self._convertor
 
-    def valueFromText(self, text: str):
-        text = text.replace(",", ".")
-        value = float(text)
-        self.setValue(value)
-        return value
+    def setConvertor(self, value: 'Convertor'):
+        self._convertor = value
 
-    def setValue(self, val):
-        self._value = self._measure(val, self._units)
-        print('set', self._value)
+    def setRawValue(self, value):
+        if self._convertor is not None:
+            self.setValue(self._convertor.fromRaw(value))
+        else:
+            self.setValue(value)
 
-    def value(self):
-        value = self._value.get_in(self._units)
-        return value
-    
-    def textFromValue(self, val: float) -> str:
-        return str(self.value())
-
-    def on_change(self, value):
-        print(locals())
-        self.setValue(value)
+    def rawValue(self):
+        if self._convertor is not None:
+            return self._convertor.toRaw(self.value())
+        else:
+            return self.value()
 
 
 class ComboBox(QComboBox):

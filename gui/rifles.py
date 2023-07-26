@@ -4,7 +4,7 @@ from PySide6 import QtWidgets, QtCore, QtGui
 from datatypes.dbworker import Worker, TwistDir, RifleData
 from units import Distance
 from .app_logo import AppLogo, AppLabel
-from .widgets import FormRow3, SpinBox, ComboBox, MeasureSpinBox
+from .widgets import FormRow3, SpinBox, ComboBox, ConverSpinBox
 
 
 class RifleItemWidget(QtWidgets.QWidget):
@@ -113,53 +113,6 @@ class RiflesLi(QtWidgets.QListWidget):
             for rifle in rifles:
                 self.create_item(rifle)
 
-    # def store_rifle(self, uid, rifle):
-    #     if uid is None:
-    #         widget = RifleItemWidget()
-    #         widget.display_data(rifle)
-    #         item = QtWidgets.QListWidgetItem()
-    #         item.setSizeHint(widget.sizeHint())
-    #         item.setData(0, self.count())
-    #         self.addItem(item)
-    #         self.setItemWidget(item, widget)
-    #     else:
-    #         item = self.item(uid)
-    #         widget = self.itemWidget(item)
-    #         widget.display_data(rifle)
-
-
-# class RiflesHeader(QtWidgets.QWidget):
-#     def __init__(self, parent=None):
-#         super(RiflesHeader, self).__init__(parent)
-#         self.setupUi(self)
-#
-#     def setupUi(self, riflesHeader):
-#         riflesHeader.setObjectName("riflesHeader")
-#
-#         self.hBoxLayout = QtWidgets.QHBoxLayout(self)
-#         self.hBoxLayout.setObjectName("hBoxLayout")
-#
-#         self.logo = AppLogo()
-#         self.label = AppLabel()
-#         self.hBoxLayout.addWidget(self.logo)
-#         self.hBoxLayout.addWidget(self.label)
-#
-#         riflesHeader.setObjectName("riflesHeader")
-#         self.addButton = QtWidgets.QPushButton('+')
-#         # self.menuButton = QtWidgets.QPushButton('...')
-#
-#         self.hBoxLayout.addWidget(self.addButton)
-#         # self.hBoxLayout.addWidget(self.menuButton)
-#
-#         self.retranslateUi(riflesHeader)
-#         QtCore.QMetaObject.connectSlotsByName(riflesHeader)
-#
-#     def retranslateUi(self, riflesHeader: 'RiflesHeader'):
-#         _translate = QtCore.QCoreApplication.translate
-#         riflesHeader.setWindowTitle(_translate("riflesHeader", "Form"))
-#         riflesHeader.addButton.setText(_translate("riflesHeader", "+"))
-#         # riflesHeader.menuButton.setText(_translate("riflesHeader", "..."))
-
 
 class RiflesWidget(QtWidgets.QWidget):
     rifle_clicked_sig = QtCore.Signal(object)
@@ -250,16 +203,18 @@ class EditRifleWidget(QtWidgets.QWidget):
 
         # self.barrel_twist = FormSpinBox(self, 0.01, 20, 0.5, 'in', 'Barel Twist')
 
-        barrel_twist = MeasureSpinBox(self, 0.01, 20, 0.5, 2, Distance, Distance.Millimeter)
+        barrel_twist = ConverSpinBox(self, 0.01, 1000, 0.5, 2)
         twist_dir = ComboBox(self, (('Right', TwistDir.Right), ('Left', TwistDir.Left)))
-        sight_height = SpinBox(self, 1, 100, 0.5)
-        sight_offset = SpinBox(self, 1, 500, 1)
-
+        sight_height = ConverSpinBox(self, 0.01, 1000, 0.5)
+        sight_offset = ConverSpinBox(self, 0.01, 1000, 1)
 
         self.barrel_twist = FormRow3(barrel_twist, 'Barel Twist', 'in')
+        self.barrel_twist.setObjectName('barrel_twist')
         self.twist_dir = FormRow3(twist_dir, 'Twist direction')
         self.sight_height = FormRow3(sight_height, 'Sight height', 'mm')
+        self.sight_height.setObjectName('sight_height')
         self.sight_offset = FormRow3(sight_offset, 'Sight offset', 'mm')
+        self.sight_offset.setObjectName('sight_offset')
 
         # self.sight_height = FormSpinBox(self, 1, 100, 0.5, 'mm', 'Sight height')
         # self.sight_offset = FormSpinBox(self, 1, 500, 1, 'mm', 'Sight offset')
@@ -288,20 +243,21 @@ class EditRifleWidget(QtWidgets.QWidget):
     def display_data(self, rifle: 'RifleData'):
         if not rifle:
             rifle = RifleData('New Rifle')
-        print(rifle.barrel_twist)
         self.uid = rifle.id
         self.name.setText(rifle.name)
-        self.barrel_twist.setValue(rifle.barrel_twist)
+        self.barrel_twist.setRawValue(rifle.barrel_twist)
         index = self.twist_dir.findData(rifle.barrel_twist_dir)
         self.twist_dir.setCurrentIndex(index)
         self.sight_height.setValue(rifle.sight_height)
         self.sight_offset.setValue(rifle.sight_offset)
 
+        self.barrel_twist.suffix.setText(self.barrel_twist.convertor().unit.value)
+
     def save_rifle(self):
         Worker.rifle_add_or_update(
             id=self.uid,
             name=self.name.text() if self.name.text() else self.name.placeholderText(),
-            barrel_twist=self.barrel_twist.value(),
+            barrel_twist=self.barrel_twist.rawValue(),
             barrel_twist_dir=self.twist_dir.currentData(),
             sight_height=self.sight_height.value(),
             sight_offset=self.sight_offset.value(),
