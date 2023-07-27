@@ -1,4 +1,5 @@
 from PySide6 import QtWidgets, QtCore, QtGui
+from gui.settings import Convertor, SettingsWidget
 
 # from datatypes.datatypes import RifleData
 from datatypes.dbworker import Worker, TwistDir, RifleData
@@ -7,61 +8,96 @@ from .app_logo import AppLogo, AppLabel
 from .widgets import FormRow3, SpinBox, ComboBox, ConverSpinBox
 
 
-class RifleItemWidget(QtWidgets.QWidget):
+# class RifleItemWidget(QtWidgets.QWidget):
+#     def __init__(self, parent=None):
+#         super(RifleItemWidget, self).__init__(parent)
+#         self.setupUi(self)
+#         self.rifle_data = None
+#
+#     def setupUi(self, rifleItemWidget):
+#         rifleItemWidget.setObjectName("rifleItemWidget")
+#
+#         self.box = QtWidgets.QGroupBox('', self)
+#
+#         self.gridLayout = QtWidgets.QGridLayout(self)
+#         self.gridLayout.setObjectName("gridLayout")
+#         self.gridLayout.setContentsMargins(0, 0, 0, 0)
+#
+#         self.gridLayout.addWidget(self.box)
+#
+#         self.boxLayout = QtWidgets.QGridLayout(self.box)
+#
+#         self.boxLayout.setObjectName("boxLayout")
+#
+#         # self.name = QtWidgets.QLabel()
+#         self.barrel = QtWidgets.QLabel()
+#         self.sight = QtWidgets.QLabel()
+#
+#         # self.gridLayout.addWidget(self.name)
+#         self.boxLayout.addWidget(self.barrel)
+#         self.boxLayout.addWidget(self.sight)
+
+class RifleItemWidget(QtWidgets.QGroupBox):
     def __init__(self, parent=None):
         super(RifleItemWidget, self).__init__(parent)
-        self.setupUi(self)
+        self.setup_ui(self)
         self.rifle_data = None
 
-    def setupUi(self, rifleItemWidget):
+
+    def setup_ui(self, rifleItemWidget):
         rifleItemWidget.setObjectName("rifleItemWidget")
-
-        self.box = QtWidgets.QGroupBox('', self)
-
         self.gridLayout = QtWidgets.QGridLayout(self)
-        self.gridLayout.setObjectName("gridLayout")
-        self.gridLayout.setContentsMargins(0, 0, 0, 0)
-
-        self.gridLayout.addWidget(self.box)
-
-        self.boxLayout = QtWidgets.QGridLayout(self.box)
-        self.boxLayout.setObjectName("boxLayout")
-
-        # self.name = QtWidgets.QLabel()
         self.barrel = QtWidgets.QLabel()
         self.sight = QtWidgets.QLabel()
-
-        # self.gridLayout.addWidget(self.name)
-        self.boxLayout.addWidget(self.barrel)
-        self.boxLayout.addWidget(self.sight)
+        self.gridLayout.addWidget(self.barrel)
+        self.gridLayout.addWidget(self.sight)
 
     def translateUi(self, rifleItemWidget):
         ...
 
     def set_data(self, rifle):
+        settings = self.get_settings()
+
+        twist = Distance(rifle.barrel_twist, Distance.Inch).convert(settings.twistUnits.currentData())
+        sh = Distance(rifle.sight_height, Distance.Centimeter).convert(settings.shUnits.currentData())
+        ofs = Distance(rifle.sight_offset, Distance.Centimeter).convert(settings.shUnits.currentData())
+
         self.rifle_data = rifle
-        self.box.setTitle(self.rifle_data.name)
-        self.barrel.setText(f'Barrel: 1 in {rifle.barrel_twist}"')
-        self.sight.setText(f'Sight Ht/Ofs: {rifle.sight_height}/{rifle.sight_offset}"')
+        # self.box.setTitle(self.rifle_data.name)
+        self.setTitle(self.rifle_data.name)
+        self.barrel.setText(f'Barrel: 1 in {twist}')
+        self.sight.setText(f'Sight Ht/Ofs: {sh}/{ofs}')
+
+    def get_settings(self) -> SettingsWidget:
+        window = self.window()
+        print(window.objectName())
+        if window:
+            settings: SettingsWidget = window.settings
+            return settings
 
 
-class RiflesDelegate(QtWidgets.QStyledItemDelegate):
 
-    def sizeHint(self, option, index):
-        size = super().sizeHint(option, index)
-        widget = index.data(QtCore.Qt.UserRole)
-        if widget is not None:
-            widget.setGeometry(QtCore.QRect(0, 0, size.width(), size.height()))
-            size.setHeight(widget.sizeHint().height())
-        return size
+# class RiflesDelegate(QtWidgets.QStyledItemDelegate):
+#
+#     def sizeHint(self, option, index):
+#         size = super().sizeHint(option, index)
+#         widget = index.data(QtCore.Qt.UserRole)
+#         if widget is not None:
+#             widget.setGeometry(QtCore.QRect(0, 0, size.width(), size.height()))
+#             size.setHeight(widget.sizeHint().height())
+#         return size
 
 
 class RiflesLi(QtWidgets.QListWidget):
     edit_context_action = QtCore.Signal(object)
 
+    rifle_clicked_sig = QtCore.Signal(object)
+    rifle_edit_sig = QtCore.Signal(object)
+
     def __init__(self, parent=None):
         super(RiflesLi, self).__init__(parent)
         self.setupUi(self)
+        self.connectUi(self)
         self.refresh()
 
     def contextMenuEvent(self, event):
@@ -98,7 +134,7 @@ class RiflesLi(QtWidgets.QListWidget):
         self.setSizePolicy(sizePolicy)
 
     def create_item(self, rifle):
-        widget = RifleItemWidget()
+        widget = RifleItemWidget(self)
         widget.set_data(rifle)
         item = QtWidgets.QListWidgetItem()
         item.setSizeHint(widget.sizeHint())
@@ -112,36 +148,36 @@ class RiflesLi(QtWidgets.QListWidget):
         if rifles:
             for rifle in rifles:
                 self.create_item(rifle)
-
-
-class RiflesWidget(QtWidgets.QWidget):
-    rifle_clicked_sig = QtCore.Signal(object)
-    rifle_edit_sig = QtCore.Signal(object)
-
-    def __init__(self, parent=None):
-        super(RiflesWidget, self).__init__(parent)
-        self.setupUi(self)
-        self.connectUi(self)
-
-    def setupUi(self, riflesWidget):
-        riflesWidget.setObjectName("riflesWidget")
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(riflesWidget.sizePolicy().hasHeightForWidth())
-        riflesWidget.setSizePolicy(sizePolicy)
-        riflesWidget.setMinimumSize(QtCore.QSize(0, 0))
-        self.vBoxLayout = QtWidgets.QVBoxLayout(riflesWidget)
-        self.vBoxLayout.setObjectName("vBoxLayout")
-        self.vBoxLayout.setContentsMargins(0, 0, 0, 0)
-
-        # self.header = RiflesHeader(self)
-        self.rifles_list = RiflesLi(self)
-        # self.vBoxLayout.addWidget(self.header)
-        self.vBoxLayout.addWidget(self.rifles_list)
-
-        self.retranslateUi(riflesWidget)
-        QtCore.QMetaObject.connectSlotsByName(riflesWidget)
+#
+#
+# class RiflesWidget(QtWidgets.QWidget):
+#     rifle_clicked_sig = QtCore.Signal(object)
+#     rifle_edit_sig = QtCore.Signal(object)
+#
+#     def __init__(self, parent=None):
+#         super(RiflesWidget, self).__init__(parent)
+#         self.setupUi(self)
+#         self.connectUi(self)
+#
+#     def setupUi(self, riflesWidget):
+#         riflesWidget.setObjectName("riflesWidget")
+#         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+#         sizePolicy.setHorizontalStretch(0)
+#         sizePolicy.setVerticalStretch(0)
+#         sizePolicy.setHeightForWidth(riflesWidget.sizePolicy().hasHeightForWidth())
+#         riflesWidget.setSizePolicy(sizePolicy)
+#         riflesWidget.setMinimumSize(QtCore.QSize(0, 0))
+#         self.vBoxLayout = QtWidgets.QVBoxLayout(riflesWidget)
+#         self.vBoxLayout.setObjectName("vBoxLayout")
+#         self.vBoxLayout.setContentsMargins(0, 0, 0, 0)
+#
+#         # self.header = RiflesHeader(self)
+#         self.rifles_list = RiflesLi(self)
+#         # self.vBoxLayout.addWidget(self.header)
+#         self.vBoxLayout.addWidget(self.rifles_list)
+#
+#         self.retranslateUi(riflesWidget)
+#         QtCore.QMetaObject.connectSlotsByName(riflesWidget)
 
     def retranslateUi(self, riflesWidget: 'RiflesWidget'):
         _translate = QtCore.QCoreApplication.translate
@@ -149,15 +185,21 @@ class RiflesWidget(QtWidgets.QWidget):
 
     def connectUi(self, riflesWidget: 'RiflesWidget'):
         # self.rifles_list.itemDoubleClicked.connect(self.rifle_edit_clicked)
-        self.rifles_list.itemClicked.connect(self.rifle_clicked)
-        self.rifles_list.edit_context_action.connect(self.rifle_edit_clicked)
+        # self.rifles_list.itemClicked.connect(self.rifle_clicked)
+        self.itemClicked.connect(self.rifle_clicked)
+        # self.rifles_list.edit_context_action.connect(self.rifle_edit_clicked)
+        self.edit_context_action.connect(self.rifle_edit_clicked)
 
     def rifle_clicked(self, item: QtWidgets.QListWidgetItem):
-        widget: RifleItemWidget = self.rifles_list.itemWidget(item)
+        # widget: RifleItemWidget = self.rifles_list.itemWidget(item)
+        print('clicked')
+        widget: RifleItemWidget = self.itemWidget(item)
         self.rifle_clicked_sig.emit(widget.rifle_data)
 
     def rifle_edit_clicked(self, item: QtWidgets.QListWidgetItem):
-        widget: RifleItemWidget = self.rifles_list.itemWidget(item)
+        # widget: RifleItemWidget = self.rifles_list.itemWidget(item)
+        widget: RifleItemWidget = self.itemWidget(item)
+        print(widget)
         self.rifle_edit_sig.emit(widget.rifle_data)
 
 
@@ -238,7 +280,24 @@ class EditRifleWidget(QtWidgets.QWidget):
         editRifleWidget.setWindowTitle(_translate("editRifleWidget", "Form"))
 
     def connectUi(self, editRifleWidget):
-        ...
+        window = self.window()
+        if window:
+            settings: SettingsWidget = window.settings
+            if settings:
+                settings.settingsUpdated.connect(self.on_settings_update)
+
+    def on_settings_update(self, settings: SettingsWidget):
+        self.barrel_twist.setConvertor(Convertor(Distance, settings.twistUnits.currentData(), Distance.Inch))
+        self.barrel_twist.suffix.setText(Distance.name(settings.twistUnits.currentData()))
+        self.barrel_twist.setDecimals(Distance.accuracy(settings.twistUnits.currentData()))
+
+        self.sight_height.setConvertor(Convertor(Distance, settings.shUnits.currentData(), Distance.Centimeter))
+        self.sight_height.suffix.setText(Distance.name(settings.shUnits.currentData()))
+        self.sight_height.setDecimals(Distance.accuracy(settings.shUnits.currentData()))
+
+        self.sight_offset.setConvertor(Convertor(Distance, settings.shUnits.currentData(), Distance.Centimeter))
+        self.sight_offset.suffix.setText(Distance.name(settings.shUnits.currentData()))
+        self.sight_offset.setDecimals(Distance.accuracy(settings.shUnits.currentData()))
 
     def display_data(self, rifle: 'RifleData'):
         if not rifle:
@@ -248,10 +307,8 @@ class EditRifleWidget(QtWidgets.QWidget):
         self.barrel_twist.setRawValue(rifle.barrel_twist)
         index = self.twist_dir.findData(rifle.barrel_twist_dir)
         self.twist_dir.setCurrentIndex(index)
-        self.sight_height.setValue(rifle.sight_height)
-        self.sight_offset.setValue(rifle.sight_offset)
-
-        self.barrel_twist.suffix.setText(self.barrel_twist.convertor().unit.value)
+        self.sight_height.setRawValue(rifle.sight_height)
+        self.sight_offset.setRawValue(rifle.sight_offset)
 
     def save_rifle(self):
         Worker.rifle_add_or_update(
@@ -259,7 +316,7 @@ class EditRifleWidget(QtWidgets.QWidget):
             name=self.name.text() if self.name.text() else self.name.placeholderText(),
             barrel_twist=self.barrel_twist.rawValue(),
             barrel_twist_dir=self.twist_dir.currentData(),
-            sight_height=self.sight_height.value(),
-            sight_offset=self.sight_offset.value(),
+            sight_height=self.sight_height.rawValue(),
+            sight_offset=self.sight_offset.rawValue(),
         )
         # self.ok_clicked.emit()

@@ -1,19 +1,19 @@
 from abc import ABC
-from enum import Enum
+from enum import IntEnum
 from math import pi, atan, tan
 
 
-class Unit(Enum):
-    Inch = 'in'
-    Foot = 'ft'
-    Yard = 'yd'
-    Mile = 'mi'
-    NauticalMile = 'nm'
-    Millimeter = 'mm'
-    Centimeter = 'cm'
-    Meter = 'm'
-    Kilometer = 'lm'
-    Line = 'ln'
+class Unit(IntEnum):
+    Inch = 10
+    Foot = 11
+    Yard = 12
+    Mile = 13
+    NauticalMile = 14
+    Millimeter = 15
+    Centimeter = 16
+    Meter = 17
+    Kilometer = 18
+    Line = 19
 
 
 class AbstractUnit(ABC):
@@ -23,9 +23,9 @@ class AbstractUnit(ABC):
         self._defined_units = units
 
     def __str__(self):
-        default = self._defined_units
-        v = self.from_default(self._value, default)
-        return f'{round(v, self.accuracy(default))} {default.value()}'
+        units = self._defined_units
+        v = self.from_default(self._value, units)
+        return f'{round(v, self.accuracy(units))} {self.name(units)}'
 
     def __repr__(self):
         return f'<{self.__class__.__name__}>'
@@ -36,8 +36,8 @@ class AbstractUnit(ABC):
     def from_default(self, value: float, units: Unit):
         raise KeyError(f'{self.__class__.__name__}: unit {units} is not supported')
 
-    def value(self, units: Unit):
-        return self.from_default(self._value, units)
+    def value(self):
+        return self._value
 
     def convert(self, units: Unit):
         value = self.get_in(units)
@@ -52,8 +52,13 @@ class AbstractUnit(ABC):
     def default_value(self):
         return self._value
 
-    def accuracy(self, units):
+    @staticmethod
+    def accuracy(units):
         return 6
+
+    @staticmethod
+    def name(units):
+        return ""
 
 
 class Distance(AbstractUnit):
@@ -104,7 +109,34 @@ class Distance(AbstractUnit):
             return value * 25.4 / 1000000
         super(Distance, self).from_default(value, units)
 
-    def accuracy(self, units):
+    @staticmethod
+    def name(units: Unit):
+        if units == Distance.Inch:
+            name = 'inch'
+        elif units == Distance.Foot:
+            name = 'ft'
+        elif units == Distance.Yard:
+            name = 'yd'
+        elif units == Distance.Mile:
+            name = 'mi'
+        elif units == Distance.NauticalMile:
+            name = 'nm'
+        elif units == Distance.Line:
+            name = 'ln'
+        elif units == Distance.Millimeter:
+            name = 'mm'
+        elif units == Distance.Centimeter:
+            name = 'cm'
+        elif units == Distance.Meter:
+            name = 'm'
+        elif units == Distance.Kilometer:
+            name = 'km'
+        else:
+            name = ''
+        return name
+
+    @staticmethod
+    def accuracy(units: Unit):
         if units == Distance.Inch:
             accuracy = 1
         elif units == Distance.Foot:

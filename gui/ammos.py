@@ -397,7 +397,7 @@ class EditAmmoWidget(QtWidgets.QWidget):
     def display_data(self, rifle, ammo):
 
         self.ammo = AmmoData('New Ammo', rifle=rifle) if not isinstance(ammo, AmmoData) else ammo
-
+        print('bc_list', self.ammo.bc_list)
         self.rifle = self.ammo.rifle
         self.name.setText(self.ammo.name)
         self.diameter.setValue(self.ammo.diameter)

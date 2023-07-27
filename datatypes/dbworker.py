@@ -66,10 +66,10 @@ class AmmoData(Base):
     atmo = relationship("AtmoData", back_populates="ammo", uselist=False, cascade="all, delete-orphan")
 
     def __init__(self, name, diameter=0.338, weight=300, length=1.5, muzzle_velocity=800, temp_sens=1, powder_temp=15,
-                 drag_model=DragModel.G7, bc=0.381, rifle=None, **kwargs):
+                 drag_model=DragModel.G7, bc=None, bc7=None, cdm=None, rifle=None, **kwargs):
         super(AmmoData, self).__init__(name=name, diameter=diameter, weight=weight, length=length,
                                        muzzle_velocity=muzzle_velocity, temp_sens=temp_sens, powder_temp=powder_temp,
-                                       drag_model=drag_model, bc=bc, **kwargs)
+                                       drag_model=drag_model, bc=bc, bc7=bc7, cdm=cdm, **kwargs)
 
         if rifle is None:
             raise ValueError("AmmoData must be associated with a RifleData.")
@@ -80,19 +80,19 @@ class AmmoData(Base):
         self.atmo = AtmoData(ammo=self)
 
     def get_bc(self):
-        return json.loads(self.bc)
+        return json.loads(self.bc) if self.bc else None
 
     def set_bc(self, value):
         self.bc = json.dumps(value)
 
     def get_bc7(self):
-        return json.loads(self.bc7)
+        return json.loads(self.bc7) if self.bc7 else None
 
     def set_bc7(self, value):
         self.bc7 = json.dumps(value)
 
     def get_cdm(self):
-        return json.loads(self.cdm)  # Deserialize the JSON to retrieve the list.
+        return json.loads(self.cdm) if self.cdm else None  # Deserialize the JSON to retrieve the list.
 
     def set_cdm(self, value):
         self.cdm = json.dumps(value)  # Serialize the list to JSON.

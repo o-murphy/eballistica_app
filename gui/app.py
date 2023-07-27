@@ -7,7 +7,8 @@ from .app_logo import AppHeader
 from .bot_app_bar import BotAppBar
 from .drag_model import MultiBCWidget, CDMWidget
 from .powder_sens import PowderSensWindget
-from .rifles import RiflesWidget, EditRifleWidget
+# from .rifles import RiflesWidget, EditRifleWidget
+from .rifles import EditRifleWidget, RiflesLi
 
 
 # class AppState(QtCore.QObject):
@@ -52,7 +53,10 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         self.main_layout.addWidget(self.scroll_area)
         self.main_layout.addWidget(self.botAppBar)
 
-        self.rifles = RiflesWidget(self)
+        self.settings = SettingsWidget(self)
+
+
+        self.rifles = RiflesLi(self)
         self.edit_rifle = EditRifleWidget(self)
 
         self.ammos = AmmosWidget(self)
@@ -65,7 +69,7 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
 
         self.powder_sens = PowderSensWindget(self)
 
-        self.settings = SettingsWidget(self)
+        self.settings.update_settings()
 
         self.stacked.addWidget(self.rifles)
         self.stacked.addWidget(self.edit_rifle)
@@ -87,7 +91,8 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         MainWindow.setWindowTitle(QtCore.QCoreApplication.translate("MainWindow", u"ArcherBC", None))
 
     def switch_to_rifles(self):
-        self.rifles.rifles_list.refresh()
+        # self.rifles.rifles_list.refresh()
+        self.rifles.refresh()
         self.stacked.setCurrentWidget(self.rifles)
         self.screen_changed(self.stacked.currentIndex())
 
@@ -143,11 +148,15 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
             self.botAppBar.setAct.setVisible(True)
             self.botAppBar.homeAct.setHidden(True)
 
+            self.header.bread.setText('Rifles')
+
         elif current_screen == self.ammos:
             self.botAppBar.okAct.setHidden(True)
             self.botAppBar.addAct.setVisible(True)
             self.botAppBar.setAct.setVisible(False)
             self.botAppBar.homeAct.setHidden(False)
+
+            self.header.bread.setText(f"{self.ammos.ammos_list.filter['rifle'].name}/Ammo")
 
         elif current_screen == self.edit_rifle or current_screen == self.edit_ammo or current_screen == self.edit_shot:
             self.botAppBar.okAct.setVisible(True)
@@ -155,7 +164,21 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
             self.botAppBar.setAct.setVisible(False)
             self.botAppBar.homeAct.setHidden(False)
 
+            rifle = self.ammos.ammos_list.filter.get('rifle')
+            rifle = rifle.name if rifle else None
+            if current_screen == self.edit_rifle:
+                self.header.bread.setText(f"{rifle}/edit/")
+            elif current_screen == self.edit_ammo:
+                self.header.bread.setText(
+                    f"{rifle}/{self.edit_ammo.ammo.name}/edit/")
+            elif current_screen == self.edit_shot:
+                self.header.bread.setText(
+                    f"{rifle}/{self.edit_shot.ammo.name}/conditions/")
+
         elif current_screen == self.settings:
+
+            self.header.bread.setText('Settings')
+
             self.botAppBar.okAct.setVisible(True)
             self.botAppBar.addAct.setVisible(False)
             self.botAppBar.setAct.setVisible(False)
@@ -200,7 +223,7 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
             self.stacked.setCurrentWidget(self.edit_ammo)
         elif current_screen == self.settings:
             self.settings.update_settings()
-            self.stacked.setCurrentWidget(self.rifles)
+            self.switch_to_rifles()
 
     def switch_drag_edit_screen(self, dm, ammo):
         if dm != DragModel.CDM:

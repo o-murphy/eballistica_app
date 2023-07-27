@@ -46,6 +46,14 @@ class ConverSpinBox(QDoubleSpinBox):
 
         self._convertor: 'Convertor' = None
 
+    def validate(self, text: str, pos: int) -> object:
+        text = text.replace(".", ",")
+        return QDoubleSpinBox.validate(self, text, pos)
+
+    def valueFromText(self, text: str) -> float:
+        text = text.replace(",", ".")
+        return float(text)
+
     def convertor(self) -> 'Convertor':
         return self._convertor
 

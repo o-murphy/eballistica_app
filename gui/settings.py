@@ -105,6 +105,8 @@ class Settings(QtCore.QObject):
 
 
 class SettingsWidget(QtWidgets.QWidget):
+    settingsUpdated = QtCore.Signal(object)
+
     def __init__(self, parent=None):
         super(SettingsWidget, self).__init__(parent)
         self.set = QSettings(QSettings.IniFormat, QSettings.UserScope, 'settings.ini')
@@ -160,7 +162,7 @@ class SettingsWidget(QtWidgets.QWidget):
         angleUnits = QtWidgets.QComboBox(self)
         pathUnits = QtWidgets.QComboBox(self)
 
-        self.shUnits = FormRow2(QtWidgets.QLabel('Sight height'), shUnits)
+        self.shUnits = FormRow2(QtWidgets.QLabel('Sight height / offset'), shUnits)
         self.shUnits.setObjectName('shUnits')
         self.twistUnits = FormRow2(QtWidgets.QLabel('Twist'), twistUnits)
         self.twistUnits.setObjectName('twistUnits')
@@ -247,21 +249,21 @@ class SettingsWidget(QtWidgets.QWidget):
     def update_settings(self):
         settings = {}
 
-        # for obj in self.findChildren(QtWidgets.QWidget):
-        #     if obj.objectName():
-        #         if hasattr(obj, 'currentData'):
-        #             print(obj.objectName(), obj.currentData())
-        #             if isinstance(obj.currentData(), Unit):
-        #                 settings[obj.objectName()] = obj.currentData().value
-        #             else:
-        #                 settings[obj.objectName()] = obj.currentData()
-        #         elif hasattr(obj, 'value'):
-        #             print(obj.objectName(), obj.value())
-        #             settings[obj.objectName()] = obj.value()
-        #         elif hasattr(obj, 'isChecked'):
-        #             print(obj.objectName(), obj.isChecked())
-        #             settings[obj.objectName()] = obj.isChecked()
-
+        for obj in self.findChildren(QtWidgets.QWidget):
+            name = obj.objectName()
+            if name:
+                if hasattr(obj, 'currentData'):
+                    if isinstance(obj.currentData(), Unit):
+                        settings[name] = obj.currentData().value
+                    else:
+                        settings[name] = obj.currentData()
+                elif hasattr(obj, 'value'):
+                    print(obj.objectName(), obj.value())
+                    settings[obj.objectName()] = obj.value()
+                elif hasattr(obj, 'isChecked'):
+                    print(obj.objectName(), obj.isChecked())
+                    settings[obj.objectName()] = obj.isChecked()
+        print(settings)
         try:
             with open('settings.json', 'w') as fp:
                 json.dump(settings, fp)
@@ -271,21 +273,7 @@ class SettingsWidget(QtWidgets.QWidget):
         # main = self.window()
         # if main:
         #     self.apply_theme()
-        self.update_measure_units()
-
-    def update_measure_units(self):
-        main = self.window()
-        if main:
-            ch = main.findChild(QtWidgets.QWidget, 'barrel_twist')
-            if ch:
-                ch.setConvertor(Convertor(Distance, self.twistUnits.currentData(), Distance.Inch))
-            ch = main.findChild(QtWidgets.QWidget, 'sight_height')
-            if ch:
-                ch.setConvertor(Convertor(Distance, self.shUnits.currentData(), Distance.Millimeter))
-            ch = main.findChild(QtWidgets.QWidget, 'barrel_offset')
-            if ch:
-                ch.setConvertor(Convertor(Distance, self.shUnits.currentData(), Distance.Millimeter))
-
+        self.settingsUpdated.emit(self)
 
     def get_settings(self):
 
@@ -293,17 +281,17 @@ class SettingsWidget(QtWidgets.QWidget):
             with open('settings.json', 'r') as fp:
                 settings = json.load(fp)
                 for k, v in settings.items():
-                    ch = self.findChild(QtWidgets.QWidget, k)
-                    if isinstance(ch, (QtWidgets.QComboBox)):
-                        ch.setCurrentIndex(ch.findData(v))
-                    elif isinstance(ch, (QtWidgets.QCheckBox)):
-                        ch.setChecked(v)
+                    obj = self.findChild(QtWidgets.QWidget, k)
+                    if hasattr(obj, 'currentData'):
+                        obj.setCurrentIndex(obj.findData(Unit(v)))
+                    elif hasattr(obj, 'value'):
+                        print(obj.objectName(), obj.value())
+                        obj.setValue(v)
+                    elif hasattr(obj, 'isChecked'):
+                        obj.setCHecked(v)
 
         except Exception as exc:
             print(exc)
 
-        self.update_measure_units()
-
     def connectUi(self):
-        # self.scale.valueChanged.connect(self.apply_theme)
         ...

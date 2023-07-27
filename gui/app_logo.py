@@ -13,6 +13,7 @@ class AppLogo(QtWidgets.QLabel):
 class AppLabel(QtWidgets.QLabel):
     def __init__(self, parent=None):
         super(AppLabel, self).__init__(parent)
+        self.setAlignment(QtCore.Qt.AlignHCenter)
         self.setText("eBallistica")
 
 
@@ -24,13 +25,18 @@ class AppHeader(QtWidgets.QWidget):
     def setupUi(self, appToolBar):
         appToolBar.setObjectName("appToolBar")
 
-        self.hBoxLayout = QtWidgets.QHBoxLayout(self)
-        self.hBoxLayout.setObjectName("hBoxLayout")
+        self.gLayout = QtWidgets.QGridLayout(self)
+        self.gLayout.setObjectName("hBoxLayout")
         
         self.logo = AppLogo()
-        self.label = AppLabel()
-        self.hBoxLayout.addWidget(self.logo)
-        self.hBoxLayout.addWidget(self.label)
+        self.title = AppLabel()
+        self.bread = QtWidgets.QLabel()
+
+        self.gLayout.setColumnStretch(0, 2)
+        self.gLayout.setColumnStretch(1, 8)
+        self.gLayout.addWidget(self.logo, 0, 0, 2, 1)
+        self.gLayout.addWidget(self.title, 0, 1, 1, 1)
+        self.gLayout.addWidget(self.bread, 1, 1, 1, 1)
 
     def retranslateUi(self, riflesHeader: 'appHeader'):
         _translate = QtCore.QCoreApplication.translate

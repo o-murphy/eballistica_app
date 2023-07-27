@@ -45,12 +45,13 @@ class MultiBCWidget(QtWidgets.QWidget):
         else:
             multi_bc = [[0, 0]] * 5
         self.title.setText(dm.name)
-        for i, (v, bc) in enumerate(multi_bc):
-            velocity_sb = self.findChild(QtWidgets.QDoubleSpinBox, f'v{i}')
-            bc_sb = self.findChild(QtWidgets.QDoubleSpinBox, f'bc{i}')
-            if velocity_sb and bc_sb:
-                velocity_sb.setValue(v)
-                bc_sb.setValue(bc)
+        if multi_bc:
+            for i, (v, bc) in enumerate(multi_bc):
+                velocity_sb = self.findChild(QtWidgets.QDoubleSpinBox, f'v{i}')
+                bc_sb = self.findChild(QtWidgets.QDoubleSpinBox, f'bc{i}')
+                if velocity_sb and bc_sb:
+                    velocity_sb.setValue(v)
+                    bc_sb.setValue(bc)
 
     def get_data(self):
         ret_list = []
@@ -151,6 +152,8 @@ class EditDragDataButton(QtWidgets.QPushButton):
 
     @staticmethod
     def count_nonzero_pairs(pair_list):
+        if pair_list is None:
+            return 0
         def count_valid_pairs(acc, pair):
             if pair[0] != 0 and pair[1] != 0:
                 return acc + 1
@@ -161,16 +164,18 @@ class EditDragDataButton(QtWidgets.QPushButton):
     def update_df(self, drag_model: DragModel, ammo: AmmoData):
         if drag_model == DragModel.G1:
             count = self.count_nonzero_pairs(ammo.bc_list)
-            first = ammo.bc_list[0][1]
+            first = ammo.bc_list[0][1] if count else None
         elif drag_model == DragModel.G7:
             count = self.count_nonzero_pairs(ammo.bc7_list)
-            first = ammo.bc7_list[0][1]
+            first = ammo.bc7_list[0][1] if count else None
         elif drag_model == DragModel.CDM:
             count = self.count_nonzero_pairs(ammo.cdm_list)
             first = None
         else:
             return
-        if count == 0 or count > 1:
+        if count == 0:
+            self.setText(f'{drag_model.name} (None)')
+        elif count > 1:
             self.setText(f'{drag_model.name} ({count})')
         else:
             self.setText(f'{drag_model.name} (BC: {first})')
