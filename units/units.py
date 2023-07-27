@@ -4,6 +4,15 @@ from math import pi, atan, tan
 
 
 class Unit(IntEnum):
+    Radian = 0
+    Degree = 1
+    MOA = 2
+    Mil = 3
+    MRad = 4
+    Thousand = 5
+    InchesPer100Yd = 6
+    CmPer100M = 7
+
     Inch = 10
     Foot = 11
     Yard = 12
@@ -14,6 +23,33 @@ class Unit(IntEnum):
     Meter = 17
     Kilometer = 18
     Line = 19
+
+    MmHg = 40
+    InHg = 41
+    Bar = 42
+    HP = 43
+    PSI = 44
+
+    Fahrenheit = 50
+    Celsius = 51
+    Kelvin = 52
+    Rankin = 53
+
+    MPS = 60
+    KMH = 61
+    FPS = 62
+    MPH = 63
+    KT = 64
+
+    Grain = 70
+    Ounce = 71
+    Gram = 72
+    Pound = 73
+    Kilogram = 74
+    Newton = 75
+
+    def __call__(self, unit_type: 'AbstractUnit'):
+        return unit_type.get_in(self)
 
 
 class AbstractUnit(ABC):
@@ -41,7 +77,7 @@ class AbstractUnit(ABC):
 
     def convert(self, units: Unit):
         value = self.get_in(units)
-        return Distance(value, units)
+        return self.__class__(value, units)
 
     def get_in(self, units: Unit):
         return self.from_default(self._value, units)
@@ -132,7 +168,7 @@ class Distance(AbstractUnit):
         elif units == Distance.Kilometer:
             name = 'km'
         else:
-            name = ''
+            name = '?'
         return name
 
     @staticmethod
@@ -175,7 +211,7 @@ class Distance(AbstractUnit):
 
 class Pressure(AbstractUnit):
 
-    def to_default(self, value: float, units: int):
+    def to_default(self, value: float, units: Unit):
         if units == Pressure.MmHg:
             return value
         elif units == Pressure.InHg:
@@ -188,7 +224,7 @@ class Pressure(AbstractUnit):
             return value * 51.714924102396
         super(Pressure, self).to_default(value, units)
 
-    def from_default(self, value: float, units: int):
+    def from_default(self, value: float, units: Unit):
         if units == Pressure.MmHg:
             return value
         elif units == Pressure.InHg:
@@ -199,42 +235,74 @@ class Pressure(AbstractUnit):
             return value / 750.061683 * 1000
         elif units == Pressure.PSI:
             return value / 51.714924102396
-        super(Pressure, self).from_default()
+        super(Pressure, self).from_default(value, units)
 
-    def __str__(self):
-        default = self._defined_units
-        v = self.from_default(self._value, default)
-        if default == Pressure.MmHg:
+    @staticmethod
+    def name(units: Unit):
+        if units == Pressure.MmHg:
             name = 'mmHg'
-            accuracy = 0
-        elif default == Pressure.MmHg:
+        elif units == Pressure.MmHg:
             name = 'inHg'
-            accuracy = 2
-        elif default == Pressure.Bar:
+        elif units == Pressure.Bar:
             name = 'bar'
-            accuracy = 2
-        elif default == Pressure.HP:
+        elif units == Pressure.HP:
             name = 'hPa'
-            accuracy = 4
-        elif default == Pressure.PSI:
+        elif units == Pressure.PSI:
             name = 'psi'
-            accuracy = 4
         else:
             name = '?'
+        return name
+
+    @staticmethod
+    def accuracy(units: Unit):
+        if units == Pressure.MmHg:
+            accuracy = 0
+        elif units == Pressure.MmHg:
+            accuracy = 2
+        elif units == Pressure.Bar:
+            accuracy = 2
+        elif units == Pressure.HP:
+            accuracy = 4
+        elif units == Pressure.PSI:
+            accuracy = 4
+        else:
             accuracy = 6
+        return accuracy
 
-        return f'{round(v, accuracy)} {name}'
+    # def __str__(self):
+    #     default = self._defined_units
+    #     v = self.from_default(self._value, default)
+    #     if default == Pressure.MmHg:
+    #         name = 'mmHg'
+    #         accuracy = 0
+    #     elif default == Pressure.MmHg:
+    #         name = 'inHg'
+    #         accuracy = 2
+    #     elif default == Pressure.Bar:
+    #         name = 'bar'
+    #         accuracy = 2
+    #     elif default == Pressure.HP:
+    #         name = 'hPa'
+    #         accuracy = 4
+    #     elif default == Pressure.PSI:
+    #         name = 'psi'
+    #         accuracy = 4
+    #     else:
+    #         name = '?'
+    #         accuracy = 6
+    #
+    #     return f'{round(v, accuracy)} {name}'
 
-    MmHg = 40
-    InHg = 41
-    Bar = 42
-    HP = 43
-    PSI = 44
+    MmHg = Unit.MmHg
+    InHg = Unit.InHg
+    Bar = Unit.Bar
+    HP = Unit.HP
+    PSI = Unit.PSI
 
 
 class Weight(AbstractUnit):
 
-    def to_default(self, value: float, units: int):
+    def to_default(self, value: float, units: Unit):
         if units == Weight.Grain:
             return value
         elif units == Weight.Gram:
@@ -249,7 +317,7 @@ class Weight(AbstractUnit):
             return value * 437.5
         super(Weight, self).to_default(value, units)
 
-    def from_default(self, value: float, units: int):
+    def from_default(self, value: float, units: Unit):
         if units == Weight.Grain:
             return value
         elif units == Weight.Gram:
@@ -264,45 +332,54 @@ class Weight(AbstractUnit):
             return value / 437.5
         super(Weight, self).from_default(value, units)
 
-    def __str__(self):
+    @staticmethod
+    def name(units):
 
-        default = self._defined_units
-        v = self.from_default(self._value, default)
-        if default == Weight.Grain:
+        if units == Weight.Grain:
             name = 'gr'
-            accuracy = 0
-        elif default == Weight.Gram:
+        elif units == Weight.Gram:
             name = 'g'
-            accuracy = 1
-        elif default == Weight.Kilogram:
+        elif units == Weight.Kilogram:
             name = 'kg'
-            accuracy = 3
-        elif default == Weight.Newton:
+        elif units == Weight.Newton:
             name = 'N'
-            accuracy = 3
-        elif default == Weight.Pound:
+        elif units == Weight.Pound:
             name = 'lb'
-            accuracy = 3
-        elif default == Weight.Ounce:
+        elif units == Weight.Ounce:
             name = 'oz'
-            accuracy = 1
         else:
             name = '?'
+        return name
+
+    @staticmethod
+    def accuracy(units):
+        if units == Weight.Grain:
+            accuracy = 0
+        elif units == Weight.Gram:
+            accuracy = 1
+        elif units == Weight.Kilogram:
+            accuracy = 3
+        elif units == Weight.Newton:
+            accuracy = 3
+        elif units == Weight.Pound:
+            accuracy = 3
+        elif units == Weight.Ounce:
+            accuracy = 1
+        else:
             accuracy = 6
+        return accuracy
 
-        return f'{round(v, accuracy)} {name}'
-
-    Grain = 70
-    Ounce = 71
-    Gram = 72
-    Pound = 73
-    Kilogram = 74
-    Newton = 75
+    Grain = Unit.Grain
+    Ounce = Unit.Ounce
+    Gram = Unit.Gram
+    Pound = Unit.Pound
+    Kilogram = Unit.Kilogram
+    Newton = Unit.Newton
 
 
 class Temperature(AbstractUnit):
 
-    def to_default(self, value: float, units: int):
+    def to_default(self, value: float, units: Unit):
         if units == Temperature.Fahrenheit:
             return value
         elif units == Temperature.Rankin:
@@ -313,7 +390,7 @@ class Temperature(AbstractUnit):
             return (value - 273.15) * 9 / 5 + 32
         super(Temperature, self).to_default(value, units)
 
-    def from_default(self, value: float, units: int):
+    def from_default(self, value: float, units: Unit):
         if units == Temperature.Fahrenheit:
             return value
         elif units == Temperature.Rankin:
@@ -324,35 +401,43 @@ class Temperature(AbstractUnit):
             return (value - 32) * 5 / 9 + 273.15
         super(Temperature, self).from_default(value, units)
 
-    def __str__(self):
-        default = self._defined_units
-        v = self.from_default(self._value, default)
-        if default == Temperature.Fahrenheit:
+    @staticmethod
+    def name(units):
+        if units == Temperature.Fahrenheit:
             name = '°F'
-            accuracy = 1
-        elif default == Temperature.Rankin:
+        elif units == Temperature.Rankin:
             name = '°R'
-            accuracy = 1
-        elif default == Temperature.Celsius:
+        elif units == Temperature.Celsius:
             name = '°C'
-            accuracy = 1
-        elif default == Temperature.Kelvin:
+        elif units == Temperature.Kelvin:
             name = '°K'
-            accuracy = 1
         else:
             name = '?'
-            accuracy = 6
-        return f'{round(v, accuracy)} {name}'
+        return name
 
-    Fahrenheit: int = 50
-    Celsius: int = 51
-    Kelvin: int = 52
-    Rankin: int = 53
+    @staticmethod
+    def accuracy(units):
+        if units == Temperature.Fahrenheit:
+            accuracy = 1
+        elif units == Temperature.Rankin:
+            accuracy = 1
+        elif units == Temperature.Celsius:
+            accuracy = 1
+        elif units == Temperature.Kelvin:
+            accuracy = 1
+        else:
+            accuracy = 6
+        return accuracy
+
+    Fahrenheit = Unit.Fahrenheit
+    Celsius = Unit.Celsius
+    Kelvin = Unit.Kelvin
+    Rankin = Unit.Rankin
 
 
 class Angular(AbstractUnit):
 
-    def to_default(self, value: float, units: int):
+    def to_default(self, value: float, units: Unit):
         if units == Angular.Radian:
             return value
         elif units == Angular.Degree:
@@ -371,7 +456,7 @@ class Angular(AbstractUnit):
             return atan(value / 10000)
         super(Angular, self).to_default(value, units)
 
-    def from_default(self, value: float, units: int):
+    def from_default(self, value: float, units: Unit):
         if units == Angular.Radian:
             return value
         elif units == Angular.Degree:
@@ -390,53 +475,63 @@ class Angular(AbstractUnit):
             return tan(value) * 10000
         super(Angular, self).from_default(value, units)
 
-    def __str__(self):
-
-        default = self._defined_units
-        v = self.from_default(self._value, default)
-        if default == Angular.Radian:
+    @staticmethod
+    def name(units):
+        if units == Angular.Radian:
             name = 'rad'
-            accuracy = 6
-        elif default == Angular.Degree:
+        elif units == Angular.Degree:
             name = '°'
-            accuracy = 4
-        elif default == Angular.MOA:
+        elif units == Angular.MOA:
             name = 'moa'
-            accuracy = 2
-        elif default == Angular.Mil:
+        elif units == Angular.Mil:
             name = 'mil'
-            accuracy = 2
-        elif default == Angular.MRad:
+        elif units == Angular.MRad:
             name = 'mrad'
-            accuracy = 2
-        elif default == Angular.Thousand:
+        elif units == Angular.Thousand:
             name = 'ths'
-            accuracy = 2
-        elif default == Angular.InchesPer100Yd:
+        elif units == Angular.InchesPer100Yd:
             name = 'in/100yd'
-            accuracy = 2
-        elif default == Angular.CmPer100M:
+        elif units == Angular.CmPer100M:
             name = 'cm/100m'
-            accuracy = 2
         else:
             name = '?'
+        return name
+
+    @staticmethod
+    def accuracy(units):
+        if units == Angular.Radian:
             accuracy = 6
+        elif units == Angular.Degree:
+            accuracy = 4
+        elif units == Angular.MOA:
+            accuracy = 2
+        elif units == Angular.Mil:
+            accuracy = 2
+        elif units == Angular.MRad:
+            accuracy = 2
+        elif units == Angular.Thousand:
+            accuracy = 2
+        elif units == Angular.InchesPer100Yd:
+            accuracy = 2
+        elif units == Angular.CmPer100M:
+            accuracy = 2
+        else:
+            accuracy = 6
+        return accuracy
 
-        return f'{round(v, accuracy)} {name}'
-
-    Radian = 0
-    Degree = 1
-    MOA = 2
-    Mil = 3
-    MRad = 4
-    Thousand = 5
-    InchesPer100Yd = 6
-    CmPer100M = 7
+    Radian = Unit.Radian
+    Degree = Unit.Degree
+    MOA = Unit.MOA
+    Mil = Unit.Mil
+    MRad = Unit.MRad
+    Thousand = Unit.Thousand
+    InchesPer100Yd = Unit.InchesPer100Yd
+    CmPer100M = Unit.CmPer100M
 
 
 class Velocity(AbstractUnit):
 
-    def to_default(self, value: float, units: int):
+    def to_default(self, value: float, units: Unit):
         if units == Velocity.MPS:
             return value
         elif units == Velocity.KMH:
@@ -449,7 +544,7 @@ class Velocity(AbstractUnit):
             return value / 1.94384449
         super(Velocity, self).to_default(value, units)
 
-    def from_default(self, value: float, units: int):
+    def from_default(self, value: float, units: Unit):
         if units == Velocity.MPS:
             return value
         elif units == Velocity.KMH:
@@ -462,31 +557,61 @@ class Velocity(AbstractUnit):
             return value * 1.94384449
         super(Velocity, self).from_default(value, units)
 
-    def __str__(self):
-        default = self._defined_units
-        v = self.from_default(self._value, default)
-        if default == Velocity.MPS:
+    @staticmethod
+    def name(units):
+        if units == Velocity.MPS:
             name = "m/s"
-            accuracy = 0
-        elif default == Velocity.KMH:
+        elif units == Velocity.KMH:
             name = "km/h"
-            accuracy = 1
-        elif default == Velocity.FPS:
+        elif units == Velocity.FPS:
             name = "ft/s"
-            accuracy = 1
-        elif default == Velocity.MPH:
+        elif units == Velocity.MPH:
             name = "mph"
-            accuracy = 1
-        elif default == Velocity.KT:
+        elif units == Velocity.KT:
             name = "kt"
-            accuracy = 1
         else:
             name = '?'
-            accuracy = 6
-        return f'{round(v, accuracy)} {name}'
+        return name
 
-    MPS = 60
-    KMH = 61
-    FPS = 62
-    MPH = 63
-    KT = 64
+    @staticmethod
+    def accuracy(units):
+        if units == Velocity.MPS:
+            accuracy = 0
+        elif units == Velocity.KMH:
+            accuracy = 1
+        elif units == Velocity.FPS:
+            accuracy = 1
+        elif units == Velocity.MPH:
+            accuracy = 1
+        elif units == Velocity.KT:
+            accuracy = 1
+        else:
+            accuracy = 6
+        return accuracy
+
+    MPS = Unit.MPS
+    KMH = Unit.KMH
+    FPS = Unit.FPS
+    MPH = Unit.MPH
+    KT = Unit.KT
+
+
+class Convertor:
+    def __init__(self, measure=None, unit: int = 0, default_unit: int = 0):
+        self.measure = measure
+        self.unit = unit
+        self.default_unit = default_unit
+
+    def fromRaw(self, value):
+        return self.measure(value, self.default_unit).get_in(self.unit)
+
+    def toRaw(self, value):
+        return self.measure(value, self.unit).get_in(self.default_unit)
+
+    @property
+    def accuracy(self):
+        return self.measure.accuracy(self.unit)
+
+    @property
+    def unit_name(self):
+        return self.measure.name(self.unit)

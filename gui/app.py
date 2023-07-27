@@ -2,7 +2,8 @@ from PySide6 import QtWidgets, QtCore, QtGui
 from qt_material import QtStyleTools
 
 from datatypes.dbworker import DragModel
-from .ammos import AmmosWidget, EditAmmoWidget, EditShotWidget
+from .ammos import EditAmmoWidget, EditShotWidget, AmmosLi
+# from .ammos import AmmosWidget, EditAmmoWidget, EditShotWidget
 from .app_logo import AppHeader
 from .bot_app_bar import BotAppBar
 from .drag_model import MultiBCWidget, CDMWidget
@@ -59,7 +60,7 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         self.rifles = RiflesLi(self)
         self.edit_rifle = EditRifleWidget(self)
 
-        self.ammos = AmmosWidget(self)
+        self.ammos = AmmosLi(self)
         self.edit_ammo = EditAmmoWidget(self)
 
         self.edit_shot = EditShotWidget(self)
@@ -101,17 +102,17 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         self.stacked.setCurrentWidget(self.edit_rifle)
 
     def switch_to_ammos(self, rifle):
-        self.ammos.ammos_list.set_filter(rifle=rifle)
-        self.ammos.ammos_list.refresh()
+        self.ammos.set_filter(rifle=rifle)
+        self.ammos.refresh()
         self.stacked.setCurrentWidget(self.ammos)
 
     def switch_edit_ammo_screen(self, ammo=None):
-        rifle = self.ammos.ammos_list.filter.get('rifle')
+        rifle = self.ammos.filter.get('rifle')
         self.edit_ammo.display_data(rifle, ammo)
         self.stacked.setCurrentWidget(self.edit_ammo)
 
     def switch_edit_shot_screen(self, ammo=None):
-        rifle = self.ammos.ammos_list.filter.get('rifle')
+        rifle = self.ammos.filter.get('rifle')
         self.edit_shot.display_data(rifle, ammo)
         self.stacked.setCurrentWidget(self.edit_shot)
 
@@ -135,7 +136,7 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         if current_screen == self.rifles:
             self.switch_edit_rifle_screen()
         elif current_screen == self.ammos:
-            rifle = self.ammos.ammos_list.filter.get('rifle')
+            rifle = self.ammos.filter.get('rifle')
             if rifle:
                 self.switch_edit_ammo_screen(rifle)
 
@@ -156,7 +157,7 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
             self.botAppBar.setAct.setVisible(False)
             self.botAppBar.homeAct.setHidden(False)
 
-            self.header.bread.setText(f"{self.ammos.ammos_list.filter['rifle'].name}/Ammo")
+            self.header.bread.setText(f"{self.ammos.filter['rifle'].name}/Ammo")
 
         elif current_screen == self.edit_rifle or current_screen == self.edit_ammo or current_screen == self.edit_shot:
             self.botAppBar.okAct.setVisible(True)
@@ -164,7 +165,7 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
             self.botAppBar.setAct.setVisible(False)
             self.botAppBar.homeAct.setHidden(False)
 
-            rifle = self.ammos.ammos_list.filter.get('rifle')
+            rifle = self.ammos.filter.get('rifle')
             rifle = rifle.name if rifle else None
             if current_screen == self.edit_rifle:
                 self.header.bread.setText(f"{rifle}/edit/")

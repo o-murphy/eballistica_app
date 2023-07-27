@@ -3,7 +3,9 @@ from statistics import median
 
 from PySide6 import QtWidgets, QtCore
 
-from gui.widgets import SpinBox
+from gui.settings import SettingsWidget
+from gui.widgets import SpinBox, ConverSpinBox
+from units import Temperature, Velocity, Convertor
 
 
 class PowderSensWindget(QtWidgets.QWidget):
@@ -20,28 +22,47 @@ class PowderSensWindget(QtWidgets.QWidget):
         self.title = QtWidgets.QLabel('Powder Sensitivity Calculation')
         self.title.setAlignment(QtCore.Qt.AlignCenter)
 
-        self.velocity_label = QtWidgets.QLabel('Temp, C')
-        self.bc_label = QtWidgets.QLabel('Velocity, mps')
+        self.temp_label = QtWidgets.QLabel('Temp, C')
+        self.velocity_label = QtWidgets.QLabel('Velocity, mps')
+        self.temp_label.setAlignment(QtCore.Qt.AlignHCenter)
         self.velocity_label.setAlignment(QtCore.Qt.AlignHCenter)
-        self.bc_label.setAlignment(QtCore.Qt.AlignHCenter)
 
         self.gridLayout.addWidget(self.title, 0, 0, 1, 2)
+        self.gridLayout.addWidget(self.temp_label)
         self.gridLayout.addWidget(self.velocity_label)
-        self.gridLayout.addWidget(self.bc_label)
 
         for i in range(5):
-            temp = SpinBox(self, -50, 50, 1)
+            temp = ConverSpinBox(self, -50, 50, 1)
             temp.setObjectName(f't{i}')
-            velocity = SpinBox(self, 0, 2000, 0.1, decimals=1)
+            velocity = ConverSpinBox(self, 0, 2000, 0.1, decimals=1)
             velocity.setObjectName(f'v{i}')
             self.gridLayout.addWidget(temp)
             self.gridLayout.addWidget(velocity)
 
+    def get_settings(self) -> SettingsWidget:
+        window = self.window()
+        if window:
+            settings: SettingsWidget = window.settings
+            return settings
+
     def display_data(self, v0, t0):
-        temp_sb = self.findChild(QtWidgets.QDoubleSpinBox, f't0')
-        velocity_sb = self.findChild(QtWidgets.QDoubleSpinBox, f'v0')
-        temp_sb.setValue(t0)
-        velocity_sb.setValue(v0)
+        settings = self.get_settings()
+        temp_units = settings.tempUnits.currentData()
+        temp_name = Temperature.name(temp_units)
+        velocity_units = settings.vUnits.currentData()
+        velocity_name = Velocity.name(velocity_units)
+
+        self.temp_label.setText(f'Temp., {temp_name}')
+        self.velocity_label.setText(f'Velocity., {velocity_name}')
+
+        for i in range(5):
+            temp_sb = self.findChild(QtWidgets.QDoubleSpinBox, f't{i}')
+            velocity_sb = self.findChild(QtWidgets.QDoubleSpinBox, f'v{i}')
+            temp_sb.setConvertor(Convertor(Temperature, temp_units, Temperature.Celsius))
+            velocity_sb.setConvertor(Convertor(Velocity, velocity_units, Velocity.MPS))
+
+            temp_sb.setRawValue(t0 if i == 0 else 0)
+            velocity_sb.setRawValue(v0 if i == 0 else 0)
 
     # def display_data(self):
     #     for i, (v, bc) in enumerate(sens_list):
@@ -88,7 +109,7 @@ class PowderSensWindget(QtWidgets.QWidget):
             temp_sb = self.findChild(QtWidgets.QDoubleSpinBox, f't{i}')
             velocity_sb = self.findChild(QtWidgets.QDoubleSpinBox, f'v{i}')
             if temp_sb and velocity_sb:
-                ret_list.append([temp_sb.value(), velocity_sb.value()])
+                ret_list.append([temp_sb.rawValue(), velocity_sb.rawValue()])
         ret_list.sort(key=lambda item: item[1], reverse=True)
 
         coeffs = []

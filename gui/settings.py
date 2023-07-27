@@ -4,7 +4,7 @@ from PySide6 import QtWidgets, QtCore
 from PySide6.QtCore import QSettings
 
 from gui.widgets import FormRow2
-from units import Distance, Pressure, Weight, Temperature, Velocity, Angular, Unit
+from units import Convertor, Distance, Pressure, Weight, Temperature, Velocity, Angular, Unit
 
 SIGHT_HEIGHT = (
     ('mm', Distance.Millimeter),
@@ -86,19 +86,6 @@ PATH = (
 )
 
 
-class Convertor:
-    def __init__(self, measure=None, unit: int = 0, default_unit: int = 0):
-        self.measure = measure
-        self.unit = unit
-        self.default_unit = default_unit
-
-    def fromRaw(self, value):
-        return self.measure(value, self.default_unit).get_in(self.unit)
-
-    def toRaw(self, value):
-        return self.measure(value, self.unit).get_in(self.default_unit)
-
-
 class Settings(QtCore.QObject):
     def __init__(self, parent=None):
         super(Settings, self).__init__(parent)
@@ -138,16 +125,23 @@ class SettingsWidget(QtWidgets.QWidget):
         # self.theme.addItem('Dark blue', 'dark_blue.xml')
         self.theme.addItem('Dark teal', 'dark_teal.xml')
         self.theme.addItem('Light', 'default.xml')
+        self.apply_theme_btn = QtWidgets.QPushButton('Apply')
+        self.apply_theme_btn.setProperty('class', 'success')
+        # self.apply_theme_btn.setCheckable(True)
+        # self.apply_theme_btn.setChecked(True)
 
-        self.scale_label = QtWidgets.QLabel('Scale')
         self.scale = QtWidgets.QSlider(QtCore.Qt.Horizontal)
         self.scale.setValue(0)
-        self.scale.setMaximum(3)
-        self.scale.setMinimum(-3)
+        self.scale.setMaximum(2)
+        self.scale.setMinimum(-2)
         self.scale.setSingleStep(1)
+        self.scale_label = QtWidgets.QLabel('Scale')
 
         self.viewLayout.addRow(self.theme_label, self.theme)
         self.viewLayout.addRow(self.scale_label, self.scale)
+        self.scale.hide()
+        self.scale_label.hide()
+        self.viewLayout.addRow(self.apply_theme_btn)
 
         shUnits = QtWidgets.QComboBox(self)
         twistUnits = QtWidgets.QComboBox(self)
@@ -184,7 +178,7 @@ class SettingsWidget(QtWidgets.QWidget):
         self.dropUnits.setObjectName('dropUnits')
         self.angleUnits = FormRow2(QtWidgets.QLabel('Angular'), angleUnits)
         self.angleUnits.setObjectName('angleUnits')
-        self.pathUnits = FormRow2(QtWidgets.QLabel('Path'), pathUnits)
+        self.pathUnits = FormRow2(QtWidgets.QLabel('Path / Windage'), pathUnits)
         self.pathUnits.setObjectName('pathUnits')
         # self.eUnits = FormComboBox(self, prefix='Energy')
 
@@ -216,7 +210,9 @@ class SettingsWidget(QtWidgets.QWidget):
         # self.unitLayout.addWidget(self.eUnits)
 
         is_calc_drag = QtWidgets.QCheckBox(self)
-        self.is_calc_drag = FormRow2(QtWidgets.QLabel('QtWidgets.QLabel'), is_calc_drag)
+        is_calc_drag.setChecked(True)
+        self.is_calc_drag = FormRow2(QtWidgets.QLabel('Calculate drag'), is_calc_drag)
+        self.is_calc_drag.setObjectName('is_drag')
         self.calcLayout.addWidget(self.is_calc_drag)
 
         self.boxLayout.addWidget(self.viewBox)
@@ -224,22 +220,13 @@ class SettingsWidget(QtWidgets.QWidget):
         self.boxLayout.addWidget(self.calcBox)
         self.boxLayout.addWidget(self.infoBox)
 
-    def change_theme(self, index):
-        self.apply_theme()
-
-    # def change_scale(self, value):
-    #     if value % 10 == 0:
-    #         self.apply_theme()
-
     def apply_theme(self):
         main = self.window()
         if main:
             index = self.theme.currentIndex()
             scale = self.scale.value()
             extra = dict(density_scale=scale)
-            # if index == 0:
-            #     extra.update(dict(primaryTextColor='#FFFFFF'))
-            #     main.apply_stylesheet(main, extra=extra, theme='dark_blue.xml')
+
             if index == 0:
                 extra.update(dict(primaryTextColor='#FFFFFF'))
                 main.apply_stylesheet(main, extra=extra, theme='dark_teal.xml')
@@ -270,9 +257,6 @@ class SettingsWidget(QtWidgets.QWidget):
         except Exception as err:
             print(err)
 
-        # main = self.window()
-        # if main:
-        #     self.apply_theme()
         self.settingsUpdated.emit(self)
 
     def get_settings(self):
@@ -294,4 +278,4 @@ class SettingsWidget(QtWidgets.QWidget):
             print(exc)
 
     def connectUi(self):
-        ...
+        self.apply_theme_btn.clicked.connect(self.apply_theme)

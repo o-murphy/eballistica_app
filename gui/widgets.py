@@ -6,7 +6,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import *
 from PySide6 import QtGui
 
-from units import Angular, Distance
+from units import Angular, Distance, Convertor
 
 
 class SpinBox(QDoubleSpinBox):
@@ -44,7 +44,7 @@ class ConverSpinBox(QDoubleSpinBox):
         self.setSingleStep(step)
         self.setDecimals(decimals)
 
-        self._convertor: 'Convertor' = None
+        self._convertor: Convertor = None
 
     def validate(self, text: str, pos: int) -> object:
         text = text.replace(".", ",")
@@ -54,11 +54,12 @@ class ConverSpinBox(QDoubleSpinBox):
         text = text.replace(",", ".")
         return float(text)
 
-    def convertor(self) -> 'Convertor':
+    def convertor(self) -> Convertor:
         return self._convertor
 
-    def setConvertor(self, value: 'Convertor'):
+    def setConvertor(self, value: Convertor):
         self._convertor = value
+        self.setDecimals(self._convertor.accuracy)
 
     def setRawValue(self, value):
         if self._convertor is not None:
