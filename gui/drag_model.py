@@ -3,13 +3,16 @@ from functools import reduce
 from PySide6 import QtWidgets, QtCore
 
 from datatypes.dbworker import DragModel, AmmoData
-from gui.widgets import SpinBox
+from gui.settings import SettingsWidget
+from gui.widgets import SpinBox, ConverSpinBox
+from units import Convertor, Velocity
 
 
 class MultiBCWidget(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(MultiBCWidget, self).__init__(parent)
         self.init_ui(self)
+        self.connect_ui()
 
     def init_ui(self, dragModelWidget):
         self.setObjectName('dragModelWidget')
@@ -30,7 +33,7 @@ class MultiBCWidget(QtWidgets.QWidget):
         self.gridLayout.addWidget(self.bc_label)
 
         for i in range(5):
-            velocity = SpinBox(self, 0, 2000, 1)
+            velocity = ConverSpinBox(self, 0, 2000, 1)
             velocity.setObjectName(f'v{i}')
             bc = SpinBox(self, 0, 2, 0.001, decimals=3)
             bc.setObjectName(f'bc{i}')
@@ -44,13 +47,14 @@ class MultiBCWidget(QtWidgets.QWidget):
             multi_bc: list[list[float, float]] = ammo.bc7_list
         else:
             multi_bc = [[0, 0]] * 5
-        self.title.setText(dm.name)
+        self.title.setText(f'Edit BC: {dm.name}')
+        self.bc_label.setText(f'BC: {dm.name}')
         if multi_bc:
             for i, (v, bc) in enumerate(multi_bc):
                 velocity_sb = self.findChild(QtWidgets.QDoubleSpinBox, f'v{i}')
                 bc_sb = self.findChild(QtWidgets.QDoubleSpinBox, f'bc{i}')
                 if velocity_sb and bc_sb:
-                    velocity_sb.setValue(v)
+                    velocity_sb.setRawValue(v)
                     bc_sb.setValue(bc)
 
     def get_data(self):
@@ -59,8 +63,26 @@ class MultiBCWidget(QtWidgets.QWidget):
             velocity_sb = self.findChild(QtWidgets.QDoubleSpinBox, f'v{i}')
             bc_sb = self.findChild(QtWidgets.QDoubleSpinBox, f'bc{i}')
             if velocity_sb and bc_sb:
-                ret_list.append([velocity_sb.value(), bc_sb.value()])
+                ret_list.append([velocity_sb.rawValue(), bc_sb.value()])
         return ret_list
+
+    def on_settings_update(self, settings: SettingsWidget):
+
+        v_units = settings.vUnits.currentData()
+        self.velocity_label.setText(f'Velocity, {Velocity.name(v_units)}')
+
+        for i in range(5):
+            velocity_sb: ConverSpinBox = self.findChild(QtWidgets.QDoubleSpinBox, f'v{i}')
+            velocity_sb.setConvertor(Convertor(Velocity, v_units, Velocity.MPS))
+            velocity_sb.setDecimals(velocity_sb.convertor().accuracy)
+
+    def connect_ui(self):
+        window = self.window()
+        if window:
+            if hasattr(window, 'settings'):
+                settings: SettingsWidget = window.settings
+                settings.settingsUpdated.connect(self.on_settings_update)
+
 
 
 class CDMWidget(QtWidgets.QWidget):

@@ -53,7 +53,7 @@ class PowderSensWindget(QtWidgets.QWidget):
         velocity_name = Velocity.name(velocity_units)
 
         self.temp_label.setText(f'Temp., {temp_name}')
-        self.velocity_label.setText(f'Velocity., {velocity_name}')
+        self.velocity_label.setText(f'Velocity, {velocity_name}')
 
         for i in range(5):
             temp_sb = self.findChild(QtWidgets.QDoubleSpinBox, f't{i}')

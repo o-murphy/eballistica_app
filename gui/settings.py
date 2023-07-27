@@ -122,13 +122,10 @@ class SettingsWidget(QtWidgets.QWidget):
 
         self.theme_label = QtWidgets.QLabel('Theme')
         self.theme = QtWidgets.QComboBox(self)
-        # self.theme.addItem('Dark blue', 'dark_blue.xml')
         self.theme.addItem('Dark teal', 'dark_teal.xml')
         self.theme.addItem('Light', 'default.xml')
         self.apply_theme_btn = QtWidgets.QPushButton('Apply')
         self.apply_theme_btn.setProperty('class', 'success')
-        # self.apply_theme_btn.setCheckable(True)
-        # self.apply_theme_btn.setChecked(True)
 
         self.scale = QtWidgets.QSlider(QtCore.Qt.Horizontal)
         self.scale.setValue(0)
