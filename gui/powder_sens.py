@@ -12,6 +12,7 @@ class PowderSensWindget(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(PowderSensWindget, self).__init__(parent)
         self.init_ui(self)
+        self.connect_ui()
 
     def init_ui(self, powderSensWindget):
         self.setObjectName('powderSensWindget')
@@ -27,6 +28,10 @@ class PowderSensWindget(QtWidgets.QWidget):
         self.temp_label.setAlignment(QtCore.Qt.AlignHCenter)
         self.velocity_label.setAlignment(QtCore.Qt.AlignHCenter)
 
+        self.temp_sens_label = QtWidgets.QLabel('Temp sens')
+        self.temp_sens_field = QtWidgets.QLabel('1%')
+        self.calc_btn = QtWidgets.QPushButton('Calculate')
+
         self.gridLayout.addWidget(self.title, 0, 0, 1, 2)
         self.gridLayout.addWidget(self.temp_label)
         self.gridLayout.addWidget(self.velocity_label)
@@ -38,6 +43,13 @@ class PowderSensWindget(QtWidgets.QWidget):
             velocity.setObjectName(f'v{i}')
             self.gridLayout.addWidget(temp)
             self.gridLayout.addWidget(velocity)
+
+        self.gridLayout.addWidget(self.temp_sens_label)
+        self.gridLayout.addWidget(self.temp_sens_field)
+        self.gridLayout.addWidget(self.calc_btn)
+
+    def connect_ui(self):
+        self.calc_btn.clicked.connect(self._calculate)
 
     def get_settings(self) -> SettingsWidget:
         window = self.window()
@@ -64,33 +76,7 @@ class PowderSensWindget(QtWidgets.QWidget):
             temp_sb.setRawValue(t0 if i == 0 else 0)
             velocity_sb.setRawValue(v0 if i == 0 else 0)
 
-    # def display_data(self):
-    #     for i, (v, bc) in enumerate(sens_list):
-    #         temp_sb = self.findChild(QtWidgets.QDoubleSpinBox, f't{i}')
-    #         velocity_sb = self.findChild(QtWidgets.QDoubleSpinBox, f'v{i}')
-    #         if temp_sb and velocity_sb:
-    #             temp_sb.setValue(v)
-    #             velocity_sb.setValue(bc)
-
-    # def get_data(self):
-    #     ret_list = []
-    #     for i in range(5):
-    #         temp_sb = self.findChild(QtWidgets.QDoubleSpinBox, f't{i}')
-    #         velocity_sb = self.findChild(QtWidgets.QDoubleSpinBox, f'v{i}')
-    #         if temp_sb and velocity_sb:
-    #             ret_list.append([temp_sb.value(), velocity_sb.value()])
-    #     return ret_list
-
-    # @staticmethod
-    # def count_nonzero_pairs(pair_list):
-    #     def count_valid_pairs(acc, pair):
-    #         if pair[0] != 0 and pair[1] != 0:
-    #             return acc + 1
-    #         return acc
-    #
-    #     return reduce(count_valid_pairs, pair_list, 0)
-
-    def calculate(self):
+    def _calculate(self):
 
         def calculate_sensitivity(v0, t0, v1, t1):
             # Step 1: Calculate the Temperature Difference
@@ -120,8 +106,14 @@ class PowderSensWindget(QtWidgets.QWidget):
                 coeffs.append(calculate_sensitivity(v0, t0, v1, t1))
 
         if len(coeffs) >= 1:
-            return median(coeffs)
-        return None
+            val = median(coeffs)
+        else:
+            val = None
+        self.temp_sens_field.setText(f'{val}%')
+        return val
+
+    def calculate(self):
+        return self._calculate()
 
 
 if __name__ == '__main__':

@@ -1,3 +1,4 @@
+from PyQt5.QtWidgets import QApplication
 from PySide6 import QtGui, QtWidgets, QtCore
 
 
@@ -36,6 +37,7 @@ class BotAppBar(QtWidgets.QWidget):
         # self.homeAct.disabled_icon = QtGui.QIcon('rsrc/home_disabled.svg')
 
         self.addAct = BarButton()
+        # self.addAct.setIcon(self.style().standardIcon(QApplication.IconStyle.SP_DialogYesButton))
         self.addAct.setIcon(QtGui.QIcon('rsrc/add.svg'))
         # self.addAct.disabled_icon = QtGui.QIcon('rsrc/add_disabled.svg')
 
