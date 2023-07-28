@@ -3,9 +3,9 @@ from PySide6 import QtWidgets, QtCore, QtGui
 from datatypes.dbworker import Worker, AmmoData, DragModel
 from gui.app_logo import AppLogo, AppLabel
 from gui.drag_model import EditDragDataButton
-from gui.settings import SettingsWidget, Convertor
+from gui.settings import SettingsWidget
 from gui.widgets import FormRow3, SpinBox, ComboBox, ConverSpinBox
-from units import Distance, Angular, Pressure, Temperature, Velocity, Weight
+from units import Distance, Angular, Pressure, Temperature, Velocity, Weight, Convertor
 
 
 class AmmoItemWidget(QtWidgets.QWidget):

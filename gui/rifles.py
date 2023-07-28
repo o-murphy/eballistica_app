@@ -1,9 +1,9 @@
 from PySide6 import QtWidgets, QtCore, QtGui
-from gui.settings import Convertor, SettingsWidget
+from gui.settings import SettingsWidget
 
 # from datatypes.datatypes import RifleData
 from datatypes.dbworker import Worker, TwistDir, RifleData
-from units import Distance
+from units import Distance, Convertor
 from .app_logo import AppLogo, AppLabel
 from .widgets import FormRow3, SpinBox, ComboBox, ConverSpinBox
 

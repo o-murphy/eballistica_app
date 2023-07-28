@@ -4,7 +4,7 @@ from PySide6 import QtWidgets, QtCore
 from PySide6.QtCore import QSettings
 
 from gui.widgets import FormRow2
-from units import Convertor, Distance, Pressure, Weight, Temperature, Velocity, Angular, Unit
+from units import Distance, Pressure, Weight, Temperature, Velocity, Angular, Unit
 
 SIGHT_HEIGHT = (
     ('mm', Distance.Millimeter),
@@ -122,7 +122,7 @@ class SettingsWidget(QtWidgets.QWidget):
 
         self.theme_label = QtWidgets.QLabel('Theme')
         self.theme = QtWidgets.QComboBox(self)
-        self.theme.addItem('Dark teal', 'dark_teal.xml')
+        self.theme.addItem('Dark', 'dark_blue.xml')
         self.theme.addItem('Light', 'default.xml')
         self.apply_theme_btn = QtWidgets.QPushButton('Apply')
         self.apply_theme_btn.setProperty('class', 'success')
@@ -226,7 +226,7 @@ class SettingsWidget(QtWidgets.QWidget):
 
             if index == 0:
                 extra.update(dict(primaryTextColor='#FFFFFF'))
-                main.apply_stylesheet(main, extra=extra, theme='dark_teal.xml')
+                main.apply_stylesheet(main, extra=extra, theme='dark_blue.xml')
             else:
                 main.apply_stylesheet(main, theme='default.xml')
 
