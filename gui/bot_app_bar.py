@@ -1,4 +1,3 @@
-from PySide6.QtWidgets import QApplication
 from PySide6 import QtGui, QtWidgets, QtCore
 
 

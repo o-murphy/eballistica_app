@@ -1,12 +1,10 @@
-import sys
-from enum import IntFlag
 from typing import Iterable, Optional, Union, Tuple
 
+from PySide6 import QtGui
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import *
-from PySide6 import QtGui
 
-from units import Angular, Distance, Convertor
+from units import Distance, Convertor
 
 
 class SpinBox(QDoubleSpinBox):
@@ -78,12 +76,12 @@ class ComboBox(QComboBox):
     def __init__(self,
                  parent=None,
                  items: Iterable[Union[
-                    Tuple[Optional[QtGui.QIcon], Optional[str], Optional[object]],
-                    Tuple[Optional[QtGui.QIcon], Optional[str]],
-                    Tuple[Optional[str], Optional[object]],
-                    Tuple[Optional[QtGui.QIcon]],
-                    Tuple[Optional[str]],
-                    Tuple[()]
+                     Tuple[Optional[QtGui.QIcon], Optional[str], Optional[object]],
+                     Tuple[Optional[QtGui.QIcon], Optional[str]],
+                     Tuple[Optional[str], Optional[object]],
+                     Tuple[Optional[QtGui.QIcon]],
+                     Tuple[Optional[str]],
+                     Tuple[()]
                  ]] = None,
                  *args, **kwargs):
         super(ComboBox, self).__init__(parent, *args, **kwargs)
@@ -177,6 +175,7 @@ class FormRow3(QWidget):
 
 if __name__ == '__main__':
     import sys
+
     app = QApplication(sys.argv)
     w = MeasureSpinBox(measure=Distance, units=Distance.Inch, default_units=Distance.Millimeter)
     w.setValue(13)

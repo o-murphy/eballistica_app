@@ -1,11 +1,10 @@
 from PySide6 import QtWidgets, QtCore, QtGui
-from gui.settings import SettingsWidget
 
 # from datatypes.datatypes import RifleData
 from datatypes.dbworker import Worker, TwistDir, RifleData
+from gui.settings import SettingsWidget
 from units import Distance, Convertor
-from .app_logo import AppLogo, AppLabel
-from .widgets import FormRow3, SpinBox, ComboBox, ConverSpinBox
+from .widgets import FormRow3, ComboBox, ConverSpinBox
 
 
 # class RifleItemWidget(QtWidgets.QWidget):
@@ -42,7 +41,6 @@ class RifleItemWidget(QtWidgets.QGroupBox):
         super(RifleItemWidget, self).__init__(parent)
         self.setup_ui(self)
         self.rifle_data = None
-
 
     def setup_ui(self, rifleItemWidget):
         rifleItemWidget.setObjectName("rifleItemWidget")
@@ -176,7 +174,6 @@ class EditRifleWidget(QtWidgets.QWidget):
         sizePolicy.setHeightForWidth(editRifleWidget.sizePolicy().hasHeightForWidth())
         editRifleWidget.setSizePolicy(sizePolicy)
         editRifleWidget.setMinimumSize(QtCore.QSize(0, 0))
-
 
         self.name_box = QtWidgets.QGroupBox('Rifle name', self)
         self.props_box = QtWidgets.QGroupBox('Properties', self)

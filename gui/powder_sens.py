@@ -1,10 +1,9 @@
-from functools import reduce
 from statistics import median
 
 from PySide6 import QtWidgets, QtCore
 
 from gui.settings import SettingsWidget
-from gui.widgets import SpinBox, ConverSpinBox
+from gui.widgets import ConverSpinBox
 from units import Temperature, Velocity, Convertor
 
 
@@ -99,9 +98,9 @@ class PowderSensWindget(QtWidgets.QWidget):
         ret_list.sort(key=lambda item: item[1], reverse=True)
 
         coeffs = []
-        for i in range(len(ret_list)-1):
+        for i in range(len(ret_list) - 1):
             t0, v0 = ret_list[i]
-            t1, v1 = ret_list[i+1]
+            t1, v1 = ret_list[i + 1]
             if v0 != 0 and v1 != 0:
                 coeffs.append(calculate_sensitivity(v0, t0, v1, t1))
 

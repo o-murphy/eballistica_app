@@ -3,20 +3,11 @@ from qt_material import QtStyleTools
 
 from datatypes.dbworker import DragModel
 from .ammos import EditAmmoWidget, EditShotWidget, AmmosLi
-# from .ammos import AmmosWidget, EditAmmoWidget, EditShotWidget
 from .app_logo import AppHeader
 from .bot_app_bar import BotAppBar
 from .drag_model import MultiBCWidget, CDMWidget
 from .powder_sens import PowderSensWindget
-# from .rifles import RiflesWidget, EditRifleWidget
 from .rifles import EditRifleWidget, RiflesLi
-
-
-# class AppState(QtCore.QObject):
-#     def __init__(self, parent=None):
-#         super(AppState, self).__init__(parent)
-#         self.rifle_id = None
-#         self.ammo_id = None
 from .settings import SettingsWidget
 from .trajectory import TrajectoryWidget
 
@@ -26,8 +17,6 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
     def __init__(self, app=None):
         super(App, self).__init__(app)
         self.setupUi(self)
-
-        # self.app_state = AppState()
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(u"MainWindow")
@@ -56,7 +45,6 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         self.main_layout.addWidget(self.botAppBar)
 
         self.settings = SettingsWidget(self)
-
 
         self.rifles = RiflesLi(self)
         self.edit_rifle = EditRifleWidget(self)
@@ -286,5 +274,3 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         self.edit_ammo.calc_powder_sens.clicked.connect(self.switch_calc_sens)
 
         self.edit_shot.traj_btn.clicked.connect(self.switch_to_trajectory)
-
-

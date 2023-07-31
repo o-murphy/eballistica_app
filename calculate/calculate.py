@@ -126,9 +126,8 @@ def calculate_pro(rifle: RifleData, ammo: AmmoData, target: Target, atmo: AtmoDa
     return data
 
 
-def calculate_graph(rifle: RifleData, ammo: AmmoData, target: Target, atmo: AtmoData, zerodata: ZeroData):
+def calculate_graph(trajectory):
 
-    trajectory = calculate_pro(rifle, ammo, target, atmo, zerodata)
     p: TrajectoryData
 
     return [
@@ -139,11 +138,9 @@ def calculate_graph(rifle: RifleData, ammo: AmmoData, target: Target, atmo: Atmo
     ]
 
 
-def calculate_traj(rifle: RifleData, ammo: AmmoData, target: Target, atmo: AtmoData, zerodata: ZeroData):
+def calculate_traj(trajectory):
 
     data = []
-
-    trajectory = calculate_pro(rifle, ammo, target, atmo, zerodata)
 
     p: TrajectoryData
     for p in trajectory:

@@ -1,9 +1,8 @@
-from PySide6 import QtWidgets, QtCore, QtGui
-from PySide6.QtCore import QPointF
+from PySide6 import QtWidgets, QtCore
 from qt_material import QtStyleTools
 import pyqtgraph as pg
 
-from calculate.calculate import calculate_traj, calculate_graph
+from calculate.calculate import calculate_traj, calculate_graph, calculate_pro
 from datatypes.dbworker import RifleData, AmmoData, ZeroData, Target, AtmoData
 
 
@@ -126,10 +125,9 @@ class TrajectoryWidget(QtWidgets.QScrollArea):
         zerodata: ZeroData = ammo.zerodata
         target: Target = ammo.target
         atmo: AtmoData = ammo.atmo
-        trajectory = calculate_traj(rifle, ammo, target, atmo, zerodata)
-        self.table.display_data(trajectory)
-
-        self.graph.display_data(calculate_graph(rifle, ammo, target, atmo, zerodata))
+        trajectory = calculate_pro(rifle, ammo, target, atmo, zerodata)
+        self.table.display_data(calculate_traj(trajectory))
+        self.graph.display_data(calculate_graph(trajectory))
 
     def switch_view(self, index):
         if index == 0:
