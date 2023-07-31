@@ -1,7 +1,9 @@
-from PySide6 import QtWidgets, QtCore
+from PySide6 import QtWidgets, QtCore, QtGui
+from PySide6.QtCore import QPointF
 from qt_material import QtStyleTools
+import pyqtgraph as pg
 
-from calculate.calculate import calculate_traj
+from calculate.calculate import calculate_traj, calculate_graph
 from datatypes.dbworker import RifleData, AmmoData, ZeroData, Target, AtmoData
 
 
@@ -61,6 +63,28 @@ class TrajectoryGraph(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(TrajectoryGraph, self).__init__(parent)
 
+    def display_data(self, points):
+        self.vLayout = QtWidgets.QVBoxLayout(self)
+
+        # Create a PlotWidget
+        self.plot_widget = pg.PlotWidget(title='Drop at distance')
+        self.vLayout.addWidget(self.plot_widget)
+
+        # Add the data to the plot
+        x = [p[0] for p in points]
+        y = [p[1] for p in points]
+
+        pen_color = '#FFA500'  # Custom pen color (red in this example)
+        symbol_color = '#008080'
+
+        self.plot_widget.plot(x, y, pen=pg.mkPen(color=pen_color), symbol='o', symbolBrush=symbol_color, symbolSize=5)
+
+        self.plot_widget.setMouseEnabled(x=False, y=False)
+        self.plot_widget.setDisabled(True)
+        self.plot_widget.showGrid(x=True, y=True)
+        self.plot_widget.showAxis('bottom')
+        self.plot_widget.showAxis('left')
+
 
 class TrajectoryReticle(QtWidgets.QWidget):
     def __init__(self, parent=None):
@@ -104,6 +128,8 @@ class TrajectoryWidget(QtWidgets.QScrollArea):
         atmo: AtmoData = ammo.atmo
         trajectory = calculate_traj(rifle, ammo, target, atmo, zerodata)
         self.table.display_data(trajectory)
+
+        self.graph.display_data(calculate_graph(rifle, ammo, target, atmo, zerodata))
 
     def switch_view(self, index):
         if index == 0:

@@ -126,6 +126,19 @@ def calculate_pro(rifle: RifleData, ammo: AmmoData, target: Target, atmo: AtmoDa
     return data
 
 
+def calculate_graph(rifle: RifleData, ammo: AmmoData, target: Target, atmo: AtmoData, zerodata: ZeroData):
+
+    trajectory = calculate_pro(rifle, ammo, target, atmo, zerodata)
+    p: TrajectoryData
+
+    return [
+        (
+            round(p.travelled_distance().get_in(Distance.Meter)),
+            round(p.drop().get_in(Distance.Centimeter), Distance.accuracy(Distance.Centimeter))
+        ) for p in trajectory
+    ]
+
+
 def calculate_traj(rifle: RifleData, ammo: AmmoData, target: Target, atmo: AtmoData, zerodata: ZeroData):
 
     data = []
