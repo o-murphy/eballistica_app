@@ -265,6 +265,7 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         self.stacked.setCurrentWidget(self.settings)
 
     def switch_to_trajectory(self):
+        self.trajectory.display_data(self.edit_shot)
         self.stacked.setCurrentWidget(self.trajectory)
 
     def connectUi(self, MainWindow):
