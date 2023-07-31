@@ -47,11 +47,15 @@ class BotAppBar(QtWidgets.QWidget):
         self.okAct = BarButton()
         self.okAct.setIcon(QtGui.QIcon('rsrc/done.svg'))
 
+        self.shareAct = BarButton()
+        self.shareAct.setIcon(QtGui.QIcon('rsrc/share.svg'))
+
         self.rowLayout.addWidget(self.setAct)
         self.rowLayout.addWidget(self.homeAct)
         self.rowLayout.addWidget(self.backAct)
         self.rowLayout.addWidget(self.addAct)
         self.rowLayout.addWidget(self.okAct)
+        self.rowLayout.addWidget(self.shareAct)
 
         for btn in self.findChildren(QtWidgets.QToolButton):
             btn.setIconSize(QtCore.QSize(64, 64))

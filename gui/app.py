@@ -18,6 +18,7 @@ from .rifles import EditRifleWidget, RiflesLi
 #         self.rifle_id = None
 #         self.ammo_id = None
 from .settings import SettingsWidget
+from .trajectory import TrajectoryWidget
 
 
 class App(QtWidgets.QMainWindow, QtStyleTools):
@@ -70,6 +71,8 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
 
         self.powder_sens = PowderSensWindget(self)
 
+        self.trajectory = TrajectoryWidget(self)
+
         self.settings.update_settings()
 
         self.stacked.addWidget(self.rifles)
@@ -81,6 +84,7 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         self.stacked.addWidget(self.cdm)
         self.stacked.addWidget(self.powder_sens)
         self.stacked.addWidget(self.settings)
+        self.stacked.addWidget(self.trajectory)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -130,6 +134,8 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
             self.stacked.setCurrentWidget(self.edit_ammo)
         elif current_screen == self.settings:
             self.stacked.setCurrentWidget(self.rifles)
+        elif current_screen == self.trajectory:
+            self.stacked.setCurrentWidget(self.edit_shot)
 
     def go_add(self):
         current_screen = self.stacked.currentWidget()
@@ -145,25 +151,31 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
 
         if current_screen == self.rifles:
             self.botAppBar.okAct.setHidden(True)
+            self.botAppBar.backAct.setHidden(True)
             self.botAppBar.addAct.setVisible(True)
             self.botAppBar.setAct.setVisible(True)
             self.botAppBar.homeAct.setHidden(True)
+            self.botAppBar.shareAct.setHidden(True)
 
             self.header.bread.setText('Rifles')
 
         elif current_screen == self.ammos:
             self.botAppBar.okAct.setHidden(True)
+            self.botAppBar.backAct.setVisible(True)
             self.botAppBar.addAct.setVisible(True)
             self.botAppBar.setAct.setVisible(False)
             self.botAppBar.homeAct.setHidden(False)
+            self.botAppBar.shareAct.setHidden(True)
 
             self.header.bread.setText(f"{self.ammos.filter['rifle'].name}/Ammo")
 
         elif current_screen == self.edit_rifle or current_screen == self.edit_ammo or current_screen == self.edit_shot:
             self.botAppBar.okAct.setVisible(True)
+            self.botAppBar.backAct.setVisible(True)
             self.botAppBar.addAct.setHidden(True)
             self.botAppBar.setAct.setVisible(False)
             self.botAppBar.homeAct.setHidden(False)
+            self.botAppBar.shareAct.setHidden(True)
 
             rifle = self.ammos.filter.get('rifle')
             rifle = rifle.name if rifle else None
@@ -181,9 +193,19 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
             self.header.bread.setText('Settings')
 
             self.botAppBar.okAct.setVisible(True)
+            self.botAppBar.backAct.setVisible(True)
             self.botAppBar.addAct.setVisible(False)
             self.botAppBar.setAct.setVisible(False)
             self.botAppBar.homeAct.setHidden(True)
+            self.botAppBar.shareAct.setHidden(True)
+
+        elif current_screen == self.trajectory:
+            self.botAppBar.okAct.setHidden(True)
+            self.botAppBar.addAct.setHidden(True)
+            self.botAppBar.setAct.setHidden(True)
+            self.botAppBar.homeAct.setVisible(True)
+            self.botAppBar.backAct.setVisible(True)
+            self.botAppBar.shareAct.setVisible(True)
 
         else:
             ...
@@ -242,6 +264,9 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         # self.settings.get_settings()
         self.stacked.setCurrentWidget(self.settings)
 
+    def switch_to_trajectory(self):
+        self.stacked.setCurrentWidget(self.trajectory)
+
     def connectUi(self, MainWindow):
         self.rifles.rifle_edit_sig.connect(self.switch_edit_rifle_screen)
         self.rifles.rifle_clicked_sig.connect(self.switch_to_ammos)
@@ -258,5 +283,7 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
 
         self.edit_ammo.editDrag.connect(self.switch_drag_edit_screen)
         self.edit_ammo.calc_powder_sens.clicked.connect(self.switch_calc_sens)
+
+        self.edit_shot.traj_btn.clicked.connect(self.switch_to_trajectory)
 
 
