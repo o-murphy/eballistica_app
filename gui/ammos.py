@@ -469,8 +469,8 @@ class EditShotWidget(QtWidgets.QWidget):
 
         self.distance = FormRow3(distance,  'Distance', 'm')
         self.look_angle = FormRow3(look_angle, 'Look Angle', 'degree')
-        self.altitude = FormRow3(altitude, 'Look Angle', 'degree')
-        self.pressure = FormRow3(pressure, 'Look Angle', 'mmGh')
+        self.altitude = FormRow3(altitude, 'Altitude', 'degree')
+        self.pressure = FormRow3(pressure, 'Pressure', 'mmGh')
         self.temperature = FormRow3(temperature, 'Temperature', 'C')
         self.humidity = FormRow3(humidity, 'Humidity', '%')
         self.wind_speed = FormRow3(wind_speed, 'Wind speed', 'mps')
