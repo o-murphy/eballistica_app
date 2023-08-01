@@ -76,7 +76,6 @@ class TrajectoryTable(QtWidgets.QTableView, QtStyleTools):
         return headers
 
     def display_data(self, data=None):
-        print(data)
         model = MyTableModel(data, self.headers())
         self.setModel(model)
         self.resizeColumnsToContents()

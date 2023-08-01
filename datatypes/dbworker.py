@@ -72,7 +72,7 @@ class AmmoData(Base):
 
         if rifle is None:
             raise ValueError("AmmoData must be associated with a RifleData.")
-        print('init', self.id)
+
         self.rifle = rifle
         self.zerodata = ZeroData(ammo=self)
         self.target = Target(ammo=self)
@@ -135,14 +135,6 @@ class ZeroData(Base):
     def __repr__(self):
         return "<{0.__class__.__name__}(id={0.id!r})>".format(self)
 
-    # @validates('ammo_id')
-    # def validate_ammo_id(self, key, ammo_id):
-    #     print('validate_ammo_id', ammo_id)
-    #     with Session() as session:
-    #         if ammo_id is not None and not session.query(AmmoData).filter_by(id=ammo_id).scalar():
-    #             raise ValueError(f"AmmoData with ID {ammo_id} does not exist in the database.")
-    #     return ammo_id
-
 
 class Target(Base):
     __tablename__ = 'target'
@@ -158,13 +150,6 @@ class Target(Base):
 
     def __repr__(self):
         return "<{0.__class__.__name__}(id={0.id!r})>".format(self)
-
-    # @validates('ammo_id')
-    # def validate_ammo_id(self, key, ammo_id):
-    #     with Session() as session:
-    #         if ammo_id and not session.query(AmmoData).filter_by(id=ammo_id).scalar():
-    #             raise ValueError(f"AmmoData with ID {ammo_id} does not exist in the database.")
-    #     return ammo_id
 
 
 class AtmoData(Base):
@@ -183,13 +168,6 @@ class AtmoData(Base):
 
     def __repr__(self):
         return "<{0.__class__.__name__}(id={0.id!r})>".format(self)
-
-    # @validates('ammo_id')
-    # def validate_ammo_id(self, key, ammo_id):
-    #     with Session() as session:
-    #         if ammo_id and not session.query(AmmoData).filter_by(id=ammo_id).scalar():
-    #             raise ValueError(f"AmmoData with ID {ammo_id} does not exist in the database.")
-    #     return ammo_id
 
 
 Base.metadata.create_all(engine)

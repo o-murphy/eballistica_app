@@ -4,7 +4,7 @@ from datatypes.dbworker import Worker, AmmoData, DragModel
 from gui.app_logo import AppLogo, AppLabel
 from gui.drag_model import EditDragDataButton
 from gui.settings import SettingsWidget
-from gui.widgets import FormRow3, SpinBox, ComboBox, ConverSpinBox
+from gui.widgets import FormRow3, SpinBox, ComboBox, ConverSpinBox, AbstractScroller, GesturedListView
 from units import Distance, Angular, Pressure, Temperature, Velocity, Weight, Convertor
 
 
@@ -104,7 +104,7 @@ class AmmosHeader(QtWidgets.QWidget):
         # ammosHeader.addButton.setText(_translate("ammosHeader", "+"))
 
 
-class AmmosLi(QtWidgets.QListWidget):
+class AmmosLi(GesturedListView):
     edit_context_action = QtCore.Signal(object)
     ammo_clicked_sig = QtCore.Signal(object)
     ammo_edit_sig = QtCore.Signal(object)
@@ -112,38 +112,33 @@ class AmmosLi(QtWidgets.QListWidget):
     def __init__(self, parent=None):
         super(AmmosLi, self).__init__(parent)
         self.filter = {}
-
+        # self.setupUi(self)
         self.connectUi(self)
 
-    def contextMenuEvent(self, event):
-        # self.itemAt(event.pos())
-        context_menu = QtWidgets.QMenu(self)
+    def showContextMenu(self, pos=None):
+        if pos is None:
+            pos = self.mapFromGlobal(self.cursor().pos())
 
-        edit_item = QtGui.QAction('Edit', self)
-        remove_item = QtGui.QAction('Delete', self)
+        item = self.itemAt(pos)
+        if item:
+            context_menu = QtWidgets.QMenu(self)
 
-        context_menu.addAction(edit_item)
-        context_menu.addAction(remove_item)
+            context_menu.addAction('Edit', lambda: self.onContextMenuAction(item, "Edit"))
+            context_menu.addAction('Delete', lambda: self.onContextMenuAction(item, "Delete"))
+            context_menu.exec_(self.mapToGlobal(pos))
 
-        selected_item = self.itemAt(event.pos())
+    def onContextMenuAction(self, item, action):
+        # Implement the code to handle context menu actions
+        if action == "Edit":
+            self.edit_context_action.emit(item)
+        elif action == 'Delete':
+            uid = self.itemWidget(item).ammo_data.id
+            Worker.delete_ammo(uid)
+            self.refresh()
 
-        if selected_item:
-            # Perform custom actions based on the selected item
-            uid = self.indexFromItem(selected_item).row()
-
-            action = context_menu.exec_(event.globalPos())
-
-            event.accept()
-            if action == edit_item:
-                self.edit_context_action.emit(selected_item)
-            elif action == remove_item:
-                uid = self.itemWidget(selected_item).ammo_data.id
-                Worker.delete_ammo(uid)
-                self.refresh()
-
-    # def setupUi(self, AmmosLi):
-    #     self.menu = QtWidgets.QMenu()
-    #     self.menu.addAction(self.edit_item)
+    def setupUi(self, ammosLi):
+        super(AmmosLi, self).setupUi(self)
+        self.setObjectName('ammosLi')
 
     def set_filter(self, **kwargs):
         self.filter = kwargs
@@ -183,7 +178,6 @@ class AmmosLi(QtWidgets.QListWidget):
 
 
 class EditAmmoWidget(QtWidgets.QWidget):
-    # ok_clicked = QtCore.Signal(object)
     editDrag = QtCore.Signal(object, object)
     errorSig = QtCore.Signal(str)
 
@@ -209,7 +203,6 @@ class EditAmmoWidget(QtWidgets.QWidget):
 
         self.vBoxLayout = QtWidgets.QVBoxLayout(self)
         self.vBoxLayout.setObjectName("vBoxLayout")
-        # self.vBoxLayout.setContentsMargins(0, 0, 0, 0)
         self.vBoxLayout.setAlignment(QtCore.Qt.AlignTop)
 
         self.name_boxLayout = QtWidgets.QFormLayout(self.name_box)

@@ -252,12 +252,9 @@ class SettingsWidget(QtWidgets.QWidget):
                     else:
                         settings[name] = obj.currentData()
                 elif hasattr(obj, 'value'):
-                    print(obj.objectName(), obj.value())
                     settings[obj.objectName()] = obj.value()
                 elif hasattr(obj, 'isChecked'):
-                    print(obj.objectName(), obj.isChecked())
                     settings[obj.objectName()] = obj.isChecked()
-        print(settings)
         try:
             with open('settings.json', 'w') as fp:
                 json.dump(settings, fp)
@@ -276,10 +273,9 @@ class SettingsWidget(QtWidgets.QWidget):
                     if hasattr(obj, 'currentData'):
                         obj.setCurrentIndex(obj.findData(Unit(v)))
                     elif hasattr(obj, 'value'):
-                        print(obj.objectName(), obj.value())
                         obj.setValue(v)
                     elif hasattr(obj, 'isChecked'):
-                        obj.setCHecked(v)
+                        obj.setChecked(v)
 
         except Exception as exc:
             print(exc)

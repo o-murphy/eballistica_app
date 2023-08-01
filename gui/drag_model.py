@@ -214,6 +214,6 @@ if __name__ == '__main__':
 
     window = MultiBCWidget()
     window.display_data([[900, 0.358], [800, 0.360]])
-    print(window.get_data())
+
     window.show()
     app.exit(app.exec())

@@ -10,6 +10,7 @@ from .powder_sens import PowderSensWindget
 from .rifles import EditRifleWidget, RiflesLi
 from .settings import SettingsWidget
 from .trajectory import TrajectoryWidget
+from .widgets import AbstractScroller
 
 
 class App(QtWidgets.QMainWindow, QtStyleTools):
@@ -41,6 +42,10 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         self.scroll_area = QtWidgets.QScrollArea(self)
         self.scroll_area.setWidgetResizable(True)
         self.scroll_area.setWidget(self.stacked)
+
+        # self.scroll_area.setVerticalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
+        self.scroller = AbstractScroller(self.scroll_area.viewport())
+        self.scroller.setScrollable(True, QtWidgets.QScroller.LeftMouseButtonGesture)
 
         self.status_bar = QtWidgets.QStatusBar(self)
 

@@ -1,10 +1,147 @@
 from typing import Iterable, Optional, Union, Tuple
 
-from PySide6 import QtGui
+from PySide6 import QtGui, QtCore
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import *
 
 from units import Distance, Convertor
+
+
+class AbstractScroller:
+
+    def __init__(self, viewport: QWidget = None):
+        self._viewport = viewport
+
+        self._sp = QScrollerProperties()
+        # self._sp.setScrollMetric(QScrollerProperties.DragVelocitySmoothingFactor, 0.6)
+        self._sp.setScrollMetric(QScrollerProperties.DragVelocitySmoothingFactor, 0.1)
+        self._sp.setScrollMetric(QScrollerProperties.ScrollingCurve, QtCore.QEasingCurve(QtCore.QEasingCurve.OutExpo))
+        self._sp.setScrollMetric(QScrollerProperties.MinimumVelocity, 0.0)
+        self._sp.setScrollMetric(QScrollerProperties.MaximumVelocity, 0.2)
+        self._sp.setScrollMetric(QScrollerProperties.AcceleratingFlickMaximumTime, 0.5)
+        self._sp.setScrollMetric(QScrollerProperties.AcceleratingFlickSpeedupFactor, 1.2)
+        # self._sp.setScrollMetric(QScrollerProperties.SnapPositionRatio, 0.2)
+        self._sp.setScrollMetric(QScrollerProperties.SnapPositionRatio, 1)
+        self._sp.setScrollMetric(QScrollerProperties.MaximumClickThroughVelocity, 1)
+        self._sp.setScrollMetric(QScrollerProperties.DragStartDistance, 0.001)
+        self._sp.setScrollMetric(QScrollerProperties.MousePressEventDelay, 0.5)
+
+        self._gesture = QScroller.scroller(self._viewport)
+        self._gesture.setScrollerProperties(self._sp)
+
+    def setScrollable(self, is_true: bool, gesture: QScroller.ScrollerGestureType):
+        if is_true:
+            self._gesture.grabGesture(self._viewport, QScroller.LeftMouseButtonGesture)
+        else:
+            self._gesture.ungrabGesture(self._viewport)
+
+
+class GesturedListView(QListWidget):
+
+        def __init__(self, parent=None):
+            super(GesturedListView, self).__init__(parent)
+            self.setupUi(self)
+            # self.connectUi(self)
+            # self.refresh()
+
+            self.setContextMenuPolicy(Qt.CustomContextMenu)
+            self.customContextMenuRequested.connect(self.showContextMenu)
+            self.setMouseTracking(True)  # Enable mouse tracking to receive mouseMoveEvent
+            self.startPos = None
+            self.isLongPress = False
+            self.timerId = None
+
+        def mousePressEvent(self, event):
+            if event.button() == Qt.LeftButton:
+                self.isLongPress = False
+                self.startPos = event.pos()
+                self.timerId = self.startTimer(200)  # Start the timer for long-press detection
+
+            super(GesturedListView, self).mousePressEvent(event)
+
+        def mouseReleaseEvent(self, event):
+            if event.button() == Qt.LeftButton:
+                if self.timerId is not None:
+                    self.killTimer(self.timerId)  # Stop the timer if it's still running
+                    self.timerId = None
+
+                endPos = event.pos()
+                distance = (endPos - self.startPos).manhattanLength()
+
+                if distance < QApplication.startDragDistance() and not self.isLongPress:
+                    # If the distance is less than startDragDistance, it's a short click
+                    self.runDefaultClickAction()
+
+            super(GesturedListView, self).mouseReleaseEvent(event)
+
+        def runDefaultClickAction(self):
+            ...
+
+        def timerEvent(self, event):
+            if event.timerId() == self.timerId:
+                self.isLongPress = True
+                self.killTimer(self.timerId)  # Stop the timer
+
+                # Open the context menu
+                self.showContextMenu()
+
+        def showContextMenu(self, pos=None):
+            ...
+
+        def onContextMenuAction(self, item, action):
+            ...
+
+        def setupUi(self, listView):
+            sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            self.setSizePolicy(sizePolicy)
+
+            self.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
+            self.scroller = AbstractScroller(self.viewport())
+            self.scroller.setScrollable(True, QScroller.LeftMouseButtonGesture)
+
+            self.setStyleSheet("""
+            QListWidget {
+                background-color: transparent;
+                show-decoration-selected: 0;
+                /*padding:0;
+                margin:0;*/
+                }
+                
+                QListWidget::item:selected {
+                border-left: none;
+                border-top:none;
+                border-right:none;
+                border-bottom:none;
+                background: transparent;
+                }
+                
+                QListWidget::item:selected:active {
+                background: transparent;
+                border-left: none;
+                border-top:none;
+                border-right:none;
+                border-bottom:none;
+                }
+                
+                QListWidget::item:selected:!active {
+                background: transparent;
+                border-left: none;
+                border-top:none;
+                border-right:none;
+                border-bottom:none;
+                }
+                
+                QListWidget::item:hover {
+                    border-left: 3px solid #008080;
+                    border-top:none;
+                    border-right:none;
+                    border-bottom:none;
+                    background: transparent;
+                }
+                
+            """)
 
 
 class SpinBox(QDoubleSpinBox):
@@ -174,11 +311,5 @@ class FormRow3(QWidget):
 
 
 if __name__ == '__main__':
-    import sys
+    ...
 
-    app = QApplication(sys.argv)
-    w = MeasureSpinBox(measure=Distance, units=Distance.Inch, default_units=Distance.Millimeter)
-    w.setValue(13)
-    print(w.value())
-    w.show()
-    app.exit(app.exec())

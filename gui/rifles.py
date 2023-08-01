@@ -1,9 +1,12 @@
+from PyQt5.QtWidgets import QApplication
 from PySide6 import QtWidgets, QtCore, QtGui
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QMenu
 
 from datatypes.dbworker import Worker, TwistDir, RifleData
 from gui.settings import SettingsWidget
 from units import Distance, Convertor
-from .widgets import FormRow3, ComboBox, ConverSpinBox
+from .widgets import FormRow3, ComboBox, ConverSpinBox, AbstractScroller, GesturedListView
 
 
 class RifleItemWidget(QtWidgets.QGroupBox):
@@ -41,7 +44,7 @@ class RifleItemWidget(QtWidgets.QGroupBox):
             return settings
 
 
-class RiflesLi(QtWidgets.QListWidget):
+class RiflesLi(GesturedListView):
     edit_context_action = QtCore.Signal(object)
 
     rifle_clicked_sig = QtCore.Signal(object)
@@ -49,41 +52,33 @@ class RiflesLi(QtWidgets.QListWidget):
 
     def __init__(self, parent=None):
         super(RiflesLi, self).__init__(parent)
-        self.setupUi(self)
         self.connectUi(self)
         self.refresh()
 
-    def contextMenuEvent(self, event):
-        context_menu = QtWidgets.QMenu(self)
+    def showContextMenu(self, pos=None):
+        if pos is None:
+            pos = self.mapFromGlobal(self.cursor().pos())
 
-        edit_item = QtGui.QAction('Edit', self)
-        remove_item = QtGui.QAction('Delete', self)
+        item = self.itemAt(pos)
+        if item:
+            context_menu = QtWidgets.QMenu(self)
 
-        context_menu.addAction(edit_item)
-        context_menu.addAction(remove_item)
+            context_menu.addAction('Edit', lambda: self.onContextMenuAction(item, "Edit"))
+            context_menu.addAction('Delete', lambda: self.onContextMenuAction(item, "Delete"))
+            context_menu.exec_(self.mapToGlobal(pos))
 
-        selected_item = self.itemAt(event.pos())
+    def onContextMenuAction(self, item, action):
+        # Implement the code to handle context menu actions
+        if action == "Edit":
+            self.edit_context_action.emit(item)
+        elif action == 'Delete':
+            uid = self.itemWidget(item).rifle_data.id
+            Worker.delete_rifle(uid)
+            self.refresh()
 
-        if selected_item:
-            # Perform custom actions based on the selected item
-            uid = self.indexFromItem(selected_item).row()
-
-            action = context_menu.exec_(event.globalPos())
-
-            event.accept()
-            if action == edit_item:
-                self.edit_context_action.emit(selected_item)
-            elif action == remove_item:
-                uid = self.itemWidget(selected_item).rifle_data.id
-                Worker.delete_rifle(uid)
-                self.refresh()
-
-    def setupUi(self, RiflesLi):
+    def setupUi(self, riflesLi):
+        super(RiflesLi, self).setupUi(self)
         self.setObjectName('riflesLi')
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        self.setSizePolicy(sizePolicy)
 
     def create_item(self, rifle):
         widget = RifleItemWidget(self)
