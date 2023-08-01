@@ -222,7 +222,7 @@ class EditRifleWidget(QtWidgets.QWidget):
         if not self.sight_height.rawValue() > 0:
             self.sight_height.value_field.setFocus()
             self.errorSig.emit('Sight height must be > 0')
-        elif self.barrel_twist.rawValue() > 0:
+        elif not self.barrel_twist.rawValue() > 0:
             self.barrel_twist.value_field.setFocus()
             self.errorSig.emit('Twist must be > 0')
         else:

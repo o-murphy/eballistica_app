@@ -68,9 +68,9 @@ class TrajectoryTable(QtWidgets.QTableView, QtStyleTools):
             f'Range\n{Distance.name(settings.distUnits.currentData())}',
             f'Path\n{Angular.name(Angular.CmPer100M)}',
             f'Path\n{Angular.name(settings.pathUnits.currentData())}',
-            f'Windage\n{Angular.name(Angular.CmPer100M)}',
-            f'Windage\n{Angular.name(settings.pathUnits.currentData())}',
-            f'Velocity\n{Velocity.name(settings.vUnits.currentData())}',
+            f'Wind.\n{Angular.name(Angular.CmPer100M)}',
+            f'Wind.\n{Angular.name(settings.pathUnits.currentData())}',
+            f'V\n{Velocity.name(settings.vUnits.currentData())}',
             f'Energy\n{Energy.name(settings.eUnits.currentData())}',
         ]
         return headers

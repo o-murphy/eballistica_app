@@ -397,8 +397,22 @@ class EditAmmoWidget(QtWidgets.QWidget):
         self.errorSig.emit(msg)
         raise ValueError('Validation error')
 
+    def validate_drag_model(self):
+        drag_model = self.drag_model.currentData()
+        if drag_model == DragModel.G1:
+            bclist = [p for p in self.ammo.bc_list if p[0] > 0 and p[1] > 0]
+        elif drag_model == DragModel.G7:
+            bclist = [p for p in self.ammo.bc7_list if p[0] > 0 and p[1] > 0]
+        else:
+            bclist = [p for p in self.ammo.cdm_list if p[0] >= 0 and  p[1] > 0]
+        if len(bclist) <= 0:
+            self.errorSig.emit('Wrong Drag data')
+            raise ValueError('Wrong BC data')
+        return
+
     def save_ammo(self):
         self.validate()
+        self.validate_drag_model()
 
         self.ammo.name = self.name.text() if self.name.text() else self.name.placeholderText()
         self.ammo.diameter = self.diameter.rawValue()
