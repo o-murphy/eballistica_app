@@ -33,7 +33,7 @@ class MultiBCWidget(QtWidgets.QWidget):
         self.gridLayout.addWidget(self.bc_label)
 
         for i in range(5):
-            velocity = ConverSpinBox(self, 0, 2000, 1)
+            velocity = ConverSpinBox(self, 1)
             velocity.setObjectName(f'v{i}')
             bc = SpinBox(self, 0, 2, 0.001, decimals=3)
             bc.setObjectName(f'bc{i}')

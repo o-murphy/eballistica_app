@@ -36,9 +36,9 @@ class PowderSensWindget(QtWidgets.QWidget):
         self.gridLayout.addWidget(self.velocity_label)
 
         for i in range(5):
-            temp = ConverSpinBox(self, -50, 50, 1)
+            temp = ConverSpinBox(self, 1)
             temp.setObjectName(f't{i}')
-            velocity = ConverSpinBox(self, 0, 2000, 0.1, decimals=1)
+            velocity = ConverSpinBox(self, 0.1)
             velocity.setObjectName(f'v{i}')
             self.gridLayout.addWidget(temp)
             self.gridLayout.addWidget(velocity)

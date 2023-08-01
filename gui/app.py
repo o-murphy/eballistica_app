@@ -18,6 +18,8 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         super(App, self).__init__(app)
         self.setupUi(self)
 
+        self.status_bar.showMessage('Data loaded', timeout=2000)
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(u"MainWindow")
         MainWindow.setMinimumSize(QtCore.QSize(480, 800))
@@ -40,8 +42,11 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         self.scroll_area.setWidgetResizable(True)
         self.scroll_area.setWidget(self.stacked)
 
+        self.status_bar = QtWidgets.QStatusBar(self)
+
         self.main_layout.addWidget(self.header)
         self.main_layout.addWidget(self.scroll_area)
+        self.main_layout.addWidget(self.status_bar)
         self.main_layout.addWidget(self.botAppBar)
 
         self.settings = SettingsWidget(self)
@@ -256,6 +261,14 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         self.trajectory.display_data(self.edit_shot)
         self.stacked.setCurrentWidget(self.trajectory)
 
+    def showError(self, string):
+        self.status_bar.setStyleSheet("color: orange")
+        self.status_bar.showMessage(string, timeout=3000)
+
+    def showMessage(self, string):
+        self.status_bar.setStyleSheet("color: white")
+        self.status_bar.showMessage(string, timeout=3000)
+
     def connectUi(self, MainWindow):
         self.rifles.rifle_edit_sig.connect(self.switch_edit_rifle_screen)
         self.rifles.rifle_clicked_sig.connect(self.switch_to_ammos)
@@ -274,3 +287,7 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         self.edit_ammo.calc_powder_sens.clicked.connect(self.switch_calc_sens)
 
         self.edit_shot.traj_btn.clicked.connect(self.switch_to_trajectory)
+
+        self.edit_rifle.errorSig.connect(self.showError)
+        self.edit_ammo.errorSig.connect(self.showError)
+        self.edit_shot.errorSig.connect(self.showError)

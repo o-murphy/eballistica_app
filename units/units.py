@@ -24,6 +24,9 @@ class Unit(IntEnum):
     Kilometer = 18
     Line = 19
 
+    FootPound: int = 30
+    Joule: int = 31
+
     MmHg = 40
     InHg = 41
     Bar = 42
@@ -594,6 +597,48 @@ class Velocity(AbstractUnit):
     FPS = Unit.FPS
     MPH = Unit.MPH
     KT = Unit.KT
+
+
+class Energy(AbstractUnit):
+
+    def to_default(self, value: float, units: int):
+        if units == Energy.FootPound:
+            return value
+        elif units == Energy.Joule:
+            return value * 0.737562149277
+        else:
+            raise KeyError(f'{self.__name__}: unit {units} is not supported')
+
+    def from_default(self, value: float, units: int):
+        if units == Energy.FootPound:
+            return value
+        elif units == Energy.Joule:
+            return value / 0.737562149277
+        else:
+            raise KeyError(f'KeyError: {self.__name__}: unit {units} is not supported')
+
+    @staticmethod
+    def name(units):
+        if units == Energy.FootPound:
+            name = "ft·lb"
+        elif units == Energy.Joule:
+            name = "J"
+        else:
+            name = '?'
+        return name
+
+    @staticmethod
+    def accuracy(units):
+        if units == Energy.FootPound:
+            accuracy = 0
+        elif units == Energy.Joule:
+            accuracy = 0
+        else:
+            accuracy = 6
+        return accuracy
+
+    FootPound = Unit.FootPound
+    Joule = Unit.Joule
 
 
 class Convertor:

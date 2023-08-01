@@ -4,7 +4,7 @@ from PySide6 import QtWidgets, QtCore
 from PySide6.QtCore import QSettings
 
 from gui.widgets import FormRow2
-from units import Distance, Pressure, Weight, Temperature, Velocity, Angular, Unit
+from units import Distance, Pressure, Weight, Temperature, Velocity, Angular, Unit, Energy
 
 SIGHT_HEIGHT = (
     ('mm', Distance.Millimeter),
@@ -85,6 +85,11 @@ PATH = (
     ('in/100yd', Angular.InchesPer100Yd)
 )
 
+ENERGY = (
+    (Energy.name(Energy.FootPound), Energy.FootPound),
+    (Energy.name(Energy.Joule), Energy.Joule)
+)
+
 
 class Settings(QtCore.QObject):
     def __init__(self, parent=None):
@@ -153,6 +158,8 @@ class SettingsWidget(QtWidgets.QWidget):
         angleUnits = QtWidgets.QComboBox(self)
         pathUnits = QtWidgets.QComboBox(self)
 
+        eUnits = QtWidgets.QComboBox(self)
+
         self.shUnits = FormRow2(QtWidgets.QLabel('Sight height / offset'), shUnits)
         self.shUnits.setObjectName('shUnits')
         self.twistUnits = FormRow2(QtWidgets.QLabel('Twist'), twistUnits)
@@ -171,13 +178,14 @@ class SettingsWidget(QtWidgets.QWidget):
         self.dUnits.setObjectName('dUnits')
         self.pUnits = FormRow2(QtWidgets.QLabel('Pressure'), pUnits)
         self.pUnits.setObjectName('pUnits')
-        self.dropUnits = FormRow2(QtWidgets.QLabel('Drop'), dropUnits)
+        self.dropUnits = FormRow2(QtWidgets.QLabel('Drop / Windage'), dropUnits)
         self.dropUnits.setObjectName('dropUnits')
         self.angleUnits = FormRow2(QtWidgets.QLabel('Angular'), angleUnits)
         self.angleUnits.setObjectName('angleUnits')
-        self.pathUnits = FormRow2(QtWidgets.QLabel('Path / Windage'), pathUnits)
+        self.pathUnits = FormRow2(QtWidgets.QLabel('Adjustment'), pathUnits)
         self.pathUnits.setObjectName('pathUnits')
-        # self.eUnits = FormComboBox(self, prefix='Energy')
+        self.eUnits = FormRow2(QtWidgets.QLabel('Energy'), eUnits)
+        self.pathUnits.setObjectName('eUnits')
 
         [self.shUnits.addItem(k, v) for k, v in SIGHT_HEIGHT]
         [self.twistUnits.addItem(k, v) for k, v in TWIST]
@@ -191,6 +199,7 @@ class SettingsWidget(QtWidgets.QWidget):
         [self.vUnits.addItem(k, v) for k, v in VELOCITY]
         [self.pathUnits.addItem(k, v) for k, v in PATH]
         [self.angleUnits.addItem(k, v) for k, v in ANGULAR]
+        [self.eUnits.addItem(k, v) for k, v in ENERGY]
 
         self.unitLayout.addWidget(self.shUnits)
         self.unitLayout.addWidget(self.twistUnits)
@@ -204,6 +213,7 @@ class SettingsWidget(QtWidgets.QWidget):
         self.unitLayout.addWidget(self.dropUnits)
         self.unitLayout.addWidget(self.angleUnits)
         self.unitLayout.addWidget(self.pathUnits)
+        self.unitLayout.addWidget(self.eUnits)
         # self.unitLayout.addWidget(self.eUnits)
 
         is_calc_drag = QtWidgets.QCheckBox(self)

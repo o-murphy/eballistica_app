@@ -1,40 +1,10 @@
 from PySide6 import QtWidgets, QtCore, QtGui
 
-# from datatypes.datatypes import RifleData
 from datatypes.dbworker import Worker, TwistDir, RifleData
 from gui.settings import SettingsWidget
 from units import Distance, Convertor
 from .widgets import FormRow3, ComboBox, ConverSpinBox
 
-
-# class RifleItemWidget(QtWidgets.QWidget):
-#     def __init__(self, parent=None):
-#         super(RifleItemWidget, self).__init__(parent)
-#         self.setupUi(self)
-#         self.rifle_data = None
-#
-#     def setupUi(self, rifleItemWidget):
-#         rifleItemWidget.setObjectName("rifleItemWidget")
-#
-#         self.box = QtWidgets.QGroupBox('', self)
-#
-#         self.gridLayout = QtWidgets.QGridLayout(self)
-#         self.gridLayout.setObjectName("gridLayout")
-#         self.gridLayout.setContentsMargins(0, 0, 0, 0)
-#
-#         self.gridLayout.addWidget(self.box)
-#
-#         self.boxLayout = QtWidgets.QGridLayout(self.box)
-#
-#         self.boxLayout.setObjectName("boxLayout")
-#
-#         # self.name = QtWidgets.QLabel()
-#         self.barrel = QtWidgets.QLabel()
-#         self.sight = QtWidgets.QLabel()
-#
-#         # self.gridLayout.addWidget(self.name)
-#         self.boxLayout.addWidget(self.barrel)
-#         self.boxLayout.addWidget(self.sight)
 
 class RifleItemWidget(QtWidgets.QGroupBox):
     def __init__(self, parent=None):
@@ -58,13 +28,11 @@ class RifleItemWidget(QtWidgets.QGroupBox):
 
         twist = Distance(rifle.barrel_twist, Distance.Inch).convert(settings.twistUnits.currentData())
         sh = Distance(rifle.sight_height, Distance.Centimeter).convert(settings.shUnits.currentData())
-        ofs = Distance(rifle.sight_offset, Distance.Centimeter).convert(settings.shUnits.currentData())
 
         self.rifle_data = rifle
-        # self.box.setTitle(self.rifle_data.name)
         self.setTitle(self.rifle_data.name)
         self.barrel.setText(f'Barrel: 1 in {twist}')
-        self.sight.setText(f'Sight Ht/Ofs: {sh}/{ofs}')
+        self.sight.setText(f'Sight Ht: {sh}')
 
     def get_settings(self) -> SettingsWidget:
         window = self.window()
@@ -86,7 +54,6 @@ class RiflesLi(QtWidgets.QListWidget):
         self.refresh()
 
     def contextMenuEvent(self, event):
-        # self.itemAt(event.pos())
         context_menu = QtWidgets.QMenu(self)
 
         edit_item = QtGui.QAction('Edit', self)
@@ -143,19 +110,16 @@ class RiflesLi(QtWidgets.QListWidget):
         self.edit_context_action.connect(self.rifle_edit_clicked)
 
     def rifle_clicked(self, item: QtWidgets.QListWidgetItem):
-        # widget: RifleItemWidget = self.rifles_list.itemWidget(item)
-        print('clicked')
         widget: RifleItemWidget = self.itemWidget(item)
         self.rifle_clicked_sig.emit(widget.rifle_data)
 
     def rifle_edit_clicked(self, item: QtWidgets.QListWidgetItem):
-        # widget: RifleItemWidget = self.rifles_list.itemWidget(item)
         widget: RifleItemWidget = self.itemWidget(item)
-        print(widget)
         self.rifle_edit_sig.emit(widget.rifle_data)
 
 
 class EditRifleWidget(QtWidgets.QWidget):
+    errorSig = QtCore.Signal(str)
 
     def __init__(self, parent=None, uid: int = None, rifle: 'RifleData' = None):
         super(EditRifleWidget, self).__init__(parent)
@@ -193,30 +157,21 @@ class EditRifleWidget(QtWidgets.QWidget):
         self.name = QtWidgets.QLineEdit()
         self.name.setPlaceholderText('Name')
 
-        # self.barrel_twist = FormSpinBox(self, 0.01, 20, 0.5, 'in', 'Barel Twist')
-
-        barrel_twist = ConverSpinBox(self, 0.01, 1000, 0.5, 2)
+        barrel_twist = ConverSpinBox(self, 0.5)
         twist_dir = ComboBox(self, (('Right', TwistDir.Right), ('Left', TwistDir.Left)))
-        sight_height = ConverSpinBox(self, 0.01, 1000, 0.5)
-        sight_offset = ConverSpinBox(self, 0.01, 1000, 1)
+        sight_height = ConverSpinBox(self, 0.5)
 
         self.barrel_twist = FormRow3(barrel_twist, 'Barel Twist', 'in')
         self.barrel_twist.setObjectName('barrel_twist')
         self.twist_dir = FormRow3(twist_dir, 'Twist direction')
         self.sight_height = FormRow3(sight_height, 'Sight height', 'mm')
         self.sight_height.setObjectName('sight_height')
-        self.sight_offset = FormRow3(sight_offset, 'Sight offset', 'mm')
-        self.sight_offset.setObjectName('sight_offset')
-
-        # self.sight_height = FormSpinBox(self, 1, 100, 0.5, 'mm', 'Sight height')
-        # self.sight_offset = FormSpinBox(self, 1, 500, 1, 'mm', 'Sight offset')
 
         self.name_boxLayout.addRow(self.name_label, self.name)
 
         self.props_boxLayout.addWidget(self.barrel_twist)
         self.props_boxLayout.addWidget(self.twist_dir)
         self.props_boxLayout.addWidget(self.sight_height)
-        self.props_boxLayout.addWidget(self.sight_offset)
 
         self.vBoxLayout.addWidget(self.name_box)
         self.vBoxLayout.addWidget(self.props_box)
@@ -243,9 +198,6 @@ class EditRifleWidget(QtWidgets.QWidget):
         self.sight_height.setConvertor(Convertor(Distance, settings.shUnits.currentData(), Distance.Centimeter))
         self.sight_height.suffix.setText(self.sight_height.convertor().unit_name)
 
-        self.sight_offset.setConvertor(Convertor(Distance, settings.shUnits.currentData(), Distance.Centimeter))
-        self.sight_offset.suffix.setText(self.sight_offset.convertor().unit_name)
-
     def display_data(self, rifle: 'RifleData'):
         if not rifle:
             rifle = RifleData('New Rifle')
@@ -255,14 +207,25 @@ class EditRifleWidget(QtWidgets.QWidget):
         index = self.twist_dir.findData(rifle.barrel_twist_dir)
         self.twist_dir.setCurrentIndex(index)
         self.sight_height.setRawValue(rifle.sight_height)
-        self.sight_offset.setRawValue(rifle.sight_offset)
 
     def save_rifle(self):
+        self.validate()
         Worker.rifle_add_or_update(
             id=self.uid,
             name=self.name.text() if self.name.text() else self.name.placeholderText(),
             barrel_twist=self.barrel_twist.rawValue(),
             barrel_twist_dir=self.twist_dir.currentData(),
             sight_height=self.sight_height.rawValue(),
-            sight_offset=self.sight_offset.rawValue(),
         )
+
+    def validate(self):
+        if not self.sight_height.rawValue() > 0:
+            self.sight_height.value_field.setFocus()
+            self.errorSig.emit('Sight height must be > 0')
+        elif self.barrel_twist.rawValue() > 0:
+            self.barrel_twist.value_field.setFocus()
+            self.errorSig.emit('Twist must be > 0')
+        else:
+            return
+
+        raise ValueError('Validation error')

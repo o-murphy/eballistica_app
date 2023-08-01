@@ -29,10 +29,8 @@ class SpinBox(QDoubleSpinBox):
 
 
 class ConverSpinBox(QDoubleSpinBox):
-    def __init__(self, parent=None, vmin=0, vmax=100, step=1, decimals=2, name: str = None,
-                 # measure=None, units: int = 0, default_units: int = 0,
-                 *args, **kwargs):
-        super(ConverSpinBox, self).__init__(parent, *args, **kwargs)
+    def __init__(self, parent, step=1, name: str = None, vmin=-10000, vmax=10000):
+        super(ConverSpinBox, self).__init__(parent)
 
         if name:
             self.setObjectName(name)
@@ -40,7 +38,7 @@ class ConverSpinBox(QDoubleSpinBox):
         self.setMinimum(vmin)
         self.setMaximum(vmax)
         self.setSingleStep(step)
-        self.setDecimals(decimals)
+        # self.setDecimals(decimals)
 
         self._convertor: Convertor = None
 
@@ -58,6 +56,8 @@ class ConverSpinBox(QDoubleSpinBox):
     def setConvertor(self, value: Convertor):
         self._convertor = value
         self.setDecimals(self._convertor.accuracy)
+        single_step = 10**(-self.decimals())
+        self.setSingleStep(single_step)
 
     def setRawValue(self, value):
         if self._convertor is not None:

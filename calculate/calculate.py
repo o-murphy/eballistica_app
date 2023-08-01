@@ -1,11 +1,10 @@
+from py_ballisticcalc.atmosphere import Atmosphere
 from py_ballisticcalc.drag import DragTableG1, DragTableG7, BallisticCoefficient
 from py_ballisticcalc.multiple_bc import MultipleBallisticCoefficient
-from py_ballisticcalc.shot_parameters import ShotParametersUnlevel
-from py_ballisticcalc.trajectory_data import TrajectoryData
-from py_ballisticcalc.trajectory_calculator import TrajectoryCalculator
 from py_ballisticcalc.projectile import ProjectileWithDimensions, Ammunition
+from py_ballisticcalc.shot_parameters import ShotParametersUnlevel
+from py_ballisticcalc.trajectory_calculator import TrajectoryCalculator
 from py_ballisticcalc.weapon import ZeroInfoWithAmmoAndAtmo, TwistInfo, TwistLeft, TwistRight, WeaponWithTwist
-from py_ballisticcalc.atmosphere import Atmosphere
 from py_ballisticcalc.wind import create_only_wind_info
 
 from datatypes.dbworker import RifleData, AmmoData, ZeroData, Target, DragModel, AtmoData, TwistDir
@@ -50,16 +49,20 @@ def cdm(ammo: AmmoData):
     return bc
 
 
-def calculate_pro(rifle: RifleData, ammo: AmmoData, target: Target, atmo: AtmoData, zerodata: ZeroData):
-
-    calc = TrajectoryCalculator()
-
+def calculated_drag(ammo: AmmoData):
     if ammo.drag_model == DragModel.G1:
         cdm = bc_g1(ammo)
     elif ammo.drag_model == DragModel.G7:
         cdm = bc_g7(ammo)
     else:
         cdm = ammo.cdm
+    return cdm
+
+
+def calculate_traj(rifle: RifleData, ammo: AmmoData, target: Target, atmo: AtmoData, zerodata: ZeroData):
+    calc = TrajectoryCalculator()
+
+    cdm = calculated_drag(ammo)
 
     bc = BallisticCoefficient(
         value=0,
@@ -110,7 +113,7 @@ def calculate_pro(rifle: RifleData, ammo: AmmoData, target: Target, atmo: AtmoDa
 
     shot_info = ShotParametersUnlevel(
         sight_angle,
-        maximum_distance=Distance(target.distance+1, Distance.Meter),
+        maximum_distance=Distance(target.distance + 1, Distance.Meter),
         step=Distance(zerodata.zero_range // 2, Distance.Meter),
         shot_angle=Angular(target.look_angle, Angular.Degree),
         cant_angle=Angular(0, Angular.Degree)
@@ -123,41 +126,4 @@ def calculate_pro(rifle: RifleData, ammo: AmmoData, target: Target, atmo: AtmoDa
 
     data = calc.trajectory(ammunition, weapon, atmosphere, shot_info, wind)
 
-    return data
-
-
-def calculate_graph(trajectory):
-
-    p: TrajectoryData
-
-    return [
-        (
-            round(p.travelled_distance().get_in(Distance.Meter)),
-            round(p.drop().get_in(Distance.Centimeter), Distance.accuracy(Distance.Centimeter))
-        ) for p in trajectory
-    ]
-
-
-def calculate_traj(trajectory):
-
-    data = []
-
-    p: TrajectoryData
-    for p in trajectory:
-        data.append((
-            round(p.travelled_distance().get_in(Distance.Meter)),
-            round(
-                p.drop_adjustment().get_in(Angular.CmPer100M), Angular.accuracy(Angular.CmPer100M)
-            ) if p.drop_adjustment() else '---',
-            round(
-                p.drop_adjustment().get_in(Angular.Mil), Angular.accuracy(Angular.Mil)
-            ) if p.drop_adjustment() else '---',
-            round(
-                p.windage_adjustment().get_in(Angular.CmPer100M), Angular.accuracy(Angular.CmPer100M)
-            ) if p.windage_adjustment() else '---',
-            round(
-                p.windage_adjustment().get_in(Angular.Mil), Angular.accuracy(Angular.Mil)
-            ) if p.windage_adjustment() else '---',
-            round(p.velocity().get_in(Velocity.MPS), Velocity.accuracy(Velocity.MPS))
-        ))
     return data
