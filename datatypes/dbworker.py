@@ -27,14 +27,13 @@ class RifleData(Base):
     barrel_twist = Column(Float, nullable=False, default=9)
     barrel_twist_dir = Column(Enum(TwistDir), nullable=False, default=TwistDir.Right)
     sight_height = Column(Float, nullable=False, default=9)
-    sight_offset = Column(Float, nullable=False, default=9)
 
     ammo = relationship("AmmoData", back_populates='rifle', cascade="all, delete-orphan")
 
     def __init__(self, name='', barrel_twist=9, barrel_twist_dir=TwistDir.Right, sight_height=9,
-                 sight_offset=9, **kwargs):
+                 **kwargs):
         super(RifleData, self).__init__(name=name, barrel_twist=barrel_twist, barrel_twist_dir=barrel_twist_dir,
-                                        sight_height=sight_height, sight_offset=sight_offset, **kwargs)
+                                        sight_height=sight_height, **kwargs)
 
     def __repr__(self):
         return "<{0.__class__.__name__}(id={0.id!r})>".format(self)
@@ -118,7 +117,6 @@ class ZeroData(Base):
     id = Column(Integer, primary_key=True, nullable=False, unique=True, autoincrement=True)
     zero_range = Column(Float, nullable=False, default=100)
     zero_height = Column(Float, nullable=False, default=9)
-    zero_offset = Column(Float, nullable=False, default=0)
     is_zero_atmo = Column(Boolean, nullable=False, default=True)
     altitude = Column(Float, nullable=False, default=0)
     pressure = Column(Float, nullable=False, default=760)
@@ -128,9 +126,9 @@ class ZeroData(Base):
     ammo_id = mapped_column(ForeignKey("ammo.id", ondelete="CASCADE"), nullable=False, unique=True)
     ammo = relationship("AmmoData", back_populates="zerodata")
 
-    def __init__(self, zero_range=100, zero_height=9, zero_offset=0, is_zero_atmo=True,
+    def __init__(self, zero_range=100, zero_height=9, is_zero_atmo=True,
                  altitude=0, pressure=760, temperature=15, humidity=50, ammo=None):
-        super(ZeroData, self).__init__(zero_range=zero_range, zero_height=zero_height, zero_offset=zero_offset,
+        super(ZeroData, self).__init__(zero_range=zero_range, zero_height=zero_height,
                                        is_zero_atmo=is_zero_atmo, altitude=altitude, pressure=pressure,
                                        temperature=temperature, humidity=humidity, ammo=ammo)
 
