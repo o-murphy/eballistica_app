@@ -1,4 +1,4 @@
-from PySide6 import QtWidgets, QtCore, QtGui
+from getqt import *
 from qt_material import QtStyleTools
 
 from datatypes.dbworker import DragModel

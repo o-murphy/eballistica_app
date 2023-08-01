@@ -1,4 +1,4 @@
-from PySide6 import QtWidgets, QtCore, QtGui
+from getqt import *
 
 from datatypes.dbworker import Worker, AmmoData, DragModel
 from gui.app_logo import AppLogo, AppLabel
@@ -105,9 +105,9 @@ class AmmosHeader(QtWidgets.QWidget):
 
 
 class AmmosLi(GesturedListView):
-    edit_context_action = QtCore.Signal(object)
-    ammo_clicked_sig = QtCore.Signal(object)
-    ammo_edit_sig = QtCore.Signal(object)
+    edit_context_action = Signal(object)
+    ammo_clicked_sig = Signal(object)
+    ammo_edit_sig = Signal(object)
 
     def __init__(self, parent=None):
         super(AmmosLi, self).__init__(parent)
@@ -178,8 +178,8 @@ class AmmosLi(GesturedListView):
 
 
 class EditAmmoWidget(QtWidgets.QWidget):
-    editDrag = QtCore.Signal(object, object)
-    errorSig = QtCore.Signal(str)
+    editDrag = Signal(object, object)
+    errorSig = Signal(str)
 
     def __init__(self, parent=None):
         super(EditAmmoWidget, self).__init__(parent)
@@ -457,7 +457,7 @@ class EditAmmoWidget(QtWidgets.QWidget):
 
 
 class EditShotWidget(QtWidgets.QWidget):
-    errorSig = QtCore.Signal(str)
+    errorSig = Signal(str)
 
     def __init__(self, parent=None):
         super(EditShotWidget, self).__init__(parent)

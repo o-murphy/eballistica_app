@@ -1,42 +1,40 @@
 from typing import Iterable, Optional, Union, Tuple
 
-from PySide6 import QtGui, QtCore
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import *
+from getqt import *
 
-from units import Distance, Convertor
+from units import Convertor
 
 
 class AbstractScroller:
 
-    def __init__(self, viewport: QWidget = None):
+    def __init__(self, viewport: QtWidgets.QWidget = None):
         self._viewport = viewport
 
-        self._sp = QScrollerProperties()
+        self._sp = QtWidgets.QScrollerProperties()
         # self._sp.setScrollMetric(QScrollerProperties.DragVelocitySmoothingFactor, 0.6)
-        self._sp.setScrollMetric(QScrollerProperties.DragVelocitySmoothingFactor, 0.1)
-        self._sp.setScrollMetric(QScrollerProperties.ScrollingCurve, QtCore.QEasingCurve(QtCore.QEasingCurve.OutExpo))
-        self._sp.setScrollMetric(QScrollerProperties.MinimumVelocity, 0.0)
-        self._sp.setScrollMetric(QScrollerProperties.MaximumVelocity, 0.2)
-        self._sp.setScrollMetric(QScrollerProperties.AcceleratingFlickMaximumTime, 0.5)
-        self._sp.setScrollMetric(QScrollerProperties.AcceleratingFlickSpeedupFactor, 1.2)
+        self._sp.setScrollMetric(QtWidgets.QScrollerProperties.DragVelocitySmoothingFactor, 0.1)
+        self._sp.setScrollMetric(QtWidgets.QScrollerProperties.ScrollingCurve, QtCore.QEasingCurve(QtCore.QEasingCurve.OutExpo))
+        self._sp.setScrollMetric(QtWidgets.QScrollerProperties.MinimumVelocity, 0.0)
+        self._sp.setScrollMetric(QtWidgets.QScrollerProperties.MaximumVelocity, 0.2)
+        self._sp.setScrollMetric(QtWidgets.QScrollerProperties.AcceleratingFlickMaximumTime, 0.5)
+        self._sp.setScrollMetric(QtWidgets.QScrollerProperties.AcceleratingFlickSpeedupFactor, 1.2)
         # self._sp.setScrollMetric(QScrollerProperties.SnapPositionRatio, 0.2)
-        self._sp.setScrollMetric(QScrollerProperties.SnapPositionRatio, 1)
-        self._sp.setScrollMetric(QScrollerProperties.MaximumClickThroughVelocity, 1)
-        self._sp.setScrollMetric(QScrollerProperties.DragStartDistance, 0.001)
-        self._sp.setScrollMetric(QScrollerProperties.MousePressEventDelay, 0.5)
+        self._sp.setScrollMetric(QtWidgets.QScrollerProperties.SnapPositionRatio, 1)
+        self._sp.setScrollMetric(QtWidgets.QScrollerProperties.MaximumClickThroughVelocity, 1)
+        self._sp.setScrollMetric(QtWidgets.QScrollerProperties.DragStartDistance, 0.001)
+        self._sp.setScrollMetric(QtWidgets.QScrollerProperties.MousePressEventDelay, 0.5)
 
-        self._gesture = QScroller.scroller(self._viewport)
+        self._gesture = QtWidgets.QScroller.scroller(self._viewport)
         self._gesture.setScrollerProperties(self._sp)
 
-    def setScrollable(self, is_true: bool, gesture: QScroller.ScrollerGestureType):
+    def setScrollable(self, is_true: bool, gesture: QtWidgets.QScroller.ScrollerGestureType):
         if is_true:
-            self._gesture.grabGesture(self._viewport, QScroller.LeftMouseButtonGesture)
+            self._gesture.grabGesture(self._viewport, QtWidgets.QScroller.LeftMouseButtonGesture)
         else:
             self._gesture.ungrabGesture(self._viewport)
 
 
-class GesturedListView(QListWidget):
+class GesturedListView(QtWidgets.QListWidget):
 
         def __init__(self, parent=None):
             super(GesturedListView, self).__init__(parent)
@@ -44,7 +42,7 @@ class GesturedListView(QListWidget):
             # self.connectUi(self)
             # self.refresh()
 
-            self.setContextMenuPolicy(Qt.CustomContextMenu)
+            self.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
             self.customContextMenuRequested.connect(self.showContextMenu)
             self.setMouseTracking(True)  # Enable mouse tracking to receive mouseMoveEvent
             self.startPos = None
@@ -52,7 +50,7 @@ class GesturedListView(QListWidget):
             self.timerId = None
 
         def mousePressEvent(self, event):
-            if event.button() == Qt.LeftButton:
+            if event.button() == QtCore.Qt.LeftButton:
                 self.isLongPress = False
                 self.startPos = event.pos()
                 self.timerId = self.startTimer(200)  # Start the timer for long-press detection
@@ -60,7 +58,7 @@ class GesturedListView(QListWidget):
             super(GesturedListView, self).mousePressEvent(event)
 
         def mouseReleaseEvent(self, event):
-            if event.button() == Qt.LeftButton:
+            if event.button() == QtCore.Qt.LeftButton:
                 if self.timerId is not None:
                     self.killTimer(self.timerId)  # Stop the timer if it's still running
                     self.timerId = None
@@ -68,7 +66,7 @@ class GesturedListView(QListWidget):
                 endPos = event.pos()
                 distance = (endPos - self.startPos).manhattanLength()
 
-                if distance < QApplication.startDragDistance() and not self.isLongPress:
+                if distance < QtWidgets.QApplication.startDragDistance() and not self.isLongPress:
                     # If the distance is less than startDragDistance, it's a short click
                     self.runDefaultClickAction()
 
@@ -92,14 +90,14 @@ class GesturedListView(QListWidget):
             ...
 
         def setupUi(self, listView):
-            sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
             sizePolicy.setHorizontalStretch(0)
             sizePolicy.setVerticalStretch(0)
             self.setSizePolicy(sizePolicy)
 
-            self.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
+            self.setVerticalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
             self.scroller = AbstractScroller(self.viewport())
-            self.scroller.setScrollable(True, QScroller.LeftMouseButtonGesture)
+            self.scroller.setScrollable(True, QtWidgets.QScroller.LeftMouseButtonGesture)
 
             self.setStyleSheet("""
             QListWidget {
@@ -144,11 +142,11 @@ class GesturedListView(QListWidget):
             """)
 
 
-class SpinBox(QDoubleSpinBox):
+class SpinBox(QtWidgets.QDoubleSpinBox):
     def __init__(self, parent=None, vmin=0, vmax=100, step=1, suffix=None, prefix=None, decimals=2, *args, **kwargs):
         super(SpinBox, self).__init__(parent, *args, **kwargs)
 
-        self.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter)
         self.setMinimum(vmin)
         self.setMaximum(vmax)
         self.setSingleStep(step)
@@ -158,20 +156,20 @@ class SpinBox(QDoubleSpinBox):
 
     def validate(self, text: str, pos: int) -> object:
         text = text.replace(".", ",")
-        return QDoubleSpinBox.validate(self, text, pos)
+        return QtWidgets.QDoubleSpinBox.validate(self, text, pos)
 
     def valueFromText(self, text: str) -> float:
         text = text.replace(",", ".")
         return float(text)
 
 
-class ConverSpinBox(QDoubleSpinBox):
+class ConverSpinBox(QtWidgets.QDoubleSpinBox):
     def __init__(self, parent, step=1, name: str = None, vmin=-10000, vmax=10000):
         super(ConverSpinBox, self).__init__(parent)
 
         if name:
             self.setObjectName(name)
-        self.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        self.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter)
         self.setMinimum(vmin)
         self.setMaximum(vmax)
         self.setSingleStep(step)
@@ -181,7 +179,7 @@ class ConverSpinBox(QDoubleSpinBox):
 
     def validate(self, text: str, pos: int) -> object:
         text = text.replace(".", ",")
-        return QDoubleSpinBox.validate(self, text, pos)
+        return QtWidgets.QDoubleSpinBox.validate(self, text, pos)
 
     def valueFromText(self, text: str) -> float:
         text = text.replace(",", ".")
@@ -209,7 +207,7 @@ class ConverSpinBox(QDoubleSpinBox):
             return self.value()
 
 
-class ComboBox(QComboBox):
+class ComboBox(QtWidgets.QComboBox):
     def __init__(self,
                  parent=None,
                  items: Iterable[Union[
@@ -227,7 +225,7 @@ class ComboBox(QComboBox):
                 self.addItem(*item)
 
 
-class Spacer(QWidget):
+class Spacer(QtWidgets.QWidget):
     Vertical = 0
     Horizontal = 1
 
@@ -241,19 +239,19 @@ class Spacer(QWidget):
             raise ValueError(direction)
 
 
-class ComboBoxHCenter(QComboBox):
-    class Delegate(QStyledItemDelegate):
+class ComboBoxHCenter(QtWidgets.QComboBox):
+    class Delegate(QtWidgets.QStyledItemDelegate):
         def initStyleOption(self, option, index):
             super().initStyleOption(option, index)
-            option.displayAlignment = Qt.AlignmentFlag.AlignCenter  # Set the alignment as needed
+            option.displayAlignment = QtCore.Qt.AlignmentFlag.AlignCenter  # Set the alignment as needed
 
     def __init__(self, *args, **kwargs):
         super(ComboBoxHCenter, self).__init__(*args, **kwargs)
         self.setItemDelegate(self.Delegate())
 
 
-class FormRow2(QWidget):
-    def __init__(self, label: QLabel, value_field: QWidget, parent=None, *args, **kwargs):
+class FormRow2(QtWidgets.QWidget):
+    def __init__(self, label: QtWidgets.QLabel, value_field: QtWidgets.QWidget, parent=None, *args, **kwargs):
         super(FormRow2, self).__init__(parent, *args, **kwargs)
         self.value_field = value_field
         self.value_field.setParent(self)
@@ -268,8 +266,8 @@ class FormRow2(QWidget):
         self.label.setText(text)
 
     def init_ui(self, formRow3):
-        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
-        self.rowLayout = QHBoxLayout(self)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Preferred)
+        self.rowLayout = QtWidgets.QHBoxLayout(self)
         self.rowLayout.setContentsMargins(0, 0, 0, 0)
 
         self.rowLayout.addWidget(self.label)
@@ -279,8 +277,8 @@ class FormRow2(QWidget):
         self.rowLayout.setStretchFactor(self.value_field, 4)
 
 
-class FormRow3(QWidget):
-    def __init__(self, value_field: QWidget, prefix=None, suffix=None, parent=None, *args, **kwargs):
+class FormRow3(QtWidgets.QWidget):
+    def __init__(self, value_field: QtWidgets.QWidget, prefix=None, suffix=None, parent=None, *args, **kwargs):
         super(FormRow3, self).__init__(parent, *args, **kwargs)
         self.value_field = value_field
         self.value_field.setParent(self)
@@ -292,14 +290,14 @@ class FormRow3(QWidget):
         return self.value_field.__getattribute__(item)
 
     def init_ui(self, formRow3):
-        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
-        self.rowLayout = QHBoxLayout(self)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Preferred)
+        self.rowLayout = QtWidgets.QHBoxLayout(self)
         self.rowLayout.setContentsMargins(0, 0, 0, 0)
 
-        self.suffix = QLabel(self)
-        self.prefix = QLabel(self)
+        self.suffix = QtWidgets.QLabel(self)
+        self.prefix = QtWidgets.QLabel(self)
 
-        self.suffix.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
+        self.suffix.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter)
 
         self.rowLayout.addWidget(self.prefix)
         self.rowLayout.addWidget(self.value_field)

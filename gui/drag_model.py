@@ -1,6 +1,6 @@
 from functools import reduce
 
-from PySide6 import QtWidgets, QtCore
+from getqt import *
 
 from datatypes.dbworker import DragModel, AmmoData
 from gui.settings import SettingsWidget

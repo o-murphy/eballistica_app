@@ -1,7 +1,6 @@
 import json
 
-from PySide6 import QtWidgets, QtCore
-from PySide6.QtCore import QSettings
+from getqt import *
 
 from gui.widgets import FormRow2
 from units import Distance, Pressure, Weight, Temperature, Velocity, Angular, Unit, Energy
@@ -97,11 +96,11 @@ class Settings(QtCore.QObject):
 
 
 class SettingsWidget(QtWidgets.QWidget):
-    settingsUpdated = QtCore.Signal(object)
+    settingsUpdated = Signal(object)
 
     def __init__(self, parent=None):
         super(SettingsWidget, self).__init__(parent)
-        self.set = QSettings(QSettings.IniFormat, QSettings.UserScope, 'settings.ini')
+        self.set = QtCore.QSettings(QtCore.QSettings.IniFormat, QtCore.QSettings.UserScope, 'settings.ini')
         self.init_ui(self)
         self.connectUi()
         self.get_settings()

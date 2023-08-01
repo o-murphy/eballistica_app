@@ -1,4 +1,4 @@
-from PySide6 import QtWidgets, QtGui, QtCore
+from getqt import *
 
 
 class AppLogo(QtWidgets.QLabel):

@@ -1,5 +1,5 @@
 import pyqtgraph as pg
-from PySide6 import QtWidgets, QtCore
+from getqt import *
 from qt_material import QtStyleTools
 
 from calculate.calculate import calculate_traj, calculated_drag

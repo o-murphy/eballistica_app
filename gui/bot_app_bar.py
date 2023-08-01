@@ -1,4 +1,4 @@
-from PySide6 import QtGui, QtWidgets, QtCore
+from getqt import *
 
 
 class BarButton(QtWidgets.QToolButton):

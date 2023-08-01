@@ -1,7 +1,4 @@
-from PyQt5.QtWidgets import QApplication
-from PySide6 import QtWidgets, QtCore, QtGui
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QMenu
+from getqt import *
 
 from datatypes.dbworker import Worker, TwistDir, RifleData
 from gui.settings import SettingsWidget
@@ -45,10 +42,10 @@ class RifleItemWidget(QtWidgets.QGroupBox):
 
 
 class RiflesLi(GesturedListView):
-    edit_context_action = QtCore.Signal(object)
+    edit_context_action = Signal(object)
 
-    rifle_clicked_sig = QtCore.Signal(object)
-    rifle_edit_sig = QtCore.Signal(object)
+    rifle_clicked_sig = Signal(object)
+    rifle_edit_sig = Signal(object)
 
     def __init__(self, parent=None):
         super(RiflesLi, self).__init__(parent)
@@ -114,7 +111,7 @@ class RiflesLi(GesturedListView):
 
 
 class EditRifleWidget(QtWidgets.QWidget):
-    errorSig = QtCore.Signal(str)
+    errorSig = Signal(str)
 
     def __init__(self, parent=None, uid: int = None, rifle: 'RifleData' = None):
         super(EditRifleWidget, self).__init__(parent)

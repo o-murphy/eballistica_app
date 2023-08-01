@@ -1,6 +1,6 @@
 from statistics import median
 
-from PySide6 import QtWidgets, QtCore
+from getqt import *
 
 from gui.settings import SettingsWidget
 from gui.widgets import ConverSpinBox
