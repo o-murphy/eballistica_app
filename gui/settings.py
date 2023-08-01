@@ -5,6 +5,10 @@ from getqt import *
 from gui.widgets import FormRow2
 from units import Distance, Pressure, Weight, Temperature, Velocity, Angular, Unit, Energy
 
+
+_translate = QtCore.QCoreApplication.translate
+
+
 SIGHT_HEIGHT = (
     ('mm', Distance.Millimeter),
     ('inch', Distance.Inch),
@@ -102,8 +106,25 @@ class SettingsWidget(QtWidgets.QWidget):
         super(SettingsWidget, self).__init__(parent)
         self.set = QtCore.QSettings(QtCore.QSettings.IniFormat, QtCore.QSettings.UserScope, 'settings.ini')
         self.init_ui(self)
+        self.translate_ui()
         self.connectUi()
         self.get_settings()
+
+    def translate_ui(self):
+        self.viewBox.setTitle(_translate('settings', 'View'))
+        self.unitsBox.setTitle(_translate('settings', 'Units of measurement'))
+        self.calcBox.setTitle(_translate('settings', 'Calculation'))
+        self.infoBox.setTitle(_translate('settings', 'Info'))
+        self.theme_label.setText(_translate('settings', 'Theme'))
+        self.theme.setItemText(0, _translate('settings', 'Dark'))
+        self.theme.setItemText(1, _translate('settings', 'Light'))
+        self.apply_theme_btn.setText(_translate('settings', 'Apply'))
+        self.scale_label.setText(_translate('settings', 'Scale'))
+
+        self.shUnits.label.setText('Sight height / offset')
+        self.twistUnits.label.setText('Twist')
+        self.vUnits.label.setText('Velocity')
+
 
     def init_ui(self, settingsWidget):
 
@@ -111,24 +132,20 @@ class SettingsWidget(QtWidgets.QWidget):
         self.boxLayout = QtWidgets.QVBoxLayout(self)
 
         self.viewBox = QtWidgets.QGroupBox(self)
-        self.viewBox.setTitle('View')
         self.unitsBox = QtWidgets.QGroupBox(self)
-        self.unitsBox.setTitle('Units of measurement')
         self.calcBox = QtWidgets.QGroupBox(self)
-        self.calcBox.setTitle('Calculation')
 
         self.infoBox = QtWidgets.QGroupBox(self)
-        self.infoBox.setTitle('Info')
 
         self.viewLayout = QtWidgets.QFormLayout(self.viewBox)
         self.unitLayout = QtWidgets.QVBoxLayout(self.unitsBox)
         self.calcLayout = QtWidgets.QVBoxLayout(self.calcBox)
 
-        self.theme_label = QtWidgets.QLabel('Theme')
+        self.theme_label = QtWidgets.QLabel()
         self.theme = QtWidgets.QComboBox(self)
         self.theme.addItem('Dark', 'dark_blue.xml')
         self.theme.addItem('Light', 'default.xml')
-        self.apply_theme_btn = QtWidgets.QPushButton('Apply')
+        self.apply_theme_btn = QtWidgets.QPushButton()
         self.apply_theme_btn.setProperty('class', 'success')
 
         self.scale = QtWidgets.QSlider(QtCore.Qt.Horizontal)
@@ -136,7 +153,7 @@ class SettingsWidget(QtWidgets.QWidget):
         self.scale.setMaximum(2)
         self.scale.setMinimum(-2)
         self.scale.setSingleStep(1)
-        self.scale_label = QtWidgets.QLabel('Scale')
+        self.scale_label = QtWidgets.QLabel()
 
         self.viewLayout.addRow(self.theme_label, self.theme)
         self.viewLayout.addRow(self.scale_label, self.scale)
@@ -159,11 +176,11 @@ class SettingsWidget(QtWidgets.QWidget):
 
         eUnits = QtWidgets.QComboBox(self)
 
-        self.shUnits = FormRow2(QtWidgets.QLabel('Sight height / offset'), shUnits)
+        self.shUnits = FormRow2(QtWidgets.QLabel(), shUnits)
         self.shUnits.setObjectName('shUnits')
-        self.twistUnits = FormRow2(QtWidgets.QLabel('Twist'), twistUnits)
+        self.twistUnits = FormRow2(QtWidgets.QLabel(), twistUnits)
         self.twistUnits.setObjectName('twistUnits')
-        self.vUnits = FormRow2(QtWidgets.QLabel('Velocity'), vUnits)
+        self.vUnits = FormRow2(QtWidgets.QLabel(), vUnits)
         self.vUnits.setObjectName('vUnits')
         self.distUnits = FormRow2(QtWidgets.QLabel('Distance'), distUnits)
         self.distUnits.setObjectName('distUnits')

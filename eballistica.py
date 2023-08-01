@@ -1,5 +1,4 @@
 from getqt import *
-
 from gui.app import App
 import res_rc
 assert res_rc
@@ -16,6 +15,12 @@ def main(argv):
 
     app.setWindowIcon(QtGui.QIcon('Icon.ico'))
     apply_stylesheet(app, extra={'primaryTextColor': '#FFFFFF'}, theme='dark_blue.xml')
+
+    translator = QtCore.QTranslator(app)
+    if translator.load('translation-ua.qm'):
+        app.installTranslator(translator)
+    else:
+        print('err')
 
     window = App()
     desktop = QtGui.QGuiApplication.screenAt(window.geometry().center())

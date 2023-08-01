@@ -1,7 +1,7 @@
-from getqt import *
 from qt_material import QtStyleTools
 
 from datatypes.dbworker import DragModel
+from getqt import *
 from .ammos import EditAmmoWidget, EditShotWidget, AmmosLi
 from .app_logo import AppHeader
 from .bot_app_bar import BotAppBar
@@ -11,6 +11,8 @@ from .rifles import EditRifleWidget, RiflesLi
 from .settings import SettingsWidget
 from .trajectory import TrajectoryWidget
 from .widgets import AbstractScroller
+
+_translate = QtCore.QCoreApplication.translate
 
 
 class App(QtWidgets.QMainWindow, QtStyleTools):
@@ -43,7 +45,6 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         self.scroll_area.setWidgetResizable(True)
         self.scroll_area.setWidget(self.stacked)
 
-        # self.scroll_area.setVerticalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
         self.scroller = AbstractScroller(self.scroll_area.viewport())
         self.scroller.setScrollable(True, QtWidgets.QScroller.LeftMouseButtonGesture)
 
@@ -91,7 +92,7 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         self.switch_to_rifles()
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QtCore.QCoreApplication.translate("MainWindow", u"ArcherBC", None))
+        MainWindow.setWindowTitle(_translate("MainWindow", "ArcherBC"))
 
     def switch_to_rifles(self):
         # self.rifles.rifles_list.refresh()
@@ -146,6 +147,8 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
 
     def screen_changed(self, index):
         current_screen = self.stacked.currentWidget()
+        rifle = self.ammos.filter.get('rifle')
+        rifle = rifle.name if rifle else None
 
         if current_screen == self.rifles:
             self.botAppBar.okAct.setHidden(True)
@@ -155,7 +158,7 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
             self.botAppBar.homeAct.setHidden(True)
             self.botAppBar.shareAct.setHidden(True)
 
-            self.header.bread.setText('Rifles')
+            self.header.bread.setText(_translate('MainWindow', 'Rifles'))
 
         elif current_screen == self.ammos:
             self.botAppBar.okAct.setHidden(True)
@@ -165,7 +168,11 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
             self.botAppBar.homeAct.setHidden(False)
             self.botAppBar.shareAct.setHidden(True)
 
-            self.header.bread.setText(f"{self.ammos.filter['rifle'].name}/Ammo")
+            self.header.bread.setText(
+                "/".join(
+                    (rifle, _translate('MainWindow', 'Ammo'))
+                )
+            )
 
         elif current_screen == self.edit_rifle or current_screen == self.edit_ammo or current_screen == self.edit_shot:
             self.botAppBar.okAct.setVisible(True)
@@ -175,20 +182,28 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
             self.botAppBar.homeAct.setHidden(False)
             self.botAppBar.shareAct.setHidden(True)
 
-            rifle = self.ammos.filter.get('rifle')
-            rifle = rifle.name if rifle else None
             if current_screen == self.edit_rifle:
-                self.header.bread.setText(f"{rifle}/edit/")
+                self.header.bread.setText(
+                    "/".join(
+                        (rifle, _translate('MainWindow', 'edit'))
+                    )
+                )
             elif current_screen == self.edit_ammo:
                 self.header.bread.setText(
-                    f"{rifle}/{self.edit_ammo.ammo.name}/edit/")
+                    "/".join(
+                        (rifle, self.edit_ammo.ammo.name, _translate('MainWindow', 'edit'))
+                    )
+                )
             elif current_screen == self.edit_shot:
                 self.header.bread.setText(
-                    f"{rifle}/{self.edit_shot.ammo.name}/conditions/")
+                    "/".join(
+                        (rifle, self.edit_shot.ammo.name, _translate('MainWindow', 'conditions'))
+                    )
+                )
 
         elif current_screen == self.settings:
 
-            self.header.bread.setText('Settings')
+            self.header.bread.setText(_translate('MainWindow', 'Settings'))
 
             self.botAppBar.okAct.setVisible(True)
             self.botAppBar.backAct.setVisible(True)
@@ -198,6 +213,13 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
             self.botAppBar.shareAct.setHidden(True)
 
         elif current_screen == self.trajectory:
+
+            self.header.bread.setText(
+                "/".join(
+                    (rifle, self.edit_shot.ammo.name, _translate('MainWindow', 'Trajectory'))
+                )
+            )
+
             self.botAppBar.okAct.setHidden(True)
             self.botAppBar.addAct.setHidden(True)
             self.botAppBar.setAct.setHidden(True)
@@ -210,12 +232,12 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
 
         if 0 <= index < self.stacked.count():
             currentPage = self.stacked.widget(index)
-            self.stacked.resize(currentPage.sizeHint())
-            self.scroll_area.scroll(0, 0)
-            current_widget = self.stacked.currentWidget()
-            if current_widget:
-                target_height = current_widget.sizeHint().height()
-                self.stacked.setMinimumHeight(target_height)
+        self.stacked.resize(currentPage.sizeHint())
+        self.scroll_area.scroll(0, 0)
+        current_widget = self.stacked.currentWidget()
+        if current_widget:
+            target_height = current_widget.sizeHint().height()
+        self.stacked.setMinimumHeight(target_height)
 
     def go_ok(self):
         current_screen = self.stacked.currentWidget()

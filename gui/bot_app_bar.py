@@ -5,18 +5,6 @@ class BarButton(QtWidgets.QToolButton):
 
     def __init__(self, parent=None):
         super(BarButton, self).__init__(parent)
-    #     self.enabled_icon = None
-    #     self.disabled_icon = None
-    #
-    # def changeEvent(self, event) -> None:
-    #     if event.type() == QtCore.QEvent.EnabledChange:
-    #         if self.isEnabled():
-    #             self.setIcon(self.enabled_icon)
-    #         else:
-    #             self.setIcon(self.disabled_icon)
-    #         self.setIconSize(QtCore.QSize(64, 64))
-    #
-    #     super(BarButton, self).changeEvent(event)
 
 
 class BotAppBar(QtWidgets.QWidget):

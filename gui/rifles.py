@@ -3,25 +3,33 @@ from getqt import *
 from datatypes.dbworker import Worker, TwistDir, RifleData
 from gui.settings import SettingsWidget
 from units import Distance, Convertor
-from .widgets import FormRow3, ComboBox, ConverSpinBox, AbstractScroller, GesturedListView
+from .widgets import FormRow3, ComboBox, ConverSpinBox, GesturedListView
+
+
+_translate = QtCore.QCoreApplication.translate
 
 
 class RifleItemWidget(QtWidgets.QGroupBox):
     def __init__(self, parent=None):
         super(RifleItemWidget, self).__init__(parent)
         self.setup_ui(self)
+        self.translateUi(self)
         self.rifle_data = None
 
     def setup_ui(self, rifleItemWidget):
-        rifleItemWidget.setObjectName("rifleItemWidget")
-        self.gridLayout = QtWidgets.QGridLayout(self)
+        rifleItemWidget.setObjectName("RifleItemWidget")
+        self.gridLayout = QtWidgets.QFormLayout(self)
+        self.barre_label = QtWidgets.QLabel()
         self.barrel = QtWidgets.QLabel()
+        self.sight_label = QtWidgets.QLabel()
         self.sight = QtWidgets.QLabel()
-        self.gridLayout.addWidget(self.barrel)
-        self.gridLayout.addWidget(self.sight)
+        self.gridLayout.addRow(self.barre_label, self.barrel)
+        self.gridLayout.addRow(self.sight_label, self.sight)
 
     def translateUi(self, rifleItemWidget):
-        ...
+        # _translate = QtCore.QCoreApplication.translate
+        rifleItemWidget.barre_label.setText(_translate("rifleItemWidget", 'Barrel: 1 in'))
+        rifleItemWidget.sight_label.setText(_translate("rifleItemWidget", 'Sight Ht:'))
 
     def set_data(self, rifle):
         settings = self.get_settings()
@@ -31,8 +39,10 @@ class RifleItemWidget(QtWidgets.QGroupBox):
 
         self.rifle_data = rifle
         self.setTitle(self.rifle_data.name)
-        self.barrel.setText(f'Barrel: 1 in {twist}')
-        self.sight.setText(f'Sight Ht: {sh}')
+        self.barrel.setText(str(twist))
+        self.sight.setText(str(sh))
+
+        self.translateUi(self)
 
     def get_settings(self) -> SettingsWidget:
         window = self.window()
@@ -60,8 +70,8 @@ class RiflesLi(GesturedListView):
         if item:
             context_menu = QtWidgets.QMenu(self)
 
-            context_menu.addAction('Edit', lambda: self.onContextMenuAction(item, "Edit"))
-            context_menu.addAction('Delete', lambda: self.onContextMenuAction(item, "Delete"))
+            context_menu.addAction(_translate("riflesLi", "Edit"), lambda: self.onContextMenuAction(item, "Edit"))
+            context_menu.addAction(_translate("riflesLi", "Delete"), lambda: self.onContextMenuAction(item, "Delete"))
             context_menu.exec_(self.mapToGlobal(pos))
 
     def onContextMenuAction(self, item, action):
@@ -93,10 +103,6 @@ class RiflesLi(GesturedListView):
             for rifle in rifles:
                 self.create_item(rifle)
 
-    def retranslateUi(self, riflesWidget: 'RiflesWidget'):
-        _translate = QtCore.QCoreApplication.translate
-        riflesWidget.setWindowTitle(_translate("riflesWidget", "Form"))
-
     def connectUi(self, riflesWidget: 'RiflesWidget'):
         self.itemClicked.connect(self.rifle_clicked)
         self.edit_context_action.connect(self.rifle_edit_clicked)
@@ -116,11 +122,25 @@ class EditRifleWidget(QtWidgets.QWidget):
     def __init__(self, parent=None, uid: int = None, rifle: 'RifleData' = None):
         super(EditRifleWidget, self).__init__(parent)
         self.setupUi(self)
+        self.translate_ui()
         self.connectUi(self)
         self.uid = uid
 
         if rifle is not None:
             self.display_data(rifle)
+
+    def translate_ui(self):
+        self.name_box.setTitle(_translate("editRifleWidget", 'Rifle name'))
+        self.props_box.setTitle(_translate("editRifleWidget", 'Properties'))
+        self.reticle_box.setTitle(_translate("editRifleWidget", 'Reticle'))
+        self.name_label.setText(_translate("editRifleWidget", 'Name'))
+        self.name.setPlaceholderText(_translate("editRifleWidget", 'Name'))
+        self.twist_dir.setItemText(0, _translate("editRifleWidget", 'Right'))
+        self.twist_dir.setItemText(1, _translate("editRifleWidget", 'Left'))
+        self.barrel_twist.prefix.setText(_translate("editRifleWidget", 'Barel Twist'))
+        self.twist_dir.prefix.setText(_translate("editRifleWidget", 'Twist direction'))
+        self.sight_height.prefix.setText(_translate("editRifleWidget", 'Sight height'))
+
 
     def setupUi(self, editRifleWidget):
         editRifleWidget.setObjectName("editRifleWidget")
@@ -131,9 +151,9 @@ class EditRifleWidget(QtWidgets.QWidget):
         editRifleWidget.setSizePolicy(sizePolicy)
         editRifleWidget.setMinimumSize(QtCore.QSize(0, 0))
 
-        self.name_box = QtWidgets.QGroupBox('Rifle name', self)
-        self.props_box = QtWidgets.QGroupBox('Properties', self)
-        self.reticle_box = QtWidgets.QGroupBox('Reticle', self)
+        self.name_box = QtWidgets.QGroupBox(self)
+        self.props_box = QtWidgets.QGroupBox(self)
+        self.reticle_box = QtWidgets.QGroupBox(self)
 
         self.vBoxLayout = QtWidgets.QVBoxLayout(self)
         self.vBoxLayout.setObjectName("vBoxLayout")
@@ -145,19 +165,19 @@ class EditRifleWidget(QtWidgets.QWidget):
         self.props_boxLayout = QtWidgets.QVBoxLayout(self.props_box)
         self.props_boxLayout.setObjectName("props_boxLayout")
 
-        self.name_label = QtWidgets.QLabel('Name')
+        self.name_label = QtWidgets.QLabel()
         self.name = QtWidgets.QLineEdit()
-        self.name.setPlaceholderText('Name')
 
         barrel_twist = ConverSpinBox(self, 0.5)
-        twist_dir = ComboBox(self, (('Right', TwistDir.Right), ('Left', TwistDir.Left)))
+        twist_dir = ComboBox(self, (
+            ('Right', TwistDir.Right),
+            ('Left', TwistDir.Left)
+        ))
         sight_height = ConverSpinBox(self, 0.5)
 
-        self.barrel_twist = FormRow3(barrel_twist, 'Barel Twist', 'in')
-        self.barrel_twist.setObjectName('barrel_twist')
-        self.twist_dir = FormRow3(twist_dir, 'Twist direction')
-        self.sight_height = FormRow3(sight_height, 'Sight height', 'mm')
-        self.sight_height.setObjectName('sight_height')
+        self.barrel_twist = FormRow3(barrel_twist)
+        self.twist_dir = FormRow3(twist_dir)
+        self.sight_height = FormRow3(sight_height)
 
         self.name_boxLayout.addRow(self.name_label, self.name)
 
@@ -169,12 +189,7 @@ class EditRifleWidget(QtWidgets.QWidget):
         self.vBoxLayout.addWidget(self.props_box)
         self.vBoxLayout.addWidget(self.reticle_box)
 
-        self.retranslateUi(editRifleWidget)
         QtCore.QMetaObject.connectSlotsByName(editRifleWidget)
-
-    def retranslateUi(self, editRifleWidget: 'EditRifleWidget'):
-        _translate = QtCore.QCoreApplication.translate
-        editRifleWidget.setWindowTitle(_translate("editRifleWidget", "Form"))
 
     def connectUi(self, editRifleWidget):
         window = self.window()
@@ -192,7 +207,7 @@ class EditRifleWidget(QtWidgets.QWidget):
 
     def display_data(self, rifle: 'RifleData'):
         if not rifle:
-            rifle = RifleData('New Rifle')
+            rifle = RifleData(_translate('editRifleWidget', 'New Rifle'))
         self.uid = rifle.id
         self.name.setText(rifle.name)
         self.barrel_twist.setRawValue(rifle.barrel_twist)
@@ -213,10 +228,10 @@ class EditRifleWidget(QtWidgets.QWidget):
     def validate(self):
         if not self.sight_height.rawValue() > 0:
             self.sight_height.value_field.setFocus()
-            self.errorSig.emit('Sight height must be > 0')
+            self.errorSig.emit(_translate('editRifleWidget', 'Sight height must be > 0'))
         elif not self.barrel_twist.rawValue() > 0:
             self.barrel_twist.value_field.setFocus()
-            self.errorSig.emit('Twist must be > 0')
+            self.errorSig.emit(_translate('editRifleWidget', 'Twist must be > 0'))
         else:
             return
 
