@@ -4,60 +4,65 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="gui/app.py" line="95"/>
+        <location filename="gui/app.py" line="98"/>
         <source>ArcherBC</source>
         <translation>ArcherBC</translation>
     </message>
     <message>
-        <location filename="gui/app.py" line="161"/>
+        <location filename="gui/app.py" line="166"/>
         <source>Rifles</source>
         <translation>Зброя</translation>
     </message>
     <message>
-        <location filename="gui/app.py" line="206"/>
+        <location filename="gui/app.py" line="211"/>
         <source>Settings</source>
         <translation>Налаштування</translation>
     </message>
     <message>
-        <location filename="gui/app.py" line="217"/>
+        <location filename="gui/app.py" line="222"/>
         <source>Trajectory</source>
         <translation>Траекторія</translation>
     </message>
     <message>
-        <location filename="gui/app.py" line="198"/>
+        <location filename="gui/app.py" line="203"/>
         <source>Conditions</source>
         <translation>Умови стрільби</translation>
     </message>
     <message>
-        <location filename="gui/app.py" line="192"/>
+        <location filename="gui/app.py" line="197"/>
         <source>edit</source>
         <translation>редагування</translation>
     </message>
     <message>
-        <location filename="gui/app.py" line="171"/>
+        <location filename="gui/app.py" line="176"/>
         <source>Ammo</source>
         <translation>Набої</translation>
+    </message>
+    <message>
+        <location filename="gui/app.py" line="236"/>
+        <source>One Shot</source>
+        <translation>Постріл</translation>
     </message>
 </context>
 <context>
     <name>ammoItemWidget</name>
     <message>
-        <location filename="gui/ammos.py" line="50"/>
+        <location filename="gui/ammos.py" line="55"/>
         <source>Caliber:</source>
         <translation>Калібр:</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="51"/>
+        <location filename="gui/ammos.py" line="56"/>
         <source>Ammo Wt/Drag:</source>
         <translation>Набій Вага/Драг Модель:</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="52"/>
+        <location filename="gui/ammos.py" line="57"/>
         <source>MV:</source>
         <translation>Швидкість:</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="53"/>
+        <location filename="gui/ammos.py" line="58"/>
         <source>Zero Rng/Ht:</source>
         <translation>Пристрілка Дист./Висота:</translation>
     </message>
@@ -98,177 +103,177 @@
 <context>
     <name>editAmmoWidget</name>
     <message>
-        <location filename="gui/ammos.py" line="296"/>
+        <location filename="gui/ammos.py" line="301"/>
         <source>Ammo name</source>
         <translation>Назва набою</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="297"/>
+        <location filename="gui/ammos.py" line="302"/>
         <source>Properties</source>
         <translation>Властивості</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="298"/>
+        <location filename="gui/ammos.py" line="303"/>
         <source>Zeroing</source>
         <translation>Пристрілка</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="300"/>
+        <location filename="gui/ammos.py" line="305"/>
         <source>Name</source>
         <translation>Назва</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="301"/>
+        <location filename="gui/ammos.py" line="306"/>
         <source>Edit</source>
         <translation>Редагувати</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="302"/>
+        <location filename="gui/ammos.py" line="307"/>
         <source>Drag data</source>
         <translation>Драг функція</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="304"/>
+        <location filename="gui/ammos.py" line="309"/>
         <source>Diameter</source>
         <translation>Діаметр</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="305"/>
+        <location filename="gui/ammos.py" line="310"/>
         <source>Weight</source>
         <translation>Вага</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="306"/>
+        <location filename="gui/ammos.py" line="311"/>
         <source>Length</source>
         <translation>Довжина</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="307"/>
+        <location filename="gui/ammos.py" line="312"/>
         <source>Muzzle velocity</source>
         <translation>Початкова швидкість</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="308"/>
+        <location filename="gui/ammos.py" line="313"/>
         <source>Powder sensitivity</source>
         <translation>Температурна чутливість пороху</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="309"/>
+        <location filename="gui/ammos.py" line="314"/>
         <source>Powder temp</source>
         <translation>Температура пороху</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="310"/>
+        <location filename="gui/ammos.py" line="315"/>
         <source>Calculate powder sensitivity</source>
         <translation>Розрахувати температурну чутливість</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="311"/>
+        <location filename="gui/ammos.py" line="316"/>
         <source>Drag model</source>
         <translation>Драг модель</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="313"/>
+        <location filename="gui/ammos.py" line="318"/>
         <source>Zero range</source>
         <translation>Дистанція пристрілки</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="314"/>
+        <location filename="gui/ammos.py" line="319"/>
         <source>Zero height</source>
         <translation>Висота прицілу</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="315"/>
+        <location filename="gui/ammos.py" line="320"/>
         <source>Zero atmosphere</source>
         <translation>Атмосфера пристрілки</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="316"/>
+        <location filename="gui/ammos.py" line="321"/>
         <source>Altitude</source>
         <translation>Висота</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="317"/>
+        <location filename="gui/ammos.py" line="322"/>
         <source>Pressure</source>
         <translation>Тиск</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="318"/>
+        <location filename="gui/ammos.py" line="323"/>
         <source>Temperature</source>
         <translation>Температура</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="319"/>
+        <location filename="gui/ammos.py" line="324"/>
         <source>Humidity</source>
         <translation>Вологість</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="375"/>
+        <location filename="gui/ammos.py" line="380"/>
         <source>Diameter must be between 0.001 and 70 inch</source>
         <translation>Діаметр має бути від 0.001 до 70 дюймів</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="378"/>
+        <location filename="gui/ammos.py" line="383"/>
         <source>Weight must be between 0.001 and 5000 inch</source>
         <translation>Вага має бути від 0.001 до 5000 грейн</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="381"/>
+        <location filename="gui/ammos.py" line="386"/>
         <source>Length must be between 0.01 and 70 inch</source>
         <translation>Довжина має бути від 0.01 до 70 дюймів</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="384"/>
+        <location filename="gui/ammos.py" line="389"/>
         <source>Muzzle velocity must be between 10 and 2000 mps</source>
         <translation>Швидкість має бути від 10 до 2000 м/с</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="387"/>
+        <location filename="gui/ammos.py" line="392"/>
         <source>Powder sensitivity must be between 0 and 10 %</source>
         <translation>Температурна чутливість має бути від 0 до 10%</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="390"/>
+        <location filename="gui/ammos.py" line="395"/>
         <source>Powder temperature must be between -50 and 50 °C</source>
         <translation>температура має бути від -50 до 50 °C</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="393"/>
+        <location filename="gui/ammos.py" line="398"/>
         <source>Zero range must be between 10 and 1000 m</source>
         <translation>Дистанція пристрілки має бути від 10 до 1000 м</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="396"/>
+        <location filename="gui/ammos.py" line="401"/>
         <source>Sight height must be &gt; 0</source>
         <translation>Висота приціла має бути &gt; 0</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="399"/>
+        <location filename="gui/ammos.py" line="404"/>
         <source>Altitude must be between 0 and 9000 m</source>
         <translation>Висота має бути від 0 до 9000 м</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="402"/>
+        <location filename="gui/ammos.py" line="407"/>
         <source>Pressure must be between 381 and 1015 mmHg</source>
         <translation>Тиск має бути від 381 до 1015 ммРтСт</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="405"/>
+        <location filename="gui/ammos.py" line="410"/>
         <source>Temperature must be between -50 and 50 °C</source>
         <translation>Температура має бути від -50 до +50 °C</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="408"/>
+        <location filename="gui/ammos.py" line="413"/>
         <source>Humidity must be between 0 and 100 %</source>
         <translation>Вологість має бути від 0 до 100 %</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="423"/>
+        <location filename="gui/ammos.py" line="428"/>
         <source>Wrong Drag data</source>
         <translation>Помилкова драг функція</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="454"/>
+        <location filename="gui/ammos.py" line="459"/>
         <source>New Ammo</source>
         <translation>Новий набій</translation>
     </message>
@@ -276,62 +281,62 @@
 <context>
     <name>editRifleWidget</name>
     <message>
-        <location filename="gui/rifles.py" line="210"/>
+        <location filename="gui/rifles.py" line="212"/>
         <source>New Rifle</source>
         <translation>Нова зброя</translation>
     </message>
     <message>
-        <location filename="gui/rifles.py" line="231"/>
+        <location filename="gui/rifles.py" line="233"/>
         <source>Sight height must be &gt; 0</source>
         <translation>Висота приціла має бути &gt; 0</translation>
     </message>
     <message>
-        <location filename="gui/rifles.py" line="234"/>
+        <location filename="gui/rifles.py" line="236"/>
         <source>Twist must be &gt; 0</source>
         <translation>Твіст має бути &gt; 0</translation>
     </message>
     <message>
-        <location filename="gui/rifles.py" line="133"/>
+        <location filename="gui/rifles.py" line="135"/>
         <source>Rifle name</source>
         <translation>Назва зброї</translation>
     </message>
     <message>
-        <location filename="gui/rifles.py" line="134"/>
+        <location filename="gui/rifles.py" line="136"/>
         <source>Properties</source>
         <translation>Властивості</translation>
     </message>
     <message>
-        <location filename="gui/rifles.py" line="135"/>
+        <location filename="gui/rifles.py" line="137"/>
         <source>Reticle</source>
         <translation>Прицільна сітка</translation>
     </message>
     <message>
-        <location filename="gui/rifles.py" line="137"/>
+        <location filename="gui/rifles.py" line="139"/>
         <source>Name</source>
         <translation>Назва</translation>
     </message>
     <message>
-        <location filename="gui/rifles.py" line="138"/>
+        <location filename="gui/rifles.py" line="140"/>
         <source>Right</source>
         <translation>Правий</translation>
     </message>
     <message>
-        <location filename="gui/rifles.py" line="139"/>
+        <location filename="gui/rifles.py" line="141"/>
         <source>Left</source>
         <translation>Лівий</translation>
     </message>
     <message>
-        <location filename="gui/rifles.py" line="140"/>
+        <location filename="gui/rifles.py" line="142"/>
         <source>Barel Twist</source>
         <translation>Крок нарізів</translation>
     </message>
     <message>
-        <location filename="gui/rifles.py" line="141"/>
+        <location filename="gui/rifles.py" line="143"/>
         <source>Twist direction</source>
         <translation>Напрям нарізів</translation>
     </message>
     <message>
-        <location filename="gui/rifles.py" line="142"/>
+        <location filename="gui/rifles.py" line="144"/>
         <source>Sight height</source>
         <translation>Висота прицілу</translation>
     </message>
@@ -339,102 +344,102 @@
 <context>
     <name>editShotWidget</name>
     <message>
-        <location filename="gui/ammos.py" line="558"/>
+        <location filename="gui/ammos.py" line="563"/>
         <source>Distance</source>
         <translation>Дистанція</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="559"/>
+        <location filename="gui/ammos.py" line="564"/>
         <source>Look Angle</source>
         <translation>Кут цілі</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="560"/>
+        <location filename="gui/ammos.py" line="565"/>
         <source>Altitude</source>
         <translation>Висота</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="561"/>
+        <location filename="gui/ammos.py" line="566"/>
         <source>Pressure</source>
         <translation>Тиск</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="562"/>
+        <location filename="gui/ammos.py" line="567"/>
         <source>Temperature</source>
         <translation>Температура</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="563"/>
+        <location filename="gui/ammos.py" line="568"/>
         <source>Humidity</source>
         <translation>Вологість</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="564"/>
+        <location filename="gui/ammos.py" line="569"/>
         <source>Wind speed</source>
         <translation>Швидкість вітру</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="565"/>
+        <location filename="gui/ammos.py" line="570"/>
         <source>Wind angle</source>
         <translation>Кут вітру</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="567"/>
+        <location filename="gui/ammos.py" line="572"/>
         <source>One shot</source>
         <translation>Постріл</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="568"/>
+        <location filename="gui/ammos.py" line="573"/>
         <source>Trajectory</source>
         <translation>Траекторія</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="569"/>
+        <location filename="gui/ammos.py" line="574"/>
         <source>Target</source>
         <translation>Ціль</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="570"/>
+        <location filename="gui/ammos.py" line="575"/>
         <source>Atmosphere</source>
         <translation>Атмосфера</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="599"/>
+        <location filename="gui/ammos.py" line="604"/>
         <source>Target distance must be between 10 and 3000 m</source>
         <translation>Дистанція до цілі має бути від 10 до 3000 м</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="602"/>
+        <location filename="gui/ammos.py" line="607"/>
         <source>Altitude must be between 0 and 9000 m</source>
         <translation>Висота має бути від 0 до 9000 м</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="605"/>
+        <location filename="gui/ammos.py" line="610"/>
         <source>Pressure must be between 381 and 1015 mmHg</source>
         <translation>Тиск має бути від 381 до 1015 ммРтСт</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="608"/>
+        <location filename="gui/ammos.py" line="613"/>
         <source>Temperature must be between -50 and 50 °C</source>
         <translation>Температура має бути від -50 до +50 °C</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="611"/>
+        <location filename="gui/ammos.py" line="616"/>
         <source>Humidity must be between 0 and 100 %</source>
         <translation>Вологість має бути від 0 до 100 %</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="614"/>
+        <location filename="gui/ammos.py" line="619"/>
         <source>Wind speed must be &gt;= 0</source>
         <translation>Швидкість вітру має бути не менше 0</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="617"/>
+        <location filename="gui/ammos.py" line="622"/>
         <source>Wind angle must be between 0 and 359 °</source>
         <translation>Кут вітру має бути від 0 до 359 °</translation>
     </message>
     <message>
-        <location filename="gui/ammos.py" line="638"/>
+        <location filename="gui/ammos.py" line="643"/>
         <source>New Ammo</source>
         <translation>Новий набій</translation>
     </message>
@@ -493,12 +498,12 @@
 <context>
     <name>rifleItemWidget</name>
     <message>
-        <location filename="gui/rifles.py" line="31"/>
+        <location filename="gui/rifles.py" line="33"/>
         <source>Barrel: 1 in</source>
         <translation>Твіст: 1 до</translation>
     </message>
     <message>
-        <location filename="gui/rifles.py" line="32"/>
+        <location filename="gui/rifles.py" line="34"/>
         <source>Sight Ht:</source>
         <translation>Висота прицілу:</translation>
     </message>
@@ -506,12 +511,12 @@
 <context>
     <name>riflesLi</name>
     <message>
-        <location filename="gui/rifles.py" line="73"/>
+        <location filename="gui/rifles.py" line="75"/>
         <source>Edit</source>
         <translation>Редагувати</translation>
     </message>
     <message>
-        <location filename="gui/rifles.py" line="74"/>
+        <location filename="gui/rifles.py" line="76"/>
         <source>Delete</source>
         <translation>Видалити</translation>
     </message>

@@ -265,5 +265,8 @@ class OneShotWidget(QtWidgets.QScrollArea):
         elif index == 1:
             self.stacked.setCurrentWidget(self.reticle)
 
+    def share_clicked(self):
+        ...
+
     def connect_ui(self, oneShot):
         self.viewCmb.currentIndexChanged.connect(self.switch_view)

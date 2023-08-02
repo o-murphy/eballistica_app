@@ -1,3 +1,5 @@
+import csv
+
 import pyqtgraph as pg
 from getqt import *
 from qt_material import QtStyleTools
@@ -82,6 +84,21 @@ class TrajectoryTable(GesturedTableView, QtStyleTools):
         self.setModel(model)
         self.resizeColumnsToContents()
 
+    def save_drag_table(self):
+        ...
+        # riflename = self.window().edit_shot.rifle.name
+        # ammoname = self.window().edit_shot.ammo.name
+        # filename = f"{riflename}_{ammoname}"
+        # with open(f'table{filename}.csv', 'w', newline='') as csvfile:
+        #     writer = csv.writer(csvfile, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        #     writer.writerow(['Mach', 'CD'])
+        #     writer.writerows(self._drag)
+
+    def share(self):
+        print(self.model()._headers.copy())
+        print(self.model()._data.copy())
+        self.save_drag_table()
+
 
 class TrajectoryGraph(QtWidgets.QWidget):
     def __init__(self, parent=None):
@@ -89,6 +106,8 @@ class TrajectoryGraph(QtWidgets.QWidget):
         self.init_ui(self)
         # self.connect_ui(self)
         self.installEventFilter(self)
+
+        self._drag = None
 
     def eventFilter(self, source, event):
         if source is self and event.type() == QtCore.QEvent.MouseButtonPress:
@@ -129,6 +148,7 @@ class TrajectoryGraph(QtWidgets.QWidget):
         self.stacked.setCurrentIndex(index)
 
     def display_data(self, drop, drag):
+        self._drag = ((p['A'], p['B']) for p in drag)
         pen_color = '#008080'  # Custom pen color (red in this example)
         symbol_color = '#008080'
 
@@ -165,6 +185,69 @@ class TrajectoryGraph(QtWidgets.QWidget):
         self.drag_plot.showAxis('left')
 
         self.stacked.setCurrentWidget(self.drop_plot)
+
+    def showContextMenu(self, pos=None):
+        if pos is None:
+            pos = self.mapFromGlobal(self.cursor().pos())
+
+        context_menu = QtWidgets.QMenu(self)
+
+        context_menu.addAction('Share drop graph', lambda: self.onContextMenuAction("ShareDropGraph"))
+        context_menu.addAction('Share drag graph', lambda: self.onContextMenuAction("ShareDragGraph"))
+        context_menu.addAction('Share drag table', lambda: self.onContextMenuAction("ShareDragTable"))
+        context_menu.exec_(self.mapToGlobal(pos))
+
+    def save_drop_graph(self):
+        riflename = self.window().edit_shot.rifle.name
+        ammoname = self.window().edit_shot.ammo.name
+        filename = f"{riflename}_{ammoname}"
+        if QT_BACKEND == QtBackend.PyQt5 or QT_BACKEND == QtBackend.PyQt6:
+            self.screenshot = QtGui.QPixmap.grabWidget(self.drop_plot)
+        else:
+            self.screenshot = self.drop_plot.grab()
+            self.painter = QtGui.QPainter(self.screenshot)
+            self.painter.setPen(QtGui.QPen('white'))
+            self.painter.drawText(QtCore.QPoint(30, 30), riflename)
+            self.painter.drawText(QtCore.QPoint(30, 60), ammoname)
+            del self.painter
+        self.screenshot.save(f'table_{filename}.png')
+
+    def save_drag_graph(self):
+        riflename = self.window().edit_shot.rifle.name
+        ammoname = self.window().edit_shot.ammo.name
+        filename = f"{riflename}_{ammoname}"
+        if QT_BACKEND == QtBackend.PyQt5 or QT_BACKEND == QtBackend.PyQt6:
+            self.screenshot = QtGui.QPixmap.grabWidget(self.drag_plot)
+        else:
+            self.screenshot = self.drag_plot.grab()
+            self.painter = QtGui.QPainter(self.screenshot)
+            self.painter.setPen(QtGui.QPen('white'))
+            self.painter.drawText(QtCore.QPoint(30, 30), riflename)
+            self.painter.drawText(QtCore.QPoint(30, 60), ammoname)
+            del self.painter
+        self.screenshot.save(f'cdm_{filename}.png')
+
+    def save_drag_table(self):
+        riflename = self.window().edit_shot.rifle.name
+        ammoname = self.window().edit_shot.ammo.name
+        filename = f"{riflename}_{ammoname}"
+        with open(f'drag{filename}.csv', 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+            writer.writerow(['Mach', 'CD'])
+            writer.writerows(self._drag)
+
+    def onContextMenuAction(self, action):
+        # Implement the code to handle context menu actions
+
+        if action == "ShareDropGraph":
+            self.save_drop_graph()
+        elif action == 'ShareDragGraph':
+            self.save_drag_graph()
+        elif action == 'ShareDragTable':
+            self.save_drag_table()
+
+    def share(self):
+        self.showContextMenu()
 
 
 class TrajectoryReticle(QtWidgets.QWidget):
@@ -265,6 +348,14 @@ class TrajectoryWidget(QtWidgets.QScrollArea):
             self.stacked.setCurrentWidget(self.reticle)
         elif index == 2:
             self.stacked.setCurrentWidget(self.graph)
+
+    def share_clicked(self):
+
+        if self.stacked.currentWidget() == self.table:
+            self.table.share()
+        elif self.stacked.currentWidget() == self.graph:
+            self.graph.share()
+
 
     def connect_ui(self, trajWidget):
         self.viewCmb.currentIndexChanged.connect(self.switch_view)

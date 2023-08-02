@@ -232,6 +232,19 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
             self.botAppBar.backAct.setVisible(True)
             self.botAppBar.shareAct.setVisible(True)
 
+        elif current_screen == self.one_shot:
+            self.header.bread.setText(
+                "/".join(
+                    (rifle, self.edit_shot.ammo.name, _translate('MainWindow', 'One Shot'))
+                )
+            )
+
+            self.botAppBar.okAct.setHidden(True)
+            self.botAppBar.addAct.setHidden(True)
+            self.botAppBar.setAct.setHidden(True)
+            self.botAppBar.homeAct.setVisible(True)
+            self.botAppBar.backAct.setVisible(True)
+            self.botAppBar.shareAct.setVisible(True)
         else:
             ...
 
@@ -299,6 +312,15 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         self.one_shot.display_data(self.edit_shot)
         self.stacked.setCurrentWidget(self.one_shot)
 
+    def share_clicked(self):
+        current_screen = self.stacked.currentWidget()
+
+        if current_screen == self.trajectory:
+            self.trajectory.share_clicked()
+
+        elif current_screen == self.one_shot:
+            self.one_shot.share_clicked()
+
     def showError(self, string):
         self.status_bar.setStyleSheet("color: orange")
         self.status_bar.showMessage(string, timeout=3000)
@@ -318,6 +340,7 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         self.botAppBar.addAct.clicked.connect(self.go_add)
         self.botAppBar.okAct.clicked.connect(self.go_ok)
         self.botAppBar.setAct.clicked.connect(self.switch_to_settings)
+        self.botAppBar.shareAct.clicked.connect(self.share_clicked)
 
         self.stacked.currentChanged.connect(self.screen_changed)
 
