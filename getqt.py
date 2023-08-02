@@ -14,7 +14,8 @@ try:
     from PySide6.QtCore import Signal, QObject, Slot
     QT_BACKEND = QtBackend.PySide6
 except ImportError:
-    pass
+    raise RuntimeError
+
 #     try:
 #         from PyQt5 import QtCore, QtWidgets, QtGui
 #         from PyQt5.QtCore import pyqtSignal as Signal

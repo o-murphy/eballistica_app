@@ -142,6 +142,31 @@ class GesturedListView(QtWidgets.QListWidget):
             """)
 
 
+class Label(QtWidgets.QLabel):
+    def __init__(self, *args, **kwargs):
+        super(Label, self).__init__(*args, **kwargs)
+
+        self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
+
+    def set_bold(self, flag: bool = True):
+        font = self.font()
+        font.setBold(flag)
+        self.setFont(font)
+
+
+class LabelCenter(Label):
+    def __init__(self, *args, **kwargs):
+        super(LabelCenter, self).__init__(*args, **kwargs)
+
+        self.setAlignment(QtCore.Qt.AlignmentFlag.AlignHCenter)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
+
+    def set_bold(self, flag: bool = True):
+        font = self.font()
+        font.setBold(flag)
+        self.setFont(font)
+
+
 class SpinBox(QtWidgets.QDoubleSpinBox):
     def __init__(self, parent=None, vmin=0, vmax=100, step=1, suffix=None, prefix=None, decimals=2, *args, **kwargs):
         super(SpinBox, self).__init__(parent, *args, **kwargs)
@@ -306,6 +331,28 @@ class FormRow3(QtWidgets.QWidget):
         self.rowLayout.setStretchFactor(self.prefix, 5)
         self.rowLayout.setStretchFactor(self.value_field, 3)
         self.rowLayout.setStretchFactor(self.suffix, 2)
+
+
+class Column(QtWidgets.QWidget):
+    def __init__(self, parent=None, widgets: list[QtWidgets.QWidget] = None, *args, **kwargs):
+        super(Column, self).__init__(parent, *args, **kwargs)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Maximum)
+        self.vLayout = QtWidgets.QVBoxLayout(self)
+
+        if isinstance(widgets, list):
+            for w in widgets:
+                self.vLayout.addWidget(w)
+
+
+class Row(QtWidgets.QWidget):
+    def __init__(self, parent=None, widgets: list[QtWidgets.QWidget] = None, *args, **kwargs):
+        super(Row, self).__init__(parent, *args, **kwargs)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Maximum)
+        self.hLayout = QtWidgets.QHBoxLayout(self)
+
+        if isinstance(widgets, list):
+            for w in widgets:
+                self.hLayout.addWidget(w)
 
 
 if __name__ == '__main__':

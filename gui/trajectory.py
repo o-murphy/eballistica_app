@@ -185,8 +185,8 @@ class TrajectoryWidget(QtWidgets.QScrollArea):
 
         self.viewCmb = QtWidgets.QComboBox(self)
         self.viewCmb.addItem('Table', 0)
-        self.viewCmb.addItem('Reticle', 0)
-        self.viewCmb.addItem('Graph', 0)
+        self.viewCmb.addItem('Reticle', 1)
+        self.viewCmb.addItem('Graph', 2)
 
         self.stacked = QtWidgets.QStackedWidget(self)
         self.stacked.addWidget(self.table)

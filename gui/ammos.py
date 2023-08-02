@@ -4,7 +4,7 @@ from datatypes.dbworker import Worker, AmmoData, DragModel
 from gui.app_logo import AppLogo, AppLabel
 from gui.drag_model import EditDragDataButton
 from gui.settings import SettingsWidget
-from gui.widgets import FormRow3, SpinBox, ComboBox, ConverSpinBox, AbstractScroller, GesturedListView
+from gui.widgets import FormRow3, SpinBox, ComboBox, ConverSpinBox, AbstractScroller, GesturedListView, Label
 from units import Distance, Angular, Pressure, Temperature, Velocity, Weight, Convertor
 
 
@@ -19,6 +19,7 @@ class AmmoItemWidget(QtWidgets.QWidget):
 
     def setupUi(self, ammoItemWidget):
         ammoItemWidget.setObjectName("ammoItemWidget")
+        self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Maximum)
 
         self.box = QtWidgets.QGroupBox('', self)
 
@@ -31,14 +32,18 @@ class AmmoItemWidget(QtWidgets.QWidget):
         self.boxLayout = QtWidgets.QFormLayout(self.box)
         self.boxLayout.setObjectName("boxLayout")
 
-        self.caliber = QtWidgets.QLabel()
-        self.caliber_label = QtWidgets.QLabel()
-        self.ammo = QtWidgets.QLabel()
-        self.ammo_label = QtWidgets.QLabel()
-        self.mv = QtWidgets.QLabel()
-        self.mv_label = QtWidgets.QLabel()
-        self.zero = QtWidgets.QLabel()
-        self.zero_label = QtWidgets.QLabel()
+        self.caliber = Label()
+        self.caliber_label = Label()
+        self.caliber_label.set_bold()
+        self.ammo = Label()
+        self.ammo_label = Label()
+        self.ammo_label.set_bold()
+        self.mv = Label()
+        self.mv_label = Label()
+        self.mv_label.set_bold()
+        self.zero = Label()
+        self.zero_label = Label()
+        self.zero_label.set_bold()
 
         self.boxLayout.addRow(self.caliber_label, self.caliber)
         self.boxLayout.addRow(self.ammo_label, self.ammo)

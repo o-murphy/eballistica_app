@@ -6,6 +6,7 @@ from .ammos import EditAmmoWidget, EditShotWidget, AmmosLi
 from .app_logo import AppHeader
 from .bot_app_bar import BotAppBar
 from .drag_model import MultiBCWidget, CDMWidget
+from .one_shot import OneShotWidget
 from .powder_sens import PowderSensWindget
 from .rifles import EditRifleWidget, RiflesLi
 from .settings import SettingsWidget
@@ -71,6 +72,7 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         self.powder_sens = PowderSensWindget(self)
 
         self.trajectory = TrajectoryWidget(self)
+        self.one_shot = OneShotWidget(self)
 
         self.settings.update_settings()
 
@@ -84,6 +86,7 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         self.stacked.addWidget(self.powder_sens)
         self.stacked.addWidget(self.settings)
         self.stacked.addWidget(self.trajectory)
+        self.stacked.addWidget(self.one_shot)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -134,6 +137,8 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         elif current_screen == self.settings:
             self.stacked.setCurrentWidget(self.rifles)
         elif current_screen == self.trajectory:
+            self.stacked.setCurrentWidget(self.edit_shot)
+        elif current_screen == self.one_shot:
             self.stacked.setCurrentWidget(self.edit_shot)
 
     def go_add(self):
@@ -289,6 +294,11 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         self.trajectory.display_data(self.edit_shot)
         self.stacked.setCurrentWidget(self.trajectory)
 
+    def switch_to_one_shot(self):
+        self.edit_shot.validate()
+        self.one_shot.display_data(self.edit_shot)
+        self.stacked.setCurrentWidget(self.one_shot)
+
     def showError(self, string):
         self.status_bar.setStyleSheet("color: orange")
         self.status_bar.showMessage(string, timeout=3000)
@@ -315,6 +325,7 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         self.edit_ammo.calc_powder_sens.clicked.connect(self.switch_calc_sens)
 
         self.edit_shot.traj_btn.clicked.connect(self.switch_to_trajectory)
+        self.edit_shot.one_shot_btn.clicked.connect(self.switch_to_one_shot)
 
         self.edit_rifle.errorSig.connect(self.showError)
         self.edit_ammo.errorSig.connect(self.showError)

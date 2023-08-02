@@ -1,4 +1,5 @@
 from getqt import *
+from gui.widgets import Label
 
 
 class AppLogo(QtWidgets.QLabel):
@@ -10,11 +11,12 @@ class AppLogo(QtWidgets.QLabel):
         self.setPixmap(scaled_pixmap)
 
 
-class AppLabel(QtWidgets.QLabel):
+class AppLabel(Label):
     def __init__(self, parent=None):
         super(AppLabel, self).__init__(parent)
         self.setAlignment(QtCore.Qt.AlignHCenter)
         self.setText("eBallistica")
+        self.set_bold()
 
 
 class AppHeader(QtWidgets.QWidget):

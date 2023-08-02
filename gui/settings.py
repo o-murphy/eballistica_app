@@ -128,7 +128,7 @@ class SettingsWidget(QtWidgets.QWidget):
         self.tempUnits.label.setText(_translate('settings', 'Temperature'))
         self.wUnits.label.setText(_translate('settings', 'Weight'))
         self.lnUnits.label.setText(_translate('settings', 'Length'))
-        self.distUnits.label.setText(_translate('settings', 'Diameter'))
+        self.dUnits.label.setText(_translate('settings', 'Diameter'))
         self.pUnits.label.setText(_translate('settings', 'Pressure'))
         self.dropUnits.label.setText(_translate('settings', 'Drop / Windage'))
         self.angleUnits.label.setText(_translate('settings', 'Angular'))

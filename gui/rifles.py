@@ -3,8 +3,7 @@ from getqt import *
 from datatypes.dbworker import Worker, TwistDir, RifleData
 from gui.settings import SettingsWidget
 from units import Distance, Convertor
-from .widgets import FormRow3, ComboBox, ConverSpinBox, GesturedListView
-
+from gui.widgets import FormRow3, ComboBox, ConverSpinBox, GesturedListView, Label
 
 _translate = QtCore.QCoreApplication.translate
 
@@ -18,11 +17,14 @@ class RifleItemWidget(QtWidgets.QGroupBox):
 
     def setup_ui(self, rifleItemWidget):
         rifleItemWidget.setObjectName("RifleItemWidget")
+        self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
         self.gridLayout = QtWidgets.QFormLayout(self)
-        self.barre_label = QtWidgets.QLabel()
-        self.barrel = QtWidgets.QLabel()
-        self.sight_label = QtWidgets.QLabel()
-        self.sight = QtWidgets.QLabel()
+        self.barre_label = Label()
+        self.barre_label.set_bold()
+        self.barrel = Label()
+        self.sight_label = Label()
+        self.sight_label.set_bold()
+        self.sight = Label()
         self.gridLayout.addRow(self.barre_label, self.barrel)
         self.gridLayout.addRow(self.sight_label, self.sight)
 
