@@ -40,5 +40,4 @@ class AppHeader(QtWidgets.QWidget):
 
     def retranslateUi(self, riflesHeader: 'appHeader'):
         _translate = QtCore.QCoreApplication.translate
-        riflesHeader.setWindowTitle(_translate("riflesHeader", "Form"))
 

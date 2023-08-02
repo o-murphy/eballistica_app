@@ -23,13 +23,15 @@ def main(argv):
         print('err')
 
     window = App()
-    desktop = QtGui.QGuiApplication.screenAt(window.geometry().center())
-    width, height = desktop.size().toTuple()
+    # desktop = QtGui.QGuiApplication.screenAt(window.geometry().center())
+    # width, height = desktop.size().toTuple()
+    #
+    # if width > height:
+    #     window.show()
+    # else:
+    #     window.showFullScreen()
 
-    if width > height:
-        window.show()
-    else:
-        window.showFullScreen()
+    window.show()
 
     app.exit(app.exec())
 

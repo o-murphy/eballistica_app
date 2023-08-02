@@ -8,6 +8,9 @@ from gui.widgets import FormRow3, SpinBox, ComboBox, ConverSpinBox, AbstractScro
 from units import Distance, Angular, Pressure, Temperature, Velocity, Weight, Convertor
 
 
+_translate = QtCore.QCoreApplication.translate
+
+
 class AmmoItemWidget(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(AmmoItemWidget, self).__init__(parent)
@@ -44,8 +47,6 @@ class AmmoItemWidget(QtWidgets.QWidget):
         self.translateUi(self)
 
     def translateUi(self, ammoItemWidget):
-        _translate = QtCore.QCoreApplication.translate
-        ammoItemWidget.setWindowTitle(_translate("ammoItemWidget", "Form"))
         ammoItemWidget.caliber_label.setText(_translate("ammoItemWidget", 'Caliber:'))
         ammoItemWidget.ammo_label.setText(_translate("ammoItemWidget", 'Ammo Wt/Drag:'))
         ammoItemWidget.mv_label.setText(_translate("ammoItemWidget", 'MV:'))
@@ -99,9 +100,7 @@ class AmmosHeader(QtWidgets.QWidget):
         QtCore.QMetaObject.connectSlotsByName(ammosHeader)
 
     def retranslateUi(self, ammosHeader: 'AmmosHeader'):
-        _translate = QtCore.QCoreApplication.translate
-        ammosHeader.setWindowTitle(_translate("ammosHeader", "Form"))
-        # ammosHeader.addButton.setText(_translate("ammosHeader", "+"))
+        ...
 
 
 class AmmosLi(GesturedListView):
@@ -160,8 +159,7 @@ class AmmosLi(GesturedListView):
                 self.create_item(ammo)
 
     def retranslateUi(self, ammosWidget: 'AmmosWidget'):
-        _translate = QtCore.QCoreApplication.translate
-        ammosWidget.setWindowTitle(_translate("ammosWidget", "Form"))
+        ...
 
     def connectUi(self, ammosWidget: 'AmmosWidget'):
         # self.ammos_list.itemDoubleClicked.connect(self.ammo_edit_clicked)
@@ -197,9 +195,9 @@ class EditAmmoWidget(QtWidgets.QWidget):
         editAmmoWidget.setSizePolicy(sizePolicy)
         editAmmoWidget.setMinimumSize(QtCore.QSize(0, 0))
 
-        self.name_box = QtWidgets.QGroupBox('Ammo name', self)
-        self.ammo_box = QtWidgets.QGroupBox('Properties', self)
-        self.zero_box = QtWidgets.QGroupBox('Zeroing', self)
+        self.name_box = QtWidgets.QGroupBox(self)
+        self.ammo_box = QtWidgets.QGroupBox(self)
+        self.zero_box = QtWidgets.QGroupBox(self)
 
         self.vBoxLayout = QtWidgets.QVBoxLayout(self)
         self.vBoxLayout.setObjectName("vBoxLayout")
@@ -214,9 +212,8 @@ class EditAmmoWidget(QtWidgets.QWidget):
         self.zero_boxLayout = QtWidgets.QVBoxLayout(self.zero_box)
         self.zero_boxLayout.setObjectName("zero_boxLayout")
 
-        self.name_label = QtWidgets.QLabel('Name')
+        self.name_label = QtWidgets.QLabel()
         self.name = QtWidgets.QLineEdit()
-        self.name.setPlaceholderText('Name')
 
         diameter = ConverSpinBox(self, 0.01)
         weight = ConverSpinBox(self, 0.5)
@@ -234,7 +231,7 @@ class EditAmmoWidget(QtWidgets.QWidget):
         temperature = ConverSpinBox(self, 1)
         humidity = ConverSpinBox(self, 1)
 
-        drag_data = EditDragDataButton(self, 'Edit')
+        drag_data = EditDragDataButton(self)
 
         drag_model = ComboBox(self, items=(
             ('G1', DragModel.G1),
@@ -242,26 +239,26 @@ class EditAmmoWidget(QtWidgets.QWidget):
             ('CDM', DragModel.CDM)
         ))
 
-        self.diameter = FormRow3(diameter, 'Diameter', 'in')
-        self.weight = FormRow3(weight, 'Weight', 'grn')
-        self.length = FormRow3(length, 'Length', 'in')
-        self.mv = FormRow3(mv, 'Muzzle velocity', 'mps')
-        self.powder_sens = FormRow3(powder_sens, 'Powder sensitivity', '%')
-        self.powder_temp = FormRow3(powder_temp, 'Powder temp', 'C')
+        self.diameter = FormRow3(diameter)
+        self.weight = FormRow3(weight)
+        self.length = FormRow3(length)
+        self.mv = FormRow3(mv)
+        self.powder_sens = FormRow3(powder_sens)
+        self.powder_temp = FormRow3(powder_temp)
 
-        self.calc_powder_sens = QtWidgets.QPushButton('Calculate powder sensitivity')
+        self.calc_powder_sens = QtWidgets.QPushButton()
 
-        self.drag_model = FormRow3(drag_model, 'Drag model', parent=self)
+        self.drag_model = FormRow3(drag_model, parent=self)
 
-        self.drag_data = FormRow3(drag_data, 'Drag data', parent=self)
+        self.drag_data = FormRow3(drag_data, parent=self)
 
-        self.zero_range = FormRow3(zero_range, 'Zero range', 'mm')
-        self.zero_height = FormRow3(zero_height, 'Zero height', 'mm')
-        self.is_zero_atmo = FormRow3(is_zero_atmo, 'Zero atmosphere')
-        self.altitude = FormRow3(altitude, 'Altitude', 'degree')
-        self.pressure = FormRow3(pressure, 'Pressure', 'kpa')
-        self.temperature = FormRow3(temperature, 'Temperature', 'C')
-        self.humidity = FormRow3(humidity, 'Humidity', '%')
+        self.zero_range = FormRow3(zero_range)
+        self.zero_height = FormRow3(zero_height)
+        self.is_zero_atmo = FormRow3(is_zero_atmo)
+        self.altitude = FormRow3(altitude)
+        self.pressure = FormRow3(pressure)
+        self.temperature = FormRow3(temperature)
+        self.humidity = FormRow3(humidity)
 
         self.name_boxLayout.addRow(self.name_label, self.name)
 
@@ -293,9 +290,33 @@ class EditAmmoWidget(QtWidgets.QWidget):
         self.retranslateUi(editAmmoWidget)
         QtCore.QMetaObject.connectSlotsByName(editAmmoWidget)
 
+        self.retranslateUi(self)
+
     def retranslateUi(self, editAmmoWidget: 'EditAmmoWidget'):
-        _translate = QtCore.QCoreApplication.translate
-        editAmmoWidget.setWindowTitle(_translate("editAmmoWidget", "Form"))
+        self.name_box.setTitle(_translate('editAmmoWidget', 'Ammo name'))
+        self.ammo_box.setTitle(_translate('editAmmoWidget', 'Properties'))
+        self.zero_box.setTitle(_translate('editAmmoWidget', 'Zeroing'))
+        self.name_label.setText(_translate('editAmmoWidget', 'Name'))
+        self.name.setPlaceholderText(_translate('editAmmoWidget', 'Name'))
+        self.drag_data.setText(_translate('editAmmoWidget', 'Edit'))
+        self.drag_data.prefix.setText(_translate('editAmmoWidget', 'Drag data'))
+
+        self.diameter.prefix.setText(_translate('editAmmoWidget', 'Diameter'))
+        self.weight.prefix.setText(_translate('editAmmoWidget', 'Weight'))
+        self.length.prefix.setText(_translate('editAmmoWidget', 'Length'))
+        self.mv.prefix.setText(_translate('editAmmoWidget', 'Muzzle velocity'))
+        self.powder_sens.prefix.setText(_translate('editAmmoWidget', 'Powder sensitivity'))
+        self.powder_temp.prefix.setText(_translate('editAmmoWidget', 'Powder temp'))
+        self.calc_powder_sens.setText(_translate('editAmmoWidget', 'Calculate powder sensitivity'))
+        self.drag_model.prefix.setText(_translate('editAmmoWidget', "Drag model"))
+
+        self.zero_range.prefix.setText(_translate('editAmmoWidget', 'Zero range'))
+        self.zero_height.prefix.setText(_translate('editAmmoWidget', 'Zero height'))
+        self.is_zero_atmo.prefix.setText(_translate('editAmmoWidget', 'Zero atmosphere'))
+        self.altitude.prefix.setText(_translate('editAmmoWidget', 'Altitude'))
+        self.pressure.prefix.setText(_translate('editAmmoWidget', 'Pressure'))
+        self.temperature.prefix.setText(_translate('editAmmoWidget', 'Temperature'))
+        self.humidity.prefix.setText(_translate('editAmmoWidget', 'Humidity'))
 
     def connectUi(self, editAmmoWidget):
         self.drag_model.currentIndexChanged.connect(self.update_drag_data_btn)
@@ -351,40 +372,40 @@ class EditAmmoWidget(QtWidgets.QWidget):
     def validate(self):
         if not 0.01 <= self.diameter.rawValue() <= 70:
             self.diameter.value_field.setFocus()
-            msg = "Diameter must be between 0.001 and 70 inch"
+            msg = _translate('editAmmoWidget', "Diameter must be between 0.001 and 70 inch")
         elif not 0.001 <= self.weight.rawValue() <= 5000:
             self.weight.value_field.setFocus()
-            msg = "Weight must be between 0.001 and 5000 inch"
+            msg = _translate('editAmmoWidget', "Weight must be between 0.001 and 5000 inch")
         elif not 0.01 <= self.length.rawValue() <= 70:
             self.length.value_field.setFocus()
-            msg = "Length must be between 0.01 and 70 inch"
+            msg = _translate('editAmmoWidget', "Length must be between 0.01 and 70 inch")
         elif not 10 <= self.mv.rawValue() <= 2000:
             self.mv.value_field.setFocus()
-            msg = "Muzzle velocity must be between 10 and 2000 mps"
+            msg = _translate('editAmmoWidget', "Muzzle velocity must be between 10 and 2000 mps")
         elif not 0 <= self.powder_sens.rawValue() <= 10:
             self.powder_sens.value_field.setFocus()
-            msg = "Powder sensitivity must be between 0 and 10 %"
+            msg = _translate('editAmmoWidget', "Powder sensitivity must be between 0 and 10 %")
         elif not -50 <= self.powder_temp.rawValue() <= 50:
             self.powder_temp.value_field.setFocus()
-            msg = "Powder temperature must be between -50 and 50 °C"
+            msg = _translate('editAmmoWidget', "Powder temperature must be between -50 and 50 °C")
         elif not 10 <= self.zero_range.rawValue() <= 1000:
             self.zero_range.value_field.setFocus()
-            msg = "Zero range must be between 10 and 1000 m"
+            msg = _translate('editAmmoWidget', "Zero range must be between 10 and 1000 m")
         elif not 0 < self.zero_height.rawValue() <= 1000:
             self.zero_height.value_field.setFocus()
-            msg = 'Sight height must be > 0'
+            msg = _translate('editAmmoWidget', 'Sight height must be > 0')
         elif not 9000 >= self.altitude.rawValue() >= 0:
             self.altitude.value_field.setFocus()
-            msg = "Altitude must be between 0 and 9000 m"
+            msg = _translate('editAmmoWidget', "Altitude must be between 0 and 9000 m")
         elif not 381 < self.pressure.rawValue() <= 1015:
             self.pressure.value_field.setFocus()
-            msg = "Pressure must be between 381 and 1015 mmHg"
+            msg = _translate('editAmmoWidget', "Pressure must be between 381 and 1015 mmHg")
         elif not -50 <= self.temperature.rawValue() <= 50:
             self.temperature.value_field.setFocus()
-            msg = "Temperature must be between -50 and 50 °C"
+            msg = _translate('editAmmoWidget', "Temperature must be between -50 and 50 °C")
         elif not 0 <= self.humidity.value() <= 100:
             self.humidity.value_field.setFocus()
-            msg = "Humidity must be between 0 and 100 %"
+            msg = _translate('editAmmoWidget', "Humidity must be between 0 and 100 %")
         else:
             return
         self.errorSig.emit(msg)
@@ -399,7 +420,7 @@ class EditAmmoWidget(QtWidgets.QWidget):
         else:
             bclist = [p for p in self.ammo.cdm_list if p[0] >= 0 and  p[1] > 0]
         if len(bclist) <= 0:
-            self.errorSig.emit('Wrong Drag data')
+            self.errorSig.emit(_translate('editAmmoWidget', 'Wrong Drag data'))
             raise ValueError('Wrong BC data')
         return
 
@@ -430,7 +451,7 @@ class EditAmmoWidget(QtWidgets.QWidget):
 
     def display_data(self, rifle, ammo):
 
-        self.ammo = AmmoData('New Ammo', rifle=rifle) if not isinstance(ammo, AmmoData) else ammo
+        self.ammo = AmmoData(_translate('editAmmoWidget', 'New Ammo'), rifle=rifle) if not isinstance(ammo, AmmoData) else ammo
         self.rifle = self.ammo.rifle
         self.name.setText(self.ammo.name)
         self.diameter.setRawValue(self.ammo.diameter)
@@ -475,8 +496,8 @@ class EditShotWidget(QtWidgets.QWidget):
         editShotWidget.setSizePolicy(sizePolicy)
         editShotWidget.setMinimumSize(QtCore.QSize(0, 0))
 
-        self.target_box = QtWidgets.QGroupBox('Target', self)
-        self.atmo_box = QtWidgets.QGroupBox('Atmosphere', self)
+        self.target_box = QtWidgets.QGroupBox(self)
+        self.atmo_box = QtWidgets.QGroupBox(self)
 
         self.vBoxLayout = QtWidgets.QVBoxLayout(self)
         self.vBoxLayout.setObjectName("vBoxLayout")
@@ -497,14 +518,14 @@ class EditShotWidget(QtWidgets.QWidget):
         wind_speed = ConverSpinBox(self, 1)
         wind_angle = ConverSpinBox(self, 1)
 
-        self.distance = FormRow3(distance,  'Distance', 'm')
-        self.look_angle = FormRow3(look_angle, 'Look Angle', 'degree')
-        self.altitude = FormRow3(altitude, 'Altitude', 'm')
-        self.pressure = FormRow3(pressure, 'Pressure', 'mmGh')
-        self.temperature = FormRow3(temperature, 'Temperature', 'C')
-        self.humidity = FormRow3(humidity, 'Humidity', '%')
-        self.wind_speed = FormRow3(wind_speed, 'Wind speed', 'mps')
-        self.wind_angle = FormRow3(wind_angle, 'Wind angle', 'degree')
+        self.distance = FormRow3(distance)
+        self.look_angle = FormRow3(look_angle)
+        self.altitude = FormRow3(altitude)
+        self.pressure = FormRow3(pressure)
+        self.temperature = FormRow3(temperature)
+        self.humidity = FormRow3(humidity)
+        self.wind_speed = FormRow3(wind_speed)
+        self.wind_angle = FormRow3(wind_angle)
 
         self.target_boxLayout.addWidget(self.distance)
         self.target_boxLayout.addWidget(self.look_angle)
@@ -519,9 +540,9 @@ class EditShotWidget(QtWidgets.QWidget):
         self.bottom_bar = QtWidgets.QWidget(self)
         self.bottom_bar_layout = QtWidgets.QHBoxLayout(self.bottom_bar)
         self.bottom_bar_layout.setContentsMargins(0, 0, 0, 0)
-        self.one_shot_btn = QtWidgets.QPushButton('One shot')
+        self.one_shot_btn = QtWidgets.QPushButton()
         self.one_shot_btn.setProperty('class', 'danger')
-        self.traj_btn = QtWidgets.QPushButton('Trajectory')
+        self.traj_btn = QtWidgets.QPushButton()
         self.bottom_bar_layout.addWidget(self.one_shot_btn)
         self.bottom_bar_layout.addWidget(self.traj_btn)
 
@@ -531,12 +552,24 @@ class EditShotWidget(QtWidgets.QWidget):
 
         self.retranslateUi(editShotWidget)
         QtCore.QMetaObject.connectSlotsByName(editShotWidget)
+        self.retranslateUi(self)
 
     def retranslateUi(self, editShotWidget: 'EditShotWidget'):
-        _translate = QtCore.QCoreApplication.translate
-        editShotWidget.setWindowTitle(_translate("editShotWidget", "Form"))
+        editShotWidget.distance.prefix.setText(_translate("editShotWidget", 'Distance'))
+        editShotWidget.look_angle.prefix.setText(_translate("editShotWidget", 'Look Angle'))
+        editShotWidget.altitude.prefix.setText(_translate("editShotWidget", 'Altitude'))
+        editShotWidget.pressure.prefix.setText(_translate("editShotWidget", 'Pressure'))
+        editShotWidget.temperature.prefix.setText(_translate("editShotWidget", 'Temperature'))
+        editShotWidget.humidity.prefix.setText(_translate("editShotWidget", 'Humidity'))
+        editShotWidget.wind_speed.prefix.setText(_translate("editShotWidget", 'Wind speed'))
+        editShotWidget.wind_angle.prefix.setText(_translate("editShotWidget", 'Wind angle'))
 
-    def connectUi(self, editAmmoWidget):
+        self.one_shot_btn.setText(_translate("editShotWidget", "One shot"))
+        self.traj_btn.setText(_translate("editShotWidget", 'Trajectory'))
+        self.target_box.setTitle(_translate("editShotWidget", 'Target'))
+        self.atmo_box.setTitle(_translate("editShotWidget", 'Atmosphere'))
+
+    def connectUi(self, editShotWidget):
 
         window = self.window()
         if window:
@@ -563,25 +596,25 @@ class EditShotWidget(QtWidgets.QWidget):
     def validate(self):
         if not 5000 >= self.distance.rawValue() >= 10:
             self.distance.value_field.setFocus()
-            msg = "Target distance must be between 10 and 3000 m"
+            msg = _translate("editShotWidget", "Target distance must be between 10 and 3000 m")
         elif not 9000 >= self.altitude.rawValue() >= 0:
             self.altitude.value_field.setFocus()
-            msg = "Altitude must be between 0 and 9000 m"
+            msg = _translate("editShotWidget", "Altitude must be between 0 and 9000 m")
         elif not 381 < self.pressure.rawValue() <= 1015:
             self.pressure.value_field.setFocus()
-            msg = "Pressure must be between 381 and 1015 mmHg"
+            msg = _translate("editShotWidget", "Pressure must be between 381 and 1015 mmHg")
         elif not -50 <= self.temperature.rawValue() <= 50:
             self.temperature.value_field.setFocus()
-            msg = "Temperature must be between -50 and 50 °C"
+            msg = _translate("editShotWidget", "Temperature must be between -50 and 50 °C")
         elif not 0 <= self.humidity.value() <= 100:
             self.humidity.value_field.setFocus()
-            msg = "Humidity must be between 0 and 100 %"
+            msg = _translate("editShotWidget", "Humidity must be between 0 and 100 %")
         elif not self.wind_speed.rawValue() >= 0:
             self.wind_speed.value_field.setFocus()
-            msg = "Wind speed must be >= 0"
+            msg = _translate("editShotWidget", "Wind speed must be >= 0")
         elif not 0 <= self.wind_angle.rawValue() < 360:
             self.wind_angle.value_field.setFocus()
-            msg = "Wind angle must be between 0 and 359 °"
+            msg = _translate("editShotWidget", "Wind angle must be between 0 and 359 °")
         else:
             return
         self.errorSig.emit(msg)
@@ -602,7 +635,7 @@ class EditShotWidget(QtWidgets.QWidget):
         Worker.ammo_add_or_update(self.ammo)
 
     def display_data(self, rifle, ammo):
-        self.ammo = AmmoData('New Ammo', rifle=rifle) if not isinstance(ammo, AmmoData) else ammo
+        self.ammo = AmmoData(_translate('editShotWidget', 'New Ammo'), rifle=rifle) if not isinstance(ammo, AmmoData) else ammo
         self.rifle = self.ammo.rifle
         target = self.ammo.target
         atmo = self.ammo.atmo

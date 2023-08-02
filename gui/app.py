@@ -197,7 +197,7 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
             elif current_screen == self.edit_shot:
                 self.header.bread.setText(
                     "/".join(
-                        (rifle, self.edit_shot.ammo.name, _translate('MainWindow', 'conditions'))
+                        (rifle, self.edit_shot.ammo.name, _translate('MainWindow', 'Conditions'))
                     )
                 )
 

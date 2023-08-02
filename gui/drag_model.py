@@ -8,11 +8,17 @@ from gui.widgets import SpinBox, ConverSpinBox
 from units import Convertor, Velocity
 
 
+_translate = QtCore.QCoreApplication.translate
+
+
 class MultiBCWidget(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(MultiBCWidget, self).__init__(parent)
         self.init_ui(self)
         self.connect_ui()
+
+    def translateUi(self, mbcWidget):
+        ...
 
     def init_ui(self, dragModelWidget):
         self.setObjectName('dragModelWidget')
@@ -39,6 +45,7 @@ class MultiBCWidget(QtWidgets.QWidget):
             bc.setObjectName(f'bc{i}')
             self.gridLayout.addWidget(velocity)
             self.gridLayout.addWidget(bc)
+        self.translateUi(self)
 
     def display_data(self, dm: DragModel, ammo):
         if dm == DragModel.G1:
@@ -47,8 +54,8 @@ class MultiBCWidget(QtWidgets.QWidget):
             multi_bc: list[list[float, float]] = ammo.bc7_list
         else:
             multi_bc = [[0, 0]] * 5
-        self.title.setText(f'Edit BC: {dm.name}')
-        self.bc_label.setText(f'BC: {dm.name}')
+        self.title.setText(_translate('mbcWidget', 'Edit BC: ') + dm.name)
+        self.bc_label.setText(_translate('mbcWidget', 'BC: ') + dm.name)
         if multi_bc:
             for i, (v, bc) in enumerate(multi_bc):
                 velocity_sb = self.findChild(QtWidgets.QDoubleSpinBox, f'v{i}')
@@ -69,7 +76,7 @@ class MultiBCWidget(QtWidgets.QWidget):
     def on_settings_update(self, settings: SettingsWidget):
 
         v_units = settings.vUnits.currentData()
-        self.velocity_label.setText(f'Velocity, {Velocity.name(v_units)}')
+        self.velocity_label.setText(_translate("mbcWidget", "Velocity, ") + Velocity.name(v_units))
 
         for i in range(5):
             velocity_sb: ConverSpinBox = self.findChild(QtWidgets.QDoubleSpinBox, f'v{i}')
@@ -92,6 +99,12 @@ class CDMWidget(QtWidgets.QWidget):
         self.connectUi(self)
         self.unlock(False)
 
+    def translateUi(self, cdmWidget):
+        self.agree.setText(_translate("cdmWidget", 'Unlock this settings'))
+        self.warning.setText(_translate("cdmWidget", 'Changing this settings can corrupt the calculation'))
+        self.mach_label.setText(_translate("cdmWidget", 'Mach'))
+        self.cd_label.setText(_translate("cdmWidget", 'Cd'))
+
     def init_ui(self, cdmWidget):
         self.setObjectName('cdmWidget')
 
@@ -101,8 +114,8 @@ class CDMWidget(QtWidgets.QWidget):
         self.title = QtWidgets.QLabel()
         self.title.setAlignment(QtCore.Qt.AlignCenter)
 
-        self.agree = QtWidgets.QCheckBox('Unlock this settings')
-        self.warning = QtWidgets.QLabel('Changing this settings can broke the calculation')
+        self.agree = QtWidgets.QCheckBox()
+        self.warning = QtWidgets.QLabel()
         self.warning.setProperty('class', 'danger')
         self.warning.setAlignment(QtCore.Qt.AlignCenter)
 
@@ -128,6 +141,7 @@ class CDMWidget(QtWidgets.QWidget):
             # mach.wheelEvent = None
             # cd.setButtonSymbols(QtWidgets.QAbstractSpinBox.NoButtons)
             # cd.wheelEvent = None
+        self.translateUi(self)
 
     def display_data(self, dm: DragModel, ammo):
         if dm == DragModel.G1:
@@ -196,11 +210,12 @@ class EditDragDataButton(QtWidgets.QPushButton):
         else:
             return
         if count == 0:
-            self.setText(f'{drag_model.name} (None)')
+            self.setText(f'{drag_model.name} (' + _translate("cdmWidget", "None") + ')')
         elif count > 1:
             self.setText(f'{drag_model.name} ({count})')
         else:
-            self.setText(f'{drag_model.name} (BC: {first})')
+            self.setText(f'{drag_model.name} (' + _translate("cdmWidget", "BC") + f': {first})')
+
 
 if __name__ == '__main__':
     import sys
