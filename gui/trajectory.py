@@ -5,6 +5,7 @@ from qt_material import QtStyleTools
 from calculate.calculate import calculate_traj, calculated_drag
 from datatypes.dbworker import RifleData, AmmoData, ZeroData, Target, AtmoData
 from gui.settings import SettingsWidget
+from gui.widgets import GesturedTableView
 from units import Distance, Angular, Velocity, Energy
 
 pg.setConfigOption('background', '#31363B')
@@ -41,14 +42,15 @@ class MyTableModel(QtCore.QAbstractTableModel):
         return None
 
 
-class TrajectoryTable(QtWidgets.QTableView, QtStyleTools):
+class TrajectoryTable(GesturedTableView, QtStyleTools):
     def __init__(self, parent=None):
         super(TrajectoryTable, self).__init__(parent)
 
-        self.init_ui(self)
+        self.setupUi(self)
         # self.display_data()
 
-    def init_ui(self, trajTable):
+    def setupUi(self, trajTable):
+        super(TrajectoryTable, self).setupUi(self)
         self.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Expanding)
         self.verticalHeader().setHidden(True)
         header = self.horizontalHeader()

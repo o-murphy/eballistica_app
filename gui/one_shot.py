@@ -5,7 +5,7 @@ from qt_material import QtStyleTools
 from calculate.calculate import calculate_traj, calculated_drag
 from datatypes.dbworker import RifleData, AmmoData, ZeroData, Target, AtmoData
 from gui.settings import SettingsWidget
-from gui.widgets import LabelCenter, SpinBox, Column, ConverSpinBox, Row
+from gui.widgets import LabelCenter, SpinBox, Column, ConverSpinBox, Row, GesturedTableWidget
 from units import Distance, Angular, Velocity, Energy
 
 pg.setConfigOption('background', '#31363B')
@@ -140,10 +140,10 @@ class OneShotValue(QtWidgets.QWidget):
         self.vLayout.addWidget(self.measure)
 
 
-class OneShotValues(QtWidgets.QTableWidget):
+class OneShotValues(GesturedTableWidget):
     def __init__(self, parent=None):
         super(OneShotValues, self).__init__(parent)
-        self.init_ui(self)
+        self.setupUi(self)
         self.connect_ui(self)
         self.display_data()
 
@@ -179,7 +179,8 @@ class OneShotValues(QtWidgets.QTableWidget):
                 self.setItem(row_index, col_index, item)
                 self.setCellWidget(row_index, col_index, widget)
 
-    def init_ui(self, oneShotVal):
+    def setupUi(self, oneShotVal):
+        super(OneShotValues, self).setupUi(self)
         hheader = self.horizontalHeader()
         hheader.setVisible(False)
         vheader = self.verticalHeader()

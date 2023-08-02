@@ -34,6 +34,40 @@ class AbstractScroller:
             self._gesture.ungrabGesture(self._viewport)
 
 
+class GesturedTableView(QtWidgets.QTableView):
+    def __init__(self, parent=None):
+        super(GesturedTableView, self).__init__(parent)
+        self.setupUi(self)
+
+    def setupUi(self, view):
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        self.setSizePolicy(sizePolicy)
+
+        self.setVerticalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
+        self.setHorizontalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
+        self.scroller = AbstractScroller(self.viewport())
+        self.scroller.setScrollable(True, QtWidgets.QScroller.LeftMouseButtonGesture)
+
+
+class GesturedTableWidget(QtWidgets.QTableWidget):
+    def __init__(self, parent=None):
+        super(GesturedTableWidget, self).__init__(parent)
+        self.setupUi(self)
+
+    def setupUi(self, view):
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        self.setSizePolicy(sizePolicy)
+
+        self.setVerticalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
+        self.setHorizontalScrollMode(QtWidgets.QAbstractItemView.ScrollPerPixel)
+        self.scroller = AbstractScroller(self.viewport())
+        self.scroller.setScrollable(True, QtWidgets.QScroller.LeftMouseButtonGesture)
+
+
 class GesturedListView(QtWidgets.QListWidget):
 
         def __init__(self, parent=None):
