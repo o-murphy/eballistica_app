@@ -121,6 +121,8 @@ class SettingsWidget(QtWidgets.QWidget):
         self.apply_theme_btn.setText(_translate('settings', 'Apply'))
         self.scale_label.setText(_translate('settings', 'Scale'))
 
+        self.lang_label.setText(_translate('settings', 'Language'))
+
         self.shUnits.label.setText(_translate('settings', 'Sight height'))
         self.twistUnits.label.setText(_translate('settings', 'Twist'))
         self.vUnits.label.setText(_translate('settings', 'Velocity'))
@@ -134,7 +136,8 @@ class SettingsWidget(QtWidgets.QWidget):
         self.angleUnits.label.setText(_translate('settings', 'Angular'))
         self.pathUnits.label.setText(_translate('settings', 'Adjustment'))
         self.eUnits.label.setText(_translate('settings', 'Energy'))
-        self.is_calc_drag.label.setText(_translate('settings', 'Calculate drag'))
+        # self.is_calc_drag.label.setText(_translate('settings', 'Calculate drag'))
+        self.backend.label.setText(_translate('settings', 'Algorythm'))
 
     def init_ui(self, settingsWidget):
 
@@ -165,6 +168,13 @@ class SettingsWidget(QtWidgets.QWidget):
         self.scale.setSingleStep(1)
         self.scale_label = QtWidgets.QLabel()
 
+        self.lang_label = QtWidgets.QLabel()
+        self.language = QtWidgets.QComboBox()
+        self.language.setObjectName('language')
+        self.language.addItem("English", "en")
+        self.language.addItem("Ukrainian", "ua")
+
+        self.viewLayout.addRow(self.lang_label, self.language)
         self.viewLayout.addRow(self.theme_label, self.theme)
         self.viewLayout.addRow(self.scale_label, self.scale)
         self.scale.hide()
@@ -242,11 +252,19 @@ class SettingsWidget(QtWidgets.QWidget):
         self.unitLayout.addWidget(self.eUnits)
         # self.unitLayout.addWidget(self.eUnits)
 
-        is_calc_drag = QtWidgets.QCheckBox(self)
-        is_calc_drag.setChecked(True)
-        self.is_calc_drag = FormRow2(QtWidgets.QLabel(), is_calc_drag)
-        self.is_calc_drag.setObjectName('is_drag')
-        self.calcLayout.addWidget(self.is_calc_drag)
+        # is_calc_drag = QtWidgets.QCheckBox(self)
+        # is_calc_drag.setChecked(True)
+        # self.is_calc_drag = FormRow2(QtWidgets.QLabel(), is_calc_drag)
+        # self.is_calc_drag.setObjectName('is_drag')
+        # self.calcLayout.addWidget(self.is_calc_drag)
+
+        backend = QtWidgets.QComboBox()
+        backend.setDisabled(True)  # temporary
+        backend.addItem(_translate("settings", "Default"), 0)
+        backend.addItem(_translate("settings", "Experimental"), 1)
+        self.backend = FormRow2(QtWidgets.QLabel(), backend)
+
+        self.calcLayout.addWidget(self.backend)
 
         self.boxLayout.addWidget(self.viewBox)
         self.boxLayout.addWidget(self.unitsBox)

@@ -213,6 +213,9 @@ class SpinBox(QtWidgets.QDoubleSpinBox):
         self.setPrefix(prefix)
         self.setDecimals(decimals)
 
+    def wheelEvent(self, event) -> None:
+        pass
+
     def validate(self, text: str, pos: int) -> object:
         text = text.replace(".", ",")
         return QtWidgets.QDoubleSpinBox.validate(self, text, pos)
@@ -235,6 +238,9 @@ class ConverSpinBox(QtWidgets.QDoubleSpinBox):
         # self.setDecimals(decimals)
 
         self._convertor: Convertor = None
+
+    def wheelEvent(self, event) -> None:
+        pass
 
     def validate(self, text: str, pos: int) -> object:
         text = text.replace(".", ",")
@@ -283,6 +289,8 @@ class ComboBox(QtWidgets.QComboBox):
             for item in items:
                 self.addItem(*item)
 
+    def wheelEvent(self, event) -> None:
+        pass
 
 class Spacer(QtWidgets.QWidget):
     Vertical = 0

@@ -185,6 +185,8 @@ class OneShotValues(GesturedTableWidget):
         hheader.setVisible(False)
         vheader = self.verticalHeader()
         vheader.setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+        self.setSelectionMode(GesturedTableWidget.SelectionMode.NoSelection)
+
 
     def connect_ui(self, oneShotVal):
         ...
@@ -204,9 +206,6 @@ class OneShotHUD(QtWidgets.QWidget):
         self.vLayout.addWidget(self.props_box)
         self.vLayout.addWidget(self.info_box)
         self.vLayout.addWidget(self.values_box)
-
-        self.infoLayout = QtWidgets.QHBoxLayout(self)
-        self.valuesLayout = QtWidgets.QHBoxLayout(self)
 
     def display_data(self, rifle, ammo, trajectory):
         self.info_box.display_data(rifle, ammo)

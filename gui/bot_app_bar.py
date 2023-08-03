@@ -5,6 +5,7 @@ class BarButton(QtWidgets.QToolButton):
 
     def __init__(self, parent=None):
         super(BarButton, self).__init__(parent)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Maximum)
 
 
 class BotAppBar(QtWidgets.QWidget):
@@ -14,6 +15,8 @@ class BotAppBar(QtWidgets.QWidget):
 
     def init_ui(self, botAppBar):
         self.rowLayout = QtWidgets.QHBoxLayout(self)
+        self.rowLayout.setContentsMargins(0, 0, 0, 0)
+        self.rowLayout.setSpacing(0)
 
         self.backAct = BarButton()
         self.backAct.setIcon(QtGui.QIcon('rsrc/arrow_back.svg'))

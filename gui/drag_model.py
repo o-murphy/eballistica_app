@@ -4,7 +4,7 @@ from getqt import *
 
 from datatypes.dbworker import DragModel, AmmoData
 from gui.settings import SettingsWidget
-from gui.widgets import SpinBox, ConverSpinBox
+from gui.widgets import SpinBox, ConverSpinBox, LabelCenter
 from units import Convertor, Velocity
 
 
@@ -26,11 +26,11 @@ class MultiBCWidget(QtWidgets.QWidget):
         self.gridLayout = QtWidgets.QGridLayout(self)
         self.gridLayout.setAlignment(QtCore.Qt.AlignTop)
 
-        self.title = QtWidgets.QLabel()
+        self.title = LabelCenter()
         self.title.setAlignment(QtCore.Qt.AlignCenter)
 
-        self.velocity_label = QtWidgets.QLabel('Velocity, mps')
-        self.bc_label = QtWidgets.QLabel('BC')
+        self.velocity_label = LabelCenter('Velocity, mps')
+        self.bc_label = LabelCenter('BC')
         self.velocity_label.setAlignment(QtCore.Qt.AlignHCenter)
         self.bc_label.setAlignment(QtCore.Qt.AlignHCenter)
 
@@ -111,16 +111,16 @@ class CDMWidget(QtWidgets.QWidget):
         self.gridLayout = QtWidgets.QGridLayout(self)
         self.gridLayout.setAlignment(QtCore.Qt.AlignTop)
 
-        self.title = QtWidgets.QLabel()
+        self.title = LabelCenter()
         self.title.setAlignment(QtCore.Qt.AlignCenter)
 
         self.agree = QtWidgets.QCheckBox()
-        self.warning = QtWidgets.QLabel()
+        self.warning = LabelCenter()
         self.warning.setProperty('class', 'danger')
         self.warning.setAlignment(QtCore.Qt.AlignCenter)
 
-        self.mach_label = QtWidgets.QLabel('Mach')
-        self.cd_label = QtWidgets.QLabel('Cd')
+        self.mach_label = LabelCenter('Mach')
+        self.cd_label = LabelCenter('Cd')
         self.mach_label.setAlignment(QtCore.Qt.AlignHCenter)
         self.cd_label.setAlignment(QtCore.Qt.AlignHCenter)
 

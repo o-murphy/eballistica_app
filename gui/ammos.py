@@ -4,7 +4,7 @@ from datatypes.dbworker import Worker, AmmoData, DragModel
 from gui.app_logo import AppLogo, AppLabel
 from gui.drag_model import EditDragDataButton
 from gui.settings import SettingsWidget
-from gui.widgets import FormRow3, SpinBox, ComboBox, ConverSpinBox, AbstractScroller, GesturedListView, Label
+from gui.widgets import FormRow3, SpinBox, ComboBox, ConverSpinBox, AbstractScroller, GesturedListView, Label, Row
 from units import Distance, Angular, Pressure, Temperature, Velocity, Weight, Convertor
 
 
@@ -104,7 +104,7 @@ class AmmosHeader(QtWidgets.QWidget):
         self.retranslateUi(ammosHeader)
         QtCore.QMetaObject.connectSlotsByName(ammosHeader)
 
-    def retranslateUi(self, ammosHeader: 'AmmosHeader'):
+    def translateUi(self, ammosHeader: 'AmmosHeader'):
         ...
 
 
@@ -163,7 +163,7 @@ class AmmosLi(GesturedListView):
             for ammo in ammos:
                 self.create_item(ammo)
 
-    def retranslateUi(self, ammosWidget: 'AmmosWidget'):
+    def translateUi(self, ammosWidget: 'AmmosWidget'):
         ...
 
     def connectUi(self, ammosWidget: 'AmmosWidget'):
@@ -229,16 +229,16 @@ class EditAmmoWidget(QtWidgets.QWidget):
 
         zero_range = ConverSpinBox(self, 1)
         zero_height = ConverSpinBox(self, 0.5)
-        # zero_offset = ConverSpinBox(self, 1)
-        is_zero_atmo = QtWidgets.QCheckBox(self)
+        # is_zero_atmo = QtWidgets.QCheckBox(self)
         altitude = ConverSpinBox(self, 10)
         pressure = ConverSpinBox(self, 1)
         temperature = ConverSpinBox(self, 1)
-        humidity = ConverSpinBox(self, 1)
+        humidity = SpinBox(self, 1)
 
-        drag_data = EditDragDataButton(self)
+        self.drag_label = QtWidgets.QLabel()
+        self.drag_data = EditDragDataButton(self)
 
-        drag_model = ComboBox(self, items=(
+        self.drag_model = ComboBox(self, items=(
             ('G1', DragModel.G1),
             ('G7', DragModel.G7),
             ('CDM', DragModel.CDM)
@@ -248,22 +248,24 @@ class EditAmmoWidget(QtWidgets.QWidget):
         self.weight = FormRow3(weight)
         self.length = FormRow3(length)
         self.mv = FormRow3(mv)
-        self.powder_sens = FormRow3(powder_sens)
+        self.powder_sens = FormRow3(powder_sens, suffix='%')
         self.powder_temp = FormRow3(powder_temp)
 
         self.calc_powder_sens = QtWidgets.QPushButton()
 
-        self.drag_model = FormRow3(drag_model, parent=self)
-
-        self.drag_data = FormRow3(drag_data, parent=self)
+        self.drag_model_row = Row(self, [self.drag_label, self.drag_model, self.drag_data])
+        self.drag_model_row.hLayout.setContentsMargins(0, 0, 0, 0)
+        self.drag_model_row.hLayout.setStretch(0, 6)
+        self.drag_model_row.hLayout.setStretch(1, 2)
+        self.drag_model_row.hLayout.setStretch(2, 4)
 
         self.zero_range = FormRow3(zero_range)
         self.zero_height = FormRow3(zero_height)
-        self.is_zero_atmo = FormRow3(is_zero_atmo)
+        # self.is_zero_atmo = FormRow3(is_zero_atmo)
         self.altitude = FormRow3(altitude)
         self.pressure = FormRow3(pressure)
         self.temperature = FormRow3(temperature)
-        self.humidity = FormRow3(humidity)
+        self.humidity = FormRow3(humidity, suffix='%')
 
         self.name_boxLayout.addRow(self.name_label, self.name)
 
@@ -272,8 +274,7 @@ class EditAmmoWidget(QtWidgets.QWidget):
         self.ammo_boxLayout.addWidget(self.length)
         self.ammo_boxLayout.addWidget(self.mv)
 
-        self.ammo_boxLayout.addWidget(self.drag_model)
-        self.ammo_boxLayout.addWidget(self.drag_data)
+        self.ammo_boxLayout.addWidget(self.drag_model_row)
 
         self.ammo_boxLayout.addWidget(self.powder_sens)
         self.ammo_boxLayout.addWidget(self.powder_temp)
@@ -282,7 +283,7 @@ class EditAmmoWidget(QtWidgets.QWidget):
 
         self.zero_boxLayout.addWidget(self.zero_range)
         self.zero_boxLayout.addWidget(self.zero_height)
-        self.zero_boxLayout.addWidget(self.is_zero_atmo)
+        # self.zero_boxLayout.addWidget(self.is_zero_atmo)
         self.zero_boxLayout.addWidget(self.altitude)
         self.zero_boxLayout.addWidget(self.pressure)
         self.zero_boxLayout.addWidget(self.temperature)
@@ -292,19 +293,16 @@ class EditAmmoWidget(QtWidgets.QWidget):
         self.vBoxLayout.addWidget(self.ammo_box)
         self.vBoxLayout.addWidget(self.zero_box)
 
-        self.retranslateUi(editAmmoWidget)
+        self.translateUi(editAmmoWidget)
         QtCore.QMetaObject.connectSlotsByName(editAmmoWidget)
 
-        self.retranslateUi(self)
-
-    def retranslateUi(self, editAmmoWidget: 'EditAmmoWidget'):
+    def translateUi(self, editAmmoWidget: 'EditAmmoWidget'):
         self.name_box.setTitle(_translate('editAmmoWidget', 'Ammo name'))
         self.ammo_box.setTitle(_translate('editAmmoWidget', 'Properties'))
         self.zero_box.setTitle(_translate('editAmmoWidget', 'Zeroing'))
         self.name_label.setText(_translate('editAmmoWidget', 'Name'))
         self.name.setPlaceholderText(_translate('editAmmoWidget', 'Name'))
-        self.drag_data.setText(_translate('editAmmoWidget', 'Edit'))
-        self.drag_data.prefix.setText(_translate('editAmmoWidget', 'Drag data'))
+        self.drag_label.setText(_translate('editAmmoWidget', "Drag model"))
 
         self.diameter.prefix.setText(_translate('editAmmoWidget', 'Diameter'))
         self.weight.prefix.setText(_translate('editAmmoWidget', 'Weight'))
@@ -313,11 +311,10 @@ class EditAmmoWidget(QtWidgets.QWidget):
         self.powder_sens.prefix.setText(_translate('editAmmoWidget', 'Powder sensitivity'))
         self.powder_temp.prefix.setText(_translate('editAmmoWidget', 'Powder temp'))
         self.calc_powder_sens.setText(_translate('editAmmoWidget', 'Calculate powder sensitivity'))
-        self.drag_model.prefix.setText(_translate('editAmmoWidget', "Drag model"))
 
         self.zero_range.prefix.setText(_translate('editAmmoWidget', 'Zero range'))
         self.zero_height.prefix.setText(_translate('editAmmoWidget', 'Zero height'))
-        self.is_zero_atmo.prefix.setText(_translate('editAmmoWidget', 'Zero atmosphere'))
+        # self.is_zero_atmo.prefix.setText(_translate('editAmmoWidget', 'Zero atmosphere'))
         self.altitude.prefix.setText(_translate('editAmmoWidget', 'Altitude'))
         self.pressure.prefix.setText(_translate('editAmmoWidget', 'Pressure'))
         self.temperature.prefix.setText(_translate('editAmmoWidget', 'Temperature'))
@@ -449,7 +446,7 @@ class EditAmmoWidget(QtWidgets.QWidget):
         self.ammo.zerodata.pressure = self.pressure.rawValue()
         self.ammo.zerodata.temperature = self.temperature.rawValue()
 
-        self.ammo.zerodata.is_zero_atmo = self.is_zero_atmo.isChecked()
+        # self.ammo.zerodata.is_zero_atmo = self.is_zero_atmo.isChecked()
         self.ammo.zerodata.humidity = self.humidity.value()
 
         Worker.ammo_add_or_update(self.ammo)
@@ -478,7 +475,7 @@ class EditAmmoWidget(QtWidgets.QWidget):
         self.pressure.setRawValue(zerodata.pressure)
         self.temperature.setRawValue(zerodata.temperature)
 
-        self.is_zero_atmo.setChecked(zerodata.is_zero_atmo)
+        # self.is_zero_atmo.setChecked(zerodata.is_zero_atmo)
         self.humidity.setValue(zerodata.humidity)
 
 
@@ -555,11 +552,10 @@ class EditShotWidget(QtWidgets.QWidget):
         self.vBoxLayout.addWidget(self.atmo_box)
         self.vBoxLayout.addWidget(self.bottom_bar)
 
-        self.retranslateUi(editShotWidget)
+        self.translateUi(editShotWidget)
         QtCore.QMetaObject.connectSlotsByName(editShotWidget)
-        self.retranslateUi(self)
 
-    def retranslateUi(self, editShotWidget: 'EditShotWidget'):
+    def translateUi(self, editShotWidget: 'EditShotWidget'):
         editShotWidget.distance.prefix.setText(_translate("editShotWidget", 'Distance'))
         editShotWidget.look_angle.prefix.setText(_translate("editShotWidget", 'Look Angle'))
         editShotWidget.altitude.prefix.setText(_translate("editShotWidget", 'Altitude'))

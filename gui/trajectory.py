@@ -55,10 +55,16 @@ class TrajectoryTable(GesturedTableView, QtStyleTools):
         super(TrajectoryTable, self).setupUi(self)
         self.setSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Expanding)
         self.verticalHeader().setHidden(True)
+        self.setSelectionMode(GesturedTableView.SelectionMode.NoSelection)
         header = self.horizontalHeader()
         header.setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
-        extra = dict(density_scale=-3)
+        extra = dict(density_scale=-1)
         self.apply_stylesheet(self, extra=extra, theme='dark_blue.xml')
+
+        font = self.font()
+        font.setPointSize(font.pointSize() - 2)
+        self.horizontalHeader().setStyleSheet("QHeaderView::section { padding: 4px; font-size: 7pt;}")
+        # self.horizontalHeader().setFont(font)
 
     def get_settings(self) -> SettingsWidget:
         window = self.window()
@@ -80,24 +86,29 @@ class TrajectoryTable(GesturedTableView, QtStyleTools):
         return headers
 
     def display_data(self, data=None):
+        data.sort(reverse=True)
         model = MyTableModel(data, self.headers())
         self.setModel(model)
         self.resizeColumnsToContents()
 
-    def save_drag_table(self):
-        ...
-        # riflename = self.window().edit_shot.rifle.name
-        # ammoname = self.window().edit_shot.ammo.name
-        # filename = f"{riflename}_{ammoname}"
-        # with open(f'table{filename}.csv', 'w', newline='') as csvfile:
-        #     writer = csv.writer(csvfile, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        #     writer.writerow(['Mach', 'CD'])
-        #     writer.writerows(self._drag)
+    def save_drag_table(self, data):
+        riflename = self.window().edit_shot.rifle.name
+        ammoname = self.window().edit_shot.ammo.name
+        filename = f"{riflename}_{ammoname}"
+
+        filename, _ = QtWidgets.QFileDialog.getSaveFileName(
+            self, 'Save file', f'table_{filename}', filter="CSV (*.csv)"
+        )
+        if filename:
+            with open(filename, 'w', newline='') as csvfile:
+                writer = csv.writer(csvfile, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+                writer.writerows(data)
 
     def share(self):
-        print(self.model()._headers.copy())
-        print(self.model()._data.copy())
-        self.save_drag_table()
+        headers = [h.replace('\n', '_') for h in self.model()._headers.copy()]
+        data = self.model()._data.copy()
+        data.insert(0, headers)
+        self.save_drag_table(data)
 
 
 class TrajectoryGraph(QtWidgets.QWidget):
@@ -210,7 +221,11 @@ class TrajectoryGraph(QtWidgets.QWidget):
             self.painter.drawText(QtCore.QPoint(30, 30), riflename)
             self.painter.drawText(QtCore.QPoint(30, 60), ammoname)
             del self.painter
-        self.screenshot.save(f'table_{filename}.png')
+        filename, _ = QtWidgets.QFileDialog.getSaveFileName(
+            self, 'Save file', f'drop_{filename}', filter="PNG (*.png)"
+        )
+        if filename:
+            self.screenshot.save(filename)
 
     def save_drag_graph(self):
         riflename = self.window().edit_shot.rifle.name
@@ -225,16 +240,24 @@ class TrajectoryGraph(QtWidgets.QWidget):
             self.painter.drawText(QtCore.QPoint(30, 30), riflename)
             self.painter.drawText(QtCore.QPoint(30, 60), ammoname)
             del self.painter
-        self.screenshot.save(f'cdm_{filename}.png')
+        filename, _ = QtWidgets.QFileDialog.getSaveFileName(
+            self, 'Save file', f'drag_{filename}', filter="PNG (*.png)"
+        )
+        if filename:
+            self.screenshot.save(filename)
 
     def save_drag_table(self):
         riflename = self.window().edit_shot.rifle.name
         ammoname = self.window().edit_shot.ammo.name
         filename = f"{riflename}_{ammoname}"
-        with open(f'drag{filename}.csv', 'w', newline='') as csvfile:
-            writer = csv.writer(csvfile, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            writer.writerow(['Mach', 'CD'])
-            writer.writerows(self._drag)
+        filename, _ = QtWidgets.QFileDialog.getSaveFileName(
+            self, 'Save file', f'drag_{filename}', filter="PNG (*.png)"
+        )
+        if filename:
+            with open(filename, 'w', newline='') as csvfile:
+                writer = csv.writer(csvfile, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+                writer.writerow(['Mach', 'CD'])
+                writer.writerows(self._drag)
 
     def onContextMenuAction(self, action):
         # Implement the code to handle context menu actions

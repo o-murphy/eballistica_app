@@ -1,3 +1,6 @@
+import os
+import sys
+
 from qt_material import QtStyleTools
 
 from datatypes.dbworker import DragModel
@@ -22,7 +25,7 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         super(App, self).__init__(app)
         self.setupUi(self)
 
-        self.status_bar.showMessage('Data loaded', timeout=2000)
+        # self.status_bar.showMessage('Data loaded', timeout=2000)
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(u"MainWindow")
@@ -88,13 +91,13 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
         self.stacked.addWidget(self.trajectory)
         self.stacked.addWidget(self.one_shot)
 
-        self.retranslateUi(MainWindow)
+        self.translateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         self.connectUi(self)
 
         self.switch_to_rifles()
 
-    def retranslateUi(self, MainWindow):
+    def translateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "ArcherBC"))
 
     def switch_to_rifles(self):
@@ -244,7 +247,7 @@ class App(QtWidgets.QMainWindow, QtStyleTools):
             self.botAppBar.setAct.setHidden(True)
             self.botAppBar.homeAct.setVisible(True)
             self.botAppBar.backAct.setVisible(True)
-            self.botAppBar.shareAct.setVisible(True)
+            self.botAppBar.shareAct.setVisible(False)
         else:
             ...
 

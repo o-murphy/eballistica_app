@@ -17,7 +17,7 @@ def main(argv):
     apply_stylesheet(app, extra={'primaryTextColor': '#FFFFFF'}, theme='dark_blue.xml')
 
     translator = QtCore.QTranslator(app)
-    if translator.load('translation-ua.qm'):
+    if translator.load('translations/translation-ua.qm'):
         app.installTranslator(translator)
     else:
         print('err')

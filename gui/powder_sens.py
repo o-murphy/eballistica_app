@@ -1,9 +1,10 @@
 from statistics import median
 
+from calculate.calculate import calculate_powder_sens
 from getqt import *
 
 from gui.settings import SettingsWidget
-from gui.widgets import ConverSpinBox
+from gui.widgets import ConverSpinBox, LabelCenter
 from units import Temperature, Velocity, Convertor
 
 
@@ -16,7 +17,7 @@ class PowderSensWindget(QtWidgets.QWidget):
         self.init_ui(self)
         self.connect_ui()
 
-    def retranslateUi(self, powderSens):
+    def translateUi(self, powderSens):
         self.title.setText(_translate("powderSens", 'Powder Sensitivity Calculation'))
         self.temp_sens_label.setText(_translate("powderSens", "Sensitivity"))
         self.temp_sens_field.setText("%")
@@ -28,16 +29,16 @@ class PowderSensWindget(QtWidgets.QWidget):
         self.gridLayout = QtWidgets.QGridLayout(self)
         self.gridLayout.setAlignment(QtCore.Qt.AlignTop)
 
-        self.title = QtWidgets.QLabel()
+        self.title = LabelCenter()
         self.title.setAlignment(QtCore.Qt.AlignCenter)
 
-        self.temp_label = QtWidgets.QLabel()
-        self.velocity_label = QtWidgets.QLabel()
+        self.temp_label = LabelCenter()
+        self.velocity_label = LabelCenter()
         self.temp_label.setAlignment(QtCore.Qt.AlignHCenter)
         self.velocity_label.setAlignment(QtCore.Qt.AlignHCenter)
 
-        self.temp_sens_label = QtWidgets.QLabel()
-        self.temp_sens_field = QtWidgets.QLabel('1%')
+        self.temp_sens_label = LabelCenter()
+        self.temp_sens_field = LabelCenter('1%')
         self.calc_btn = QtWidgets.QPushButton()
 
         self.gridLayout.addWidget(self.title, 0, 0, 1, 2)
@@ -52,11 +53,12 @@ class PowderSensWindget(QtWidgets.QWidget):
             self.gridLayout.addWidget(temp)
             self.gridLayout.addWidget(velocity)
 
+        self.gridLayout.addWidget(self.calc_btn, 9, 0, 1, 2)
+
         self.gridLayout.addWidget(self.temp_sens_label)
         self.gridLayout.addWidget(self.temp_sens_field)
-        self.gridLayout.addWidget(self.calc_btn)
 
-        self.retranslateUi(self)
+        self.translateUi(self)
 
     def connect_ui(self):
         self.calc_btn.clicked.connect(self._calculate)
@@ -88,18 +90,6 @@ class PowderSensWindget(QtWidgets.QWidget):
 
     def _calculate(self):
 
-        def calculate_sensitivity(v0, t0, v1, t1):
-            # Step 1: Calculate the Temperature Difference
-            temp_difference = t0 - t1
-
-            # Step 2: Calculate the Speed Difference
-            speed_difference = v0 - v1
-
-            # Step 3: Calculate the Temperature Sensitivity Factor (TempModifier)
-            temp_modifier = (speed_difference / temp_difference) * (15 / v0) * 100
-
-            return temp_modifier
-
         ret_list = []
         for i in range(5):
             temp_sb = self.findChild(QtWidgets.QDoubleSpinBox, f't{i}')
@@ -108,20 +98,10 @@ class PowderSensWindget(QtWidgets.QWidget):
                 ret_list.append([temp_sb.rawValue(), velocity_sb.rawValue()])
         ret_list.sort(key=lambda item: item[1], reverse=True)
 
-        coeffs = []
-        for i in range(len(ret_list) - 1):
-            t0, v0 = ret_list[i]
-            t1, v1 = ret_list[i + 1]
-            if v0 != 0 and v1 != 0:
-                coeffs.append(calculate_sensitivity(v0, t0, v1, t1))
+        value = calculate_powder_sens(ret_list)
 
-        if len(coeffs) >= 1:
-            val = round(median(coeffs), 3)
-            self.temp_sens_field.setText(f'{val}%')
-        else:
-            val = None
-            self.temp_sens_field.setText(_translate("powderSens", "Error"))
-        return val
+        self.temp_sens_field.setText(f'{value}%' if value else _translate("powderSens", "Error"))
+        return value
 
     def calculate(self):
         return self._calculate()

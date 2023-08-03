@@ -1,3 +1,5 @@
+from statistics import median
+
 from py_ballisticcalc.atmosphere import Atmosphere
 from py_ballisticcalc.drag import DragTableG1, DragTableG7, BallisticCoefficient
 from py_ballisticcalc.multiple_bc import MultipleBallisticCoefficient
@@ -127,3 +129,33 @@ def calculate_traj(rifle: RifleData, ammo: AmmoData, target: Target, atmo: AtmoD
     data = calc.trajectory(ammunition, weapon, atmosphere, shot_info, wind)
 
     return data
+
+
+def calculate_powder_sens(ret_list):
+
+    def calculate_delta(v0, t0, v1, t1):
+        # Step 1: Calculate the Temperature Difference
+        temp_difference = t0 - t1
+
+        # Step 2: Calculate the Speed Difference
+        speed_difference = v0 - v1
+
+        # Step 3: Calculate the Temperature Sensitivity Factor (TempModifier)
+        temp_modifier = (speed_difference / temp_difference) * (15 / v0) * 100
+
+        return temp_modifier
+
+
+
+    coeffs = []
+    for i in range(len(ret_list) - 1):
+        t0, v0 = ret_list[i]
+        t1, v1 = ret_list[i + 1]
+        if v0 != 0 and v1 != 0:
+            coeffs.append(calculate_delta(v0, t0, v1, t1))
+
+    if len(coeffs) >= 1:
+        val = round(median(coeffs), 3)
+    else:
+        val = None
+    return val
