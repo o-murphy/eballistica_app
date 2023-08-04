@@ -1,16 +1,166 @@
-
-from kivy.metrics import dp
-from kivymd.app import MDApp
-from kivymd.uix.button import MDRectangleFlatButton, MDFlatButton
+# from kivy.metrics import dp
+# from kivymd.uix.button import MDRectangleFlatButton, MDFlatButton
 # from kivymd.uix.textfield import MDTextField
-# from kivy.lang import Builder
 # from kivymd.uix.dialog import MDDialog
 # from kivymd.uix.list import MDList, ThreeLineIconListItem, IconLeftWidget, ThreeLineAvatarIconListItem
 # from kivy.uix.scrollview import ScrollView
 # from kivymd.uix.list import OneLineListItem
-from kivymd.uix.datatables import MDDataTable
+# from kivymd.uix.datatables import MDDataTable
 # from kivymd.uix.label import MDLabel, MDIcon
-from kivymd.uix.screen import Screen
+# from kivymd.uix.screen import Screen
+from kivy.core.window import Window
+from kivy.lang import Builder
+from kivymd.app import MDApp
+from kivy.uix.screenmanager import Screen, ScreenManager
+
+
+Window.size = (400, 600)
+
+
+# screen change
+
+screen_helper = """
+ScreenManager:
+    MenuScreen:
+    ProfileScreen:
+    
+<MenuScreen>:
+    name: 'menu'
+    MDRectangleFlatButton:
+        text: 'Profile'
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+<MenuScreen>:
+    name: 'profile'
+    MDLabel:
+        text: 'Welcome'
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+
+"""
+
+
+class ProfileScreen(Screen):
+    pass
+
+
+class MenuScreen(Screen):
+    pass
+
+
+class App(MDApp):
+    def build(self):
+        self.theme_cls.theme_style = 'Dark'
+        screen = Builder.load_string(screen_helper)
+        return screen
+
+
+App().run()
+
+
+
+# # NAVBAR
+# screen_helper = """
+# Screen:
+#     MDNavigationLayout:
+#         ScreenManager:
+#             Screen:
+#                 BoxLayout:
+#                     orientation: 'vertical'
+#                     MDTopAppBar:
+#                         title: 'Application'
+#                         left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
+#                         elevation: 2
+#
+#                     Widget:
+#
+#
+#         MDNavigationDrawer:
+#             id: nav_drawer
+#
+#
+#             BoxLayout:
+#                 orientation: 'vertical'
+#
+#                 Image:
+#                     source: '../Icon.png'
+#
+#                 MDLabel:
+#                     text: 'Props'
+#                     font_style: 'Subtitle1'
+#                     size_hint_y: None
+#                     height: self.texture_size[1]
+#                 MDLabel:
+#                     text: 'Email'
+#                     font_style: 'Caption'
+#                     size_hint_y: None
+#                     height: self.texture_size[1]
+#                 ScrollView:
+#                     MDList:
+#                         OneLineIconListItem:
+#                             text: "Settings"
+#                             IconLeftWidget:
+#                                 icon: 'cog-outline'
+#                         OneLineIconListItem:
+#                             text: "Info"
+#                             IconLeftWidget:
+#                                 icon: 'information-outline'
+#
+#
+# """
+#
+#
+# class App(MDApp):
+#     def build(self):
+#         self.theme_cls.primary_palette = 'Red'
+#         self.theme_cls.theme_style = 'Dark'
+#         screen = Builder.load_string(screen_helper)
+#         return screen
+#
+#     def navigation_draw(self):
+#         print("Navigation")
+#
+#
+# App().run()
+
+
+
+# # Toolbar
+# screen_helper = """
+# Screen:
+#     BoxLayout:
+#         orientation: 'vertical'
+#         MDTopAppBar:
+#             title: 'Application'
+#             left_action_items: [["menu", lambda x: app.navigation_draw()]]
+#             right_action_items: [["clock", lambda x: app.navigation_draw()]]
+#             elevation: 2
+#         MDLabel:
+#             text: 'HelloWorld'
+#             halign: 'center'
+#         MDBottomAppBar:
+#             MDTopAppBar:
+#                 title: "Help"
+#                 left_action_items: [["coffee", lambda x: app.navigation_draw()]]
+#                 mode: "end"
+#                 icon: "git"
+#                 type: "bottom"
+#                 elevation: 2
+#                 on_action_button: app.navigation_draw()
+#
+# """
+#
+#
+# class App(MDApp):
+#     def build(self):
+#         self.theme_cls.primary_palette = 'Red'
+#         screen = Builder.load_string(screen_helper)
+#         return screen
+#
+#     def navigation_draw(self):
+#         print("Navigation")
+#
+#
+# App().run()
 
 
 # # MDTextField properties
@@ -188,11 +338,3 @@ from kivymd.uix.screen import Screen
 #         print(instance_table, current_row)
 
 
-# Toolbar
-class App(MDApp):
-    def build(self):
-        screen = Screen()
-        return screen
-
-
-App().run()
