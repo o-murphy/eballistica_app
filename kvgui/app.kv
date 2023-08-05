@@ -17,6 +17,7 @@ Screen:
 
 <AppScreenManager>
     MainScreen:
+    AmmosScreen:
 
 
 <RifleListItem>
@@ -26,6 +27,7 @@ Screen:
     secondary_font_style: "Caption"
     tertiary_text: "Sight height: <num> <units>"
     tertiary_font_style: "Caption"
+    on_release: app.switch_ammo_list()
 
 
 <RiflesList>
@@ -58,25 +60,7 @@ Screen:
         on_release: app.add_act()
 
 
-
-<TopBar>
-
-    orientation: "vertical"
-    spacing: "12dp"
-    pos_hint: {"top": 1}
-    adaptive_height: True
-
-    MDTopAppBar:
-        type_height: 'medium'
-        headline_text: "Rifles /"
-        md_bg_color: "#2d2734"
-        title: "eBallistica"
-        anchor_title: "left"
-#            left_action_items: [["menu", lambda x: x]]
-#            right_action_items: [["dots-vertical", lambda x: x]]
-        right_action_items: [["cog-outline", lambda x: x]]
-
 <MainScreen>:
     name: 'rifles_screen'
-
     RiflesList:
+
