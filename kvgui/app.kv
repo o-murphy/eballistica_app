@@ -1,0 +1,67 @@
+#:import MDActionBottomAppBarButton kivymd.uix.toolbar.MDActionBottomAppBarButton
+
+Screen:
+    MDFloatLayout:
+        orientation: 'vertical'
+
+        ScreenManager:
+            id: screen_manager
+            MainScreen:
+
+        TopBar:
+
+        BottomBar:
+
+
+
+
+<BottomBar>
+    id: bot_bar
+
+    md_bg_color: "#2d2734"
+    # icon_color: "#de218c"
+    elevation: 2
+
+    action_items:
+        [
+        MDActionBottomAppBarButton(icon='arrow-left', on_release=app.on_bottom_action_buttons)
+        ]
+
+    MDFabBottomAppBarButton:
+        md_bg_color: "#4e4559"
+        left_action_items: [["coffee"]]
+        icon: "plus"
+        elevation: 4
+#        on_release: app.add_act(app.root.ids.screen_manager)
+        on_release: app.add_act()
+
+
+
+<TopBar>
+
+    id: top_bar
+    orientation: "vertical"
+    spacing: "12dp"
+    pos_hint: {"top": 1}
+    adaptive_height: True
+
+    MDTopAppBar:
+        type_height: 'medium'
+        headline_text: "Rifles /"
+        md_bg_color: "#2d2734"
+        title: "eBallistica"
+        anchor_title: "left"
+#            left_action_items: [["menu", lambda x: x]]
+#            right_action_items: [["dots-vertical", lambda x: x]]
+        right_action_items: [["cog-outline", lambda x: x]]
+
+<MainScreen>:
+    name: 'menu'
+
+    MDLabel:
+        text: 'Main screen'
+        halign: 'center'
+
+    MDRectangleFlatButton:
+        text: 'Main'
+        pos_hint: {'center_x': 0.5, 'center_y': 0.4}
