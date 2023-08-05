@@ -1,5 +1,3 @@
-#:import MDActionBottomAppBarButton kivymd.uix.toolbar.MDActionBottomAppBarButton
-
 Screen:
 #    MDFloatLayout:
     BoxLayout
@@ -16,51 +14,6 @@ Screen:
 
 
 <AppScreenManager>
-    MainScreen:
+
+    RiflesScreen:
     AmmosScreen:
-
-
-<RifleListItem>
-    text: "New rifle"
-#    font_style: "Subtitle1"
-    secondary_text: "Twist: 1 in <num> <units>"
-    secondary_font_style: "Caption"
-    tertiary_text: "Sight height: <num> <units>"
-    tertiary_font_style: "Caption"
-    on_release: app.switch_ammo_list()
-
-
-<RiflesList>
-
-    MDList:
-        id: rifles_list
-
-        RifleListItem:
-        RifleListItem:
-        RifleListItem:
-
-
-
-<BottomBar>
-
-    md_bg_color: "#2d2734"
-    # icon_color: "#de218c"
-    elevation: 2
-
-    action_items:
-        [
-        MDActionBottomAppBarButton(icon='arrow-left', on_release=app.on_bottom_action_buttons)
-        ]
-
-    MDFabBottomAppBarButton:
-        md_bg_color: "#4e4559"
-        left_action_items: [["coffee"]]
-        icon: "plus"
-        elevation: 4
-        on_release: app.add_act()
-
-
-<MainScreen>:
-    name: 'rifles_screen'
-    RiflesList:
-

@@ -1,45 +1,19 @@
 from kivy.core.window import Window
-from kivy.uix.screenmanager import Screen, ScreenManager
-from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.list import ThreeLineListItem
-from kivymd.uix.scrollview import MDScrollView
-from kivymd.uix.toolbar import MDActionBottomAppBarButton, MDBottomAppBar
+from kivy.uix.screenmanager import ScreenManager
+from kivymd.uix.toolbar import MDActionBottomAppBarButton
 
 
 from kivymd.app import MDApp
 from kivy.lang import Builder
 
-
-from kvgui.components import TopBar
-from kvgui.components import AmmosList, AmmoListItem, AmmosScreen
-
-
-assert TopBar
-assert AmmosList
-assert AmmoListItem
-assert AmmosScreen
+from kvgui.components import *
+assert RiflesScreen  # temp
 
 
 Window.size = (400, 700)
 
 
 class AppScreenManager(ScreenManager):
-    pass
-
-
-class RiflesList(MDScrollView):
-    pass
-
-
-class RifleListItem(ThreeLineListItem):
-    pass
-
-
-class BottomBar(MDBottomAppBar):
-    pass
-
-
-class MainScreen(Screen):
     pass
 
 
@@ -65,10 +39,13 @@ class EBallisticaApp(MDApp):
     def on_bottom_action_buttons(self, action: MDActionBottomAppBarButton):
         print('bot action', action.icon)
         if action.icon == "arrow-left":
-            self.root.ids.screen_manager.transition.direction = 'right'
-            self.root.ids.screen_manager.current = 'rifles_screen'
+            self.switch_rifles_list()
 
-    def switch_ammo_list(self, obj=None):
+    def switch_rifles_list(self):
+        self.root.ids.screen_manager.transition.direction = 'right'
+        self.root.ids.screen_manager.current = 'rifles_screen'
+
+    def switch_ammos_list(self):
         self.root.ids.screen_manager.transition.direction = 'left'
         self.root.ids.screen_manager.current = 'ammos_screen'
 

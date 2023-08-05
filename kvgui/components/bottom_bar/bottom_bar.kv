@@ -1,0 +1,20 @@
+#:import MDActionBottomAppBarButton kivymd.uix.toolbar.MDActionBottomAppBarButton
+
+
+<BottomBar>
+
+    md_bg_color: "#2d2734"
+    # icon_color: "#de218c"
+    elevation: 2
+
+    action_items:
+        [
+        MDActionBottomAppBarButton(icon='arrow-left', on_release=app.on_bottom_action_buttons)
+        ]
+
+    MDFabBottomAppBarButton:
+        md_bg_color: "#4e4559"
+        left_action_items: [["coffee"]]
+        icon: "plus"
+        elevation: 4
+        on_release: app.add_act()
