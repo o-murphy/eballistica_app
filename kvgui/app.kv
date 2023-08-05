@@ -1,22 +1,45 @@
 #:import MDActionBottomAppBarButton kivymd.uix.toolbar.MDActionBottomAppBarButton
 
 Screen:
-    MDFloatLayout:
+#    MDFloatLayout:
+    BoxLayout
         orientation: 'vertical'
 
-        ScreenManager:
-            id: screen_manager
-            MainScreen:
-
         TopBar:
+            id: top_bar
+
+        AppScreenManager:
+            id: screen_manager
 
         BottomBar:
+            id: bot_bar
 
+
+<AppScreenManager>
+    MainScreen:
+
+
+<RifleListItem>
+    text: "New rifle"
+#    font_style: "Subtitle1"
+    secondary_text: "Twist: 1 in <num> <units>"
+    secondary_font_style: "Caption"
+    tertiary_text: "Sight height: <num> <units>"
+    tertiary_font_style: "Caption"
+
+
+<RiflesList>
+
+    MDList:
+        id: rifles_list
+
+        RifleListItem:
+        RifleListItem:
+        RifleListItem:
 
 
 
 <BottomBar>
-    id: bot_bar
 
     md_bg_color: "#2d2734"
     # icon_color: "#de218c"
@@ -32,14 +55,12 @@ Screen:
         left_action_items: [["coffee"]]
         icon: "plus"
         elevation: 4
-#        on_release: app.add_act(app.root.ids.screen_manager)
         on_release: app.add_act()
 
 
 
 <TopBar>
 
-    id: top_bar
     orientation: "vertical"
     spacing: "12dp"
     pos_hint: {"top": 1}
@@ -56,12 +77,6 @@ Screen:
         right_action_items: [["cog-outline", lambda x: x]]
 
 <MainScreen>:
-    name: 'menu'
+    name: 'rifles_screen'
 
-    MDLabel:
-        text: 'Main screen'
-        halign: 'center'
-
-    MDRectangleFlatButton:
-        text: 'Main'
-        pos_hint: {'center_x': 0.5, 'center_y': 0.4}
+    RiflesList:
