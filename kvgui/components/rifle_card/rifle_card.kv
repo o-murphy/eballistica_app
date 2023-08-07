@@ -1,69 +1,89 @@
+<ConvertableNumField>
+    orientation: "horizontal"
+    spacing: "10dp"
+    size_hint_y: None
+    height: 40
+
+    prefix: ""
+    suffix: ""
+
+    MDLabel:
+        text: self.parent.prefix
+        size_hint_x: 0.5
+    MDTextField:
+        text: '0.0'
+        input_filter: 'float'
+        helper_text_mode: "on_error"
+        size_hint_x: 0.3
+#        mode: "round"
+
+    MDLabel:
+        size_hint_x: 0.2
+        text: self.parent.suffix
+
+
 <RiflesCardScreen>:
     name: 'rifle_card'
 
     MDScrollView:
 
-        MDList:
-            padding: 20
-#            size_hint: .8, .8
+        BoxLayout:
+            orientation: "vertical"
+            size_hint_y: None
+            height: self.minimum_height
+            width: self.minimum_width
+            spacing: "30dp"
+            padding: "20dp"
 
-            BoxLayout:
-                orientation: 'horizontal'
+            row_force_default: True
+            row_default_height: 30
 
-                MDLabel:
-                    text: "Item"
-                MDTextField:
-                    hint_text: "No helper text"
-                MDLabel:
-                    text: "Item"
+            MDLabel:
+                text: 'Weapon name:'
+                halign: 'center'
 
-            BoxLayout:
-                orientation: 'horizontal'
+            MDTextField:
+                text: 'New rifle'
+#                size_hint: 1, None
+                hint_text: "Weapon name"
+                helper_text: "Required field"
+                helper_text_mode: "on_error"
+                max_text_length: 40
+#                mode: "round"
+                required: True
 
-                MDLabel:
-                    text: "Item"
-                MDTextField:
-                    hint_text: "No helper text"
-                MDLabel:
-                    text: "Item"
+            MDLabel:
+                text: 'Properties:'
+                halign: 'center'
 
-            BoxLayout:
-                orientation: 'horizontal'
+#            BoxLayout:
+#                orientation: "vertical"
+#                spacing: "10dp"
 
-                MDLabel:
-                    text: "Item"
-                MDTextField:
-                    hint_text: "No helper text"
-                MDLabel:
-                    text: "Item"
+#            row_force_default: True
+#            row_default_height: 60
 
-            BoxLayout:
-                orientation: 'horizontal'
+            ConvertableNumField:
+                prefix: "Twist"
+                suffix: "inch"
 
-                MDLabel:
-                    text: "Item"
-                MDTextField:
-                    hint_text: "No helper text"
-                MDLabel:
-                    text: "Item"
-
-            BoxLayout:
-                orientation: 'horizontal'
-
-                MDLabel:
-                    text: "Item"
-                MDTextField:
-                    hint_text: "No helper text"
-                MDLabel:
-                    text: "Item"
-
-            BoxLayout:
-                orientation: 'horizontal'
+            MDBoxLayout:
+                orientation: "horizontal"
+                spacing: "10dp"
+                size_hint_y: None
+                height: 30
 
                 MDLabel:
-                    text: "Item"
-                MDTextField:
-                    hint_text: "No helper text"
+                    text: 'Twist direction'
+                    size_hint_x: 0.5
+                MDDropDownItem:
+                    text: 'Right'
+                    size_hint_x: 0.3
                 MDLabel:
-                    text: "Item"
+                    size_hint_x: 0.2
+
+            ConvertableNumField:
+                prefix: "Sight height"
+                suffix: "cm"
+
 

@@ -37,13 +37,23 @@ class EBallisticaApp(MDApp):
         print('add on', self.get_current_screen())
 
     def on_bottom_action_buttons(self, action: MDActionBottomAppBarButton):
-        print('bot action', action.icon)
         if action.icon == "arrow-left":
+            self.back_action()
+
+    def back_action(self):
+        current = self.root.ids.screen_manager.current
+        if current == 'ammos_screen':
+            self.switch_rifles_list()
+        elif current == 'rifle_card':
             self.switch_rifles_list()
 
     def switch_rifles_list(self):
         self.root.ids.screen_manager.transition.direction = 'right'
         self.root.ids.screen_manager.current = 'rifles_screen'
+
+    def switch_rifle_card(self):
+        self.root.ids.screen_manager.transition.direction = 'left'
+        self.root.ids.screen_manager.current = 'rifle_card'
 
     def switch_ammos_list(self):
         self.root.ids.screen_manager.transition.direction = 'left'
