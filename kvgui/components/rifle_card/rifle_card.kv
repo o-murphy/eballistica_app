@@ -1,13 +1,12 @@
 <FloatField>
     text: '0.0'
     input_filter: 'float'
-    pos_hint: {'center_x': 0.65, 'center_y': 0.1}
-    size_hint_x: 0.3
+    mode: "fill"
 #    hint_text: 'value'
 #    helper_text_mode: "persistent"
 
 <ConvertableNumField>
-    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+#    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
     prefix: ""
     suffix: ""
@@ -17,6 +16,8 @@
         pos_hint: {'center_x': 0.25, 'center_y': 0.5}
         size_hint: 0.5, 1
     FloatField:
+        pos_hint: {'center_x': 0.65, 'center_y': 0.5}
+        size_hint_x: 0.3
 
     MDLabel:
         text: self.parent.suffix
@@ -26,7 +27,7 @@
 
 <TwistDirection>
     text: 'Right'
-    pos_hint: {'center_x': 0.65, 'center_y': 0.1}
+    pos_hint: {'center_x': 0.65, 'center_y': 0.5}
     size_hint_x: 0.3
     on_release: self.show_menu()
 
@@ -39,6 +40,7 @@
         pos_hint: {'center_x': 0.25, 'center_y': 0.5}
         size_hint: 0.5, 1
     TwistDirection:
+        mode: "fill"
 
 
 
@@ -53,33 +55,56 @@
             size_hint_y: None
             height: self.minimum_height
             width: self.minimum_width
-            spacing: "40dp"
+            spacing: "15dp"
             padding: "20dp"
 
             row_force_default: True
             row_default_height: 30
 
-            MDTextField:
-                text: 'New rifle'
-                hint_text: "Weapon name"
-                helper_text: "Required field"
-                helper_text_mode: "on_error"
-                max_text_length: 40
-                required: True
+            MDCard:
+                padding: 20
+                spacing: "15dp"
+                size_hint: 1, None
+                md_bg_color: "#1f352aaa"
 
-            MDLabel:
-                text: 'Properties:'
-                halign: 'center'
+                MDRelativeLayout:
 
-            ComboField:
-                prefix: "Twist direction"
+                    MDTextField:
+                        text: 'New rifle'
+                        pos_hint: {"top": 1, "right": 1}
+                        md_bg_color: '#364b40'
+                        mode: "fill"
+                        hint_text: "Weapon name"
+                        helper_text: "Required field"
+                        helper_text_mode: "on_error"
+                        max_text_length: 40
+                        required: True
 
-            ConvertableNumField:
-                prefix: "Twist"
-                suffix: "inch"
+            MDCard:
+                md_bg_color: "#1f352aaa"
+                padding: 20
+                spacing: "15dp"
+                size_hint: 1, None
+                size: "200dp", "400dp"
+                orientation: "vertical"
 
-            ConvertableNumField:
-                prefix: "Sight height"
-                suffix: "cm"
+#                MDRelativeLayout:
+
+                MDLabel:
+                    text: 'Properties:'
+                    font_style: 'H6'
+#                    halign: 'center'
+
+
+                ComboField:
+                    prefix: "Twist direction"
+
+                ConvertableNumField:
+                    prefix: "Twist"
+                    suffix: "inch"
+
+                ConvertableNumField:
+                    prefix: "Sight height"
+                    suffix: "cm"
 
 
