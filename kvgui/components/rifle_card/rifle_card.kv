@@ -1,25 +1,41 @@
+<FloatField>
+    text: '0.0'
+    input_filter: 'float'
+    pos_hint: {'center_x': 0.65, 'center_y': 0.1}
+    size_hint_x: 0.3
+    helper_text_mode: "on_error"
+
 <ConvertableNumField>
-    orientation: "horizontal"
-    spacing: "10dp"
-    size_hint_y: None
-    height: 40
+    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
 
     prefix: ""
     suffix: ""
 
     MDLabel:
         text: self.parent.prefix
-        size_hint_x: 0.5
-    MDTextField:
-        text: '0.0'
-        input_filter: 'float'
-        helper_text_mode: "on_error"
-        size_hint_x: 0.3
-#        mode: "round"
+        pos_hint: {'center_x': 0.25, 'center_y': 0.5}
+        size_hint: 0.5, 1
+    FloatField:
 
     MDLabel:
-        size_hint_x: 0.2
         text: self.parent.suffix
+        pos_hint: {'center_x': 0.9, 'center_y': 0.5}
+        size_hint: 0.2, 1
+        halign: 'right'
+
+
+<ComboField>
+    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+    prefix: ""
+
+    MDLabel:
+        text: self.parent.prefix
+        pos_hint: {'center_x': 0.25, 'center_y': 0.5}
+        size_hint: 0.5, 1
+    MDDropDownItem:
+        text: 'Right'
+        pos_hint: {'center_x': 0.65, 'center_y': 0.1}
+        size_hint_x: 0.3
 
 
 <RiflesCardScreen>:
@@ -32,7 +48,7 @@
             size_hint_y: None
             height: self.minimum_height
             width: self.minimum_width
-            spacing: "30dp"
+            spacing: "40dp"
             padding: "20dp"
 
             row_force_default: True
@@ -56,31 +72,14 @@
                 text: 'Properties:'
                 halign: 'center'
 
-#            BoxLayout:
-#                orientation: "vertical"
-#                spacing: "10dp"
-
-#            row_force_default: True
-#            row_default_height: 60
+            ComboField:
+                prefix: "Twist direction"
 
             ConvertableNumField:
                 prefix: "Twist"
                 suffix: "inch"
 
-            MDBoxLayout:
-                orientation: "horizontal"
-                spacing: "10dp"
-                size_hint_y: None
-                height: 30
 
-                MDLabel:
-                    text: 'Twist direction'
-                    size_hint_x: 0.5
-                MDDropDownItem:
-                    text: 'Right'
-                    size_hint_x: 0.3
-                MDLabel:
-                    size_hint_x: 0.2
 
             ConvertableNumField:
                 prefix: "Sight height"
