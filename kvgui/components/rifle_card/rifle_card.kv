@@ -1,9 +1,10 @@
 <FloatField>
     text: '0.0'
-#    input_filter: 'float'
+    input_filter: 'float'
     pos_hint: {'center_x': 0.65, 'center_y': 0.1}
     size_hint_x: 0.3
-    helper_text_mode: "on_error"
+#    hint_text: 'value'
+#    helper_text_mode: "persistent"
 
 <ConvertableNumField>
     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
@@ -23,6 +24,11 @@
         size_hint: 0.2, 1
         halign: 'right'
 
+<TwistDirection>
+    text: 'Right'
+    pos_hint: {'center_x': 0.65, 'center_y': 0.1}
+    size_hint_x: 0.3
+    on_release: self.show_menu()
 
 <ComboField>
     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
@@ -32,10 +38,9 @@
         text: self.parent.prefix
         pos_hint: {'center_x': 0.25, 'center_y': 0.5}
         size_hint: 0.5, 1
-    MDDropDownItem:
-        text: 'Right'
-        pos_hint: {'center_x': 0.65, 'center_y': 0.1}
-        size_hint_x: 0.3
+    TwistDirection:
+
+
 
 
 <RiflesCardScreen>:
@@ -54,18 +59,12 @@
             row_force_default: True
             row_default_height: 30
 
-            MDLabel:
-                text: 'Weapon name:'
-                halign: 'center'
-
             MDTextField:
                 text: 'New rifle'
-#                size_hint: 1, None
                 hint_text: "Weapon name"
                 helper_text: "Required field"
                 helper_text_mode: "on_error"
                 max_text_length: 40
-#                mode: "round"
                 required: True
 
             MDLabel:
@@ -78,8 +77,6 @@
             ConvertableNumField:
                 prefix: "Twist"
                 suffix: "inch"
-
-
 
             ConvertableNumField:
                 prefix: "Sight height"
