@@ -68,6 +68,7 @@ class TwistDirSelector(BoxLayout):
         self.label = MDLabel(size_hint_x=.5)
         self.dropdown = MDRoundFlatIconButton(size_hint_x=.5)
         self.dropdown.icon = "rotate-right"
+        self.dropdown.size_hint_x = None
         self.add_widget(self.label)
         self.add_widget(self.dropdown)
 
