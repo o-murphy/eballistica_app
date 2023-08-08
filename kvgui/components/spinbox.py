@@ -12,6 +12,7 @@ class MDSpinBox(MDTextField):
         self.decimals: int = 2
         self.step: float = 1
         self.input_filter = 'float'
+        self.value = 0
 
         self.prefix = ''
         self.suffix = ''

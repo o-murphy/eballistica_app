@@ -1,1 +1,0 @@
-from .rifles_list import RiflesList, RifleListItem, RiflesScreen

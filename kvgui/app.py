@@ -18,7 +18,7 @@ class AppScreenManager(ScreenManager):
     def init_ui(self):
         self.rifles_screen = RiflesScreen()
         self.ammos_screen = AmmosScreen()
-        self.rifle_card_screen = RiflesCardScreen()
+        self.rifle_card_screen = RifleCardScreen()
         self.settings_screen = SettingsScreen()
 
         self.add_widget(self.rifles_screen)

@@ -21,37 +21,64 @@ Builder.load_string("""
 
 
 class RifleListItem(ThreeLineListItem, TouchBehavior):
+    menu_action = Signal(args=['action'], name='menu_action')
+    short_touch = Signal(args=['item'], name='short_touch')
+    long_touch = Signal(args=['item'], name='long_touch')
+
+    def __init__(self, *args, **kwargs):
+        super(RifleListItem, self).__init__(*args, **kwargs)
+
+        self.is_long_touch = False
+
+        self.init_ui()
+        self.bind_ui()
+
+    def init_ui(self):
+        ...
+
+    def bind_ui(self):
+        self.menu_action.connect(self.on_menu_action)
 
     def on_long_touch(self, touch, *args):
+        self.is_long_touch = True
         self.show_menu()
 
     def on_touch_up(self, touch):
-        if self.collide_point(touch.x, touch.y):
-            if "event" not in touch.ud:
-                print('skipping as long touch')
-
-        else:
+        if not self.is_long_touch:
+            self.short_touch.emit()
             MDApp.get_running_app().switch_ammos_list()
+        else:
+            self.long_touch.emit()
+        self.is_long_touch = False
 
     def show_menu(self):
 
         menu_items = [
-            {"text": "Edit", "leading_icon": "pencil-outline", "on_release": lambda x='Edit': self.on_menu_action(x)},
-            {"text": "Delete", "leading_icon": "delete-outline", "on_release": lambda x='Delete': self.on_menu_action(x)},
+            {
+                "text": "Edit", "leading_icon": "pencil-outline",
+                "on_release": lambda: self.menu_action.emit(action='Edit')
+            },
+            {
+                "text": "Delete", "leading_icon": "delete-outline",
+                "on_release": lambda: self.menu_action.emit(action='Delete')
+            },
         ]
         self.menu = MDDropdownMenu(
             caller=self, items=menu_items
         )
         self.menu.open()
 
-    def on_menu_action(self, obj):
-        print(obj)
-        if obj == 'Edit':
+    def on_menu_action(self, action, **kwargs):
+        if action == 'Edit':
             MDApp.get_running_app().switch_rifle_card()
         self.menu.dismiss()
 
 
 class RiflesScreen(Screen):
+    menu_action = Signal(args=['action'], name='menu_action')
+    short_touch = Signal(args=['item'], name='short_touch')
+    long_touch = Signal(args=['item'], name='long_touch')
+
     def __init__(self, *args, **kwargs):
         super(RiflesScreen, self).__init__(*args, **kwargs)
         self.name = 'rifles_screen'
