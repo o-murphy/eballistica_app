@@ -27,9 +27,10 @@ class EBallisticaApp(MDApp):
         return screen
 
     def on_start(self):
-        print(self.root.ids.screen_manager.__dir__())
-        print(self.root.ids.screen_manager.children)
-        print(self.root.ids.screen_manager.screens)
+        ...
+        # print(self.root.ids.screen_manager.__dir__())
+        # print(self.root.ids.screen_manager.children)
+        # print(self.root.ids.screen_manager.screens)
         # self.root.ids.screen_manager.current_screen = self.root.ids.screen_manager.ids.ammos_list
 
     def get_current_screen(self):
