@@ -4,6 +4,7 @@ from kivymd.uix.toolbar import MDTopAppBar
 
 from signalslot import Signal
 
+
 Builder.load_string("""
 <AppTopBar>
     orientation: "vertical"
@@ -22,6 +23,7 @@ Builder.load_string("""
 
 class TopBar(MDTopAppBar):
     action_click = Signal(args=['action'], name='action_click')
+    settings_cicked = Signal(name='settings_cicked')
 
     def __init__(self, **kwargs):
         super(TopBar, self).__init__(**kwargs)
@@ -33,8 +35,9 @@ class TopBar(MDTopAppBar):
         ]
         self.action_click.connect(self.action_reciever)
 
-    def action_reciever(self, **action):
-        print(action)
+    def action_reciever(self, action, **kwargs):
+        if action.icon.find('cog') >= 0:
+            self.settings_cicked.emit()
 
 
 class AppTopBar(MDBoxLayout):

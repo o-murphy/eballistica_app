@@ -1,7 +1,7 @@
 from kivy.lang import Builder
 from kivymd.app import MDApp
 from kivymd.uix.behaviors import TouchBehavior
-from kivymd.uix.list import ThreeLineListItem
+from kivymd.uix.list import ThreeLineListItem, MDList
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.scrollview import MDScrollView
 from kivy.uix.screenmanager import Screen
@@ -9,11 +9,15 @@ from kivy.uix.screenmanager import Screen
 from signalslot import Signal
 
 
-Builder.load_file('../kvgui/components/rifles_list/rifles_list.kv')
-
-
-class RiflesList(MDScrollView):
-    pass
+Builder.load_string("""
+<RifleListItem>
+    text: "New rifle"
+    md_bg_color: "#191c1a"
+    secondary_text: "Twist: 1 in <num> <units>"
+    secondary_font_style: "Caption"
+    tertiary_text: "Sight height: <num> <units>"
+    tertiary_font_style: "Caption"
+""")
 
 
 class RifleListItem(ThreeLineListItem, TouchBehavior):
@@ -48,6 +52,17 @@ class RifleListItem(ThreeLineListItem, TouchBehavior):
 
 
 class RiflesScreen(Screen):
-    pass
+    def __init__(self, *args, **kwargs):
+        super(RiflesScreen, self).__init__(*args, **kwargs)
+        self.name = 'rifles_screen'
+        self.init_ui()
 
+    def init_ui(self):
+        self.scroll = MDScrollView()
+        self.list = MDList()
+
+        self.list.add_widget(RifleListItem())  # TODO: temporary
+
+        self.scroll.add_widget(self.list)
+        self.add_widget(self.scroll)
 
