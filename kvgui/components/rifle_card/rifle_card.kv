@@ -2,109 +2,84 @@
     text: '0.0'
     input_filter: 'float'
     mode: "fill"
-#    hint_text: 'value'
-#    helper_text_mode: "persistent"
-
-<ConvertableNumField>
-#    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-
-    prefix: ""
-    suffix: ""
-
-    MDLabel:
-        text: self.parent.prefix
-        pos_hint: {'center_x': 0.25, 'center_y': 0.5}
-        size_hint: 0.5, 1
-    FloatField:
-        pos_hint: {'center_x': 0.65, 'center_y': 0.5}
-        size_hint_x: 0.3
-
-    MDLabel:
-        text: self.parent.suffix
-        pos_hint: {'center_x': 0.9, 'center_y': 0.5}
-        size_hint: 0.2, 1
-        halign: 'right'
-
-<TwistDirection>
-    text: 'Right'
-    pos_hint: {'center_x': 0.65, 'center_y': 0.5}
-    size_hint_x: 0.3
-    on_release: self.show_menu()
-
-<ComboField>
-    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-    prefix: ""
-
-    MDLabel:
-        text: self.parent.prefix
-        pos_hint: {'center_x': 0.25, 'center_y': 0.5}
-        size_hint: 0.5, 1
-    TwistDirection:
-        mode: "fill"
-
-
 
 
 <RiflesCardScreen>:
     name: 'rifle_card'
 
     MDScrollView:
-
-        BoxLayout:
+        MDBoxLayout:
             orientation: "vertical"
-            size_hint_y: None
-            height: self.minimum_height
-            width: self.minimum_width
             spacing: "15dp"
             padding: "20dp"
-
-            row_force_default: True
-            row_default_height: 30
-
-            MDCard:
-                padding: 20
-                spacing: "15dp"
-                size_hint: 1, None
-                md_bg_color: "#1f352aaa"
-
-                MDRelativeLayout:
-
-                    MDTextField:
-                        text: 'New rifle'
-                        pos_hint: {"top": 1, "right": 1}
-                        md_bg_color: '#364b40'
-                        mode: "fill"
-                        hint_text: "Weapon name"
-                        helper_text: "Required field"
-                        helper_text_mode: "on_error"
-                        max_text_length: 40
-                        required: True
+            height: self.minimum_height
+            size_hint_y: None
 
             MDCard:
-                md_bg_color: "#1f352aaa"
-                padding: 20
+                padding: "20dp"
+                height: self.minimum_height
+                size_hint_y: None
+
+                MDTextField:
+                    text: 'New rifle'
+                    mode: "fill"
+                    hint_text: "Weapon name"
+                    helper_text: "Required field"
+                    helper_text_mode: "on_error"
+                    max_text_length: 40
+                    required: True
+
+            MDCard:
+                padding: "20dp"
                 spacing: "15dp"
                 size_hint: 1, None
-                size: "200dp", "400dp"
+                height: self.minimum_height  # Adjust the card's height to fit content
                 orientation: "vertical"
-
-#                MDRelativeLayout:
 
                 MDLabel:
                     text: 'Properties:'
                     font_style: 'H6'
-#                    halign: 'center'
+                    size_hint_y: None
+                    height: self.texture_size[1]
 
+                BoxLayout:
+                    orientation: "horizontal"
+                    height: self.minimum_height
+                    size_hint_y: None
 
-                ComboField:
-                    prefix: "Twist direction"
+                    MDLabel:
+                        text: "Twist"
+                        size_hint_x: 0.5
+                    FloatField:
+                        size_hint_x: 0.3
+                    MDLabel:
+                        text: "Inch"
+                        size_hint_x: 0.2
+                        halign: 'right'
 
-                ConvertableNumField:
-                    prefix: "Twist"
-                    suffix: "inch"
+                BoxLayout:
+                    orientation: "horizontal"
+                    height: self.minimum_height
+                    size_hint_y: None
 
-                ConvertableNumField:
-                    prefix: "Sight height"
-                    suffix: "cm"
+                    MDLabel:
+                        text: "Twist direction"
+                        size_hint_x: 0.5
+                    TwistDirection:
+                        mode: "fill"
+                        size_hint_x: 0.5
 
+                BoxLayout:
+                    orientation: "horizontal"
+                    height: self.minimum_height
+                    size_hint_y: None
 
+                    MDLabel:
+                        text: "Sight height"
+                        size_hint_x: 0.5
+                    FloatField:
+                        size_hint_x: 0.3
+                    MDLabel:
+                        text: "cm"
+                        size_hint_x: 0.2
+                        halign: 'right'

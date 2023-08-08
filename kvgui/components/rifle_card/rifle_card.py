@@ -3,6 +3,7 @@ from kivy.uix.screenmanager import Screen
 from kivymd.uix.dropdownitem import MDDropDownItem
 from kivymd.uix.floatlayout import MDFloatLayout
 from kivymd.uix.menu import MDDropdownMenu
+from kivymd.uix.widget import MDWidget
 
 from kvgui.components.spinbox import MDSpinBox
 
@@ -18,7 +19,7 @@ class FloatField(MDSpinBox):
         self.decimals = 3
 
 
-class ConvertableNumField(MDFloatLayout):
+class ConvertableNumField(MDWidget):
     pass
 
 
@@ -39,7 +40,7 @@ class TwistDirection(MDDropDownItem):
         self.menu.dismiss()
 
 
-class ComboField(MDFloatLayout):
+class ComboField(MDWidget):
     pass
 
 

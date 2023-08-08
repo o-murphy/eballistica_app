@@ -48,6 +48,16 @@ class EBallisticaApp(MDApp):
             self.switch_rifles_list()
         elif current == 'rifle_card':
             self.switch_rifles_list()
+        elif current == 'settings':
+            self.switch_rifles_list()
+
+    def top_act_click(self, action):
+        if action.icon == 'cog-outline':
+            self.switch_settings()
+
+    def switch_settings(self):
+        self.root.ids.screen_manager.transition.direction = 'right'
+        self.root.ids.screen_manager.current = 'settings'
 
     def switch_rifles_list(self):
         self.root.ids.screen_manager.transition.direction = 'right'

@@ -1,6 +1,6 @@
 import logging
 
-from kivymd.uix.textfield import MDTextField
+from kivymd.uix.textfield import MDTextField, MDTextFieldRect
 
 
 class MDSpinBox(MDTextField):
