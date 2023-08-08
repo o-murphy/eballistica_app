@@ -14,7 +14,6 @@ Builder.load_string("""
     size_hint_y: None
     height: self.texture_size[1]
 
-
 <MD3Card>
     orientation: "vertical"
     padding: "20dp"
@@ -22,12 +21,10 @@ Builder.load_string("""
     height: self.minimum_height
     size_hint_y: None
 
-
 <NamedSelector>
     orientation: "horizontal"
     height: self.minimum_height
     size_hint_y: None
-    
     
 <InScrollBox>
     orientation: "vertical"
@@ -35,39 +32,6 @@ Builder.load_string("""
     padding: "20dp"
     height: self.minimum_height
     size_hint_y: None
-
-
-# <SettingsScreen>:
-#     name: "settings"
-# 
-#     MDScrollView:
-# 
-#         MDBoxLayout:
-#             orientation: "vertical"
-#             spacing: "15dp"
-#             padding: "20dp"
-#             height: self.minimum_height
-#             size_hint_y: None
-# 
-#             MD3Card:
-#                 id: view_card
-# 
-#                 CardTitle:
-#                     text: "View"
-# 
-#             MD3Card:
-#                 id: units_card
-# 
-#                 CardTitle:
-#                     id: title
-#                     text: "Units"
-# 
-#                 NamedSelector:
-#                     id: sh
-# 
-#                 NamedSelector:
-#                     id: twist
-
 """)
 
 
@@ -212,6 +176,12 @@ class ViewCard(MD3Card):
         self.add_widget(self.s_lang)
 
 
+class InfoCard(MD3Card):
+    def init_ui(self):
+        super(InfoCard, self).init_ui()
+        self.title.text = 'Info:'
+
+
 class UnitsCard(MD3Card):
     def init_ui(self):
         super(UnitsCard, self).init_ui()
@@ -260,9 +230,11 @@ class SettingsScreen(Screen):
 
         self.view_card = ViewCard()
         self.unit_card = UnitsCard()
+        self.info_card = InfoCard()
 
         self.layout.add_widget(self.view_card)
         self.layout.add_widget(self.unit_card)
+        self.layout.add_widget(self.info_card)
 
         self.scroll.add_widget(self.layout)
         self.add_widget(self.scroll)

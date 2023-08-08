@@ -1,5 +1,6 @@
 from kivy.core.window import Window
-from kivy.uix.screenmanager import ScreenManager
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.toolbar import MDActionBottomAppBarButton
 
 
@@ -7,24 +8,59 @@ from kivymd.app import MDApp
 from kivy.lang import Builder
 
 from kvgui.components import *
-assert RiflesScreen  # temp
 
 
 Window.size = (400, 700)
 
 
+screen_helper = """
+<AppScreenManager>
+
+    RiflesScreen:
+    AmmosScreen:
+    RiflesCardScreen:
+    SettingsScreen:
+"""
+
+
 class AppScreenManager(ScreenManager):
-    pass
+    def __init__(self, **kwargs):
+        super(AppScreenManager, self).__init__(**kwargs)
+        self.init_ui()
+
+    def init_ui(self):
+        self.rifles_screen = RiflesScreen()
+        self.ammos_screen = AmmosScreen()
+        self.rifle_card_screen = RiflesCardScreen()
+        self.settings_screen = SettingsScreen()
+
+        self.add_widget(self.rifles_screen)
+        self.add_widget(self.ammos_screen)
+        self.add_widget(self.rifle_card_screen)
+        self.add_widget(self.settings_screen)
 
 
 class EBallisticaApp(MDApp):
+
     def build(self):
         self.theme_cls.theme_style = 'Dark'
         self.theme_cls.material_style = "M3"
         self.theme_cls.primary_palette = 'BlueGray'
 
-        screen = Builder.load_file('app.kv')
-        return screen
+        self.screen = Screen()
+        self.layout = MDBoxLayout()
+        self.layout.orientation = 'vertical'
+
+        self.app_top_bar = AppTopBar()
+        self.app_screen_manager = AppScreenManager()
+        self.app_bottom_bar = AppBottomBar()
+
+        self.layout.add_widget(self.app_top_bar)
+        self.layout.add_widget(self.app_screen_manager)
+        self.layout.add_widget(self.app_bottom_bar)
+
+        self.screen.add_widget(self.layout)
+        return self.screen
 
     def on_start(self):
         ...
