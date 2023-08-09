@@ -1,6 +1,7 @@
 import logging
 
-from kivymd.uix.textfield import MDTextField
+from kivy.uix.textinput import TextInput
+from kivymd.uix.textfield import MDTextField, MDTextFieldRect
 
 
 class MDSpinBox(MDTextField):
@@ -65,9 +66,9 @@ class MDSpinBox(MDTextField):
             super(MDSpinBox, self).insert_text(substring, from_undo)
 
 
-class ConverMDSpinBox(MDSpinBox):
+class MDUnitsInput(MDSpinBox):
     def __init__(self, *args, **kwargs):
-        super(ConverMDSpinBox, self).__init__(*args, **kwargs)
+        super(MDUnitsInput, self).__init__(*args, **kwargs)
 
         self._convertor = None
 
@@ -96,7 +97,7 @@ if __name__ == '__main__':
     class SpinBoxApp(MDApp):
         
         def build(self):
-            spinbox = MDSpinBox()
+            spinbox = MDUnitsInput()
             return spinbox
 
     SpinBoxApp().run()

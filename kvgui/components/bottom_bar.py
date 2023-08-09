@@ -15,15 +15,15 @@ Builder.load_string("""
 
     MDBottomAppBar:
         id: bottom_bar
-        md_bg_color: "#191c1a"
-        icon_color: "#8a938c"
+        # md_bg_color: "#191c1a"
+        # icon_color: "#8a938c"
         # elevation: 2
 
         MDFabBottomAppBarButton:
             id: bottom_bar_fab
             md_bg_color: "#1f352a"
             icon: "plus"
-            icon_color: "#8a938c"
+            # icon_color: "#8a938c"
             # elevation: 2
 
 """)
