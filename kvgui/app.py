@@ -51,7 +51,7 @@ class EBallisticaApp(MDApp):
         self.app_top_bar.bar.settings_clicked.connect(self.switch_settings)
         self.app_top_bar.bar.apply_clicked.connect(self.apply_settings)
         self.app_bottom_bar.action_clicked.connect(self.back_action)
-        self.app_bottom_bar.fab.bind(on_release=self.add_action)
+        self.app_bottom_bar.fab.bind(on_release=self.bot_fab_action)
 
     def build(self):
         self.theme_cls.theme_style = 'Dark'
@@ -78,20 +78,29 @@ class EBallisticaApp(MDApp):
         elif current == 'settings':
             self.switch_rifles_list()
 
-    def add_action(self, *args, **kwargs):
+    def bot_fab_action(self, *args, **kwargs):
         current = self.app_screen_manager.current
-        if current == 'rifles_screen':
+        fab_icon = self.app_bottom_bar.fab.icon
+        if current == 'rifles_screen' and fab_icon == 'plus':
             self.switch_rifle_card()
+        elif current == 'rifle_card' and fab_icon == 'check':
+            self.save_rifle_card()
 
     def switch_rifles_list(self, **kwargs):
         self.app_screen_manager.transition.direction = 'right'
         self.app_screen_manager.current = 'rifles_screen'
-
+        self.app_bottom_bar.fab_show()
+        self.app_bottom_bar.fab_add_new()
         self.app_top_bar.show_cog()
 
     def switch_rifle_card(self, **kwargs):
         self.app_screen_manager.transition.direction = 'left'
         self.app_screen_manager.current = 'rifle_card'
+        self.app_bottom_bar.fab_applying()
+
+    def save_rifle_card(self):
+        # Todo:
+        self.switch_rifles_list()
 
     def switch_ammos_list(self, **kwargs):
         self.app_screen_manager.transition.direction = 'left'
@@ -102,6 +111,7 @@ class EBallisticaApp(MDApp):
         self.app_screen_manager.current = 'settings'
 
         self.app_top_bar.hide_cog()
+        self.app_bottom_bar.fab_hide()
 
     def apply_settings(self, **kwargs):
         # TODO:

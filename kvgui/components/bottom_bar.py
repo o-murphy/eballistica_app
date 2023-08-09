@@ -49,7 +49,7 @@ class AppBottomBar(MDBoxLayout):
         back_action = BottomAction(icon='arrow-left',
                                    on_release=lambda action: self.action_clicked.emit(action=action))
         self.bar.action_items = [back_action]
-        self.fab = self.ids.bottom_bar_fab
+        self.fab: MDFabBottomAppBarButton = self.ids.bottom_bar_fab
 
 
     def bind_ui(self):
@@ -58,4 +58,18 @@ class AppBottomBar(MDBoxLayout):
     def on_action(self, action, **kwargs):
         if action.icon.find('left') >= 0:
             self.back_act_clicked.emit()
+
+    def fab_hide(self):
+        self.fab.opacity = 0
+        self.fab.disabled = True
+
+    def fab_show(self):
+        self.fab.opacity = 1
+        self.fab.disabled = False
+
+    def fab_applying(self):
+        self.fab.icon = 'check'
+
+    def fab_add_new(self):
+        self.fab.icon = 'plus'
 
