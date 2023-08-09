@@ -2,32 +2,9 @@ from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.floatlayout import MDFloatLayout
 from kivymd.uix.toolbar import MDActionBottomAppBarButton, MDFabBottomAppBarButton, MDBottomAppBar
 from kivy.lang import Builder
-from kivymd.uix.widget import MDWidget
-
 from signalslot import Signal
 
-Builder.load_string("""
-#:import MDActionBottomAppBarButton kivymd.uix.toolbar.MDActionBottomAppBarButton
-
-<AppBottomBar>
-    orientation: 'vertical'
-    adaptive_height: True
-
-    MDBottomAppBar:
-        id: bottom_bar
-        # md_bg_color: "#191c1a"
-        icon_color: "#ffffff"
-        # icon_color: "#8a938c"
-        # elevation: 2
-
-        MDFabBottomAppBarButton:
-            id: bottom_bar_fab
-            md_bg_color: "#1f352a"
-            icon: "plus"
-            # icon_color: "#8a938c"
-            # elevation: 2
-
-""")
+Builder.load_file('kvgui/kv/bottom_bar.kv')
 
 
 class BottomAction(MDActionBottomAppBarButton):
@@ -62,14 +39,18 @@ class AppBottomBar(MDBoxLayout):
     def fab_hide(self):
         self.fab.opacity = 0
         self.fab.disabled = True
+        # self.bar.allow_hidden = True
 
     def fab_show(self):
         self.fab.opacity = 1
         self.fab.disabled = False
+        # self.bar.allow_hidden = False
 
     def fab_applying(self):
         self.fab.icon = 'check'
+        self.fab._md_bg_color = "teal"
 
     def fab_add_new(self):
         self.fab.icon = 'plus'
+        self.fab._md_bg_color = "orange"
 

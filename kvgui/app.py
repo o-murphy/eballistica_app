@@ -1,13 +1,14 @@
 from kivy.core.window import Window
-from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivymd.app import MDApp
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.toolbar import MDActionBottomAppBarButton
 
 from kvgui.components import *
+from kivymd.toast import toast
 
-from kvgui.components.abstract import *
+from kvgui.components import abstract
+assert abstract
 
 
 Window.size = (400, 700)
@@ -56,7 +57,7 @@ class EBallisticaApp(MDApp):
     def build(self):
         self.theme_cls.theme_style = 'Dark'
         self.theme_cls.material_style = "M3"
-        self.theme_cls.primary_palette = 'BlueGray'
+        self.theme_cls.primary_palette = 'Teal'
 
         self.init_ui()
         self.bind_ui()
@@ -97,26 +98,30 @@ class EBallisticaApp(MDApp):
         self.app_screen_manager.transition.direction = 'left'
         self.app_screen_manager.current = 'rifle_card'
         self.app_bottom_bar.fab_applying()
+        self.app_top_bar.hide_all()
 
     def save_rifle_card(self):
         # Todo:
         self.switch_rifles_list()
+        toast("Rifle data saved", duration=1)
 
     def switch_ammos_list(self, **kwargs):
         self.app_screen_manager.transition.direction = 'left'
         self.app_screen_manager.current = 'ammos_screen'
+        self.app_top_bar.hide_all()
 
     def switch_settings(self, **kwargs):
         self.app_screen_manager.transition.direction = 'left'
         self.app_screen_manager.current = 'settings'
 
-        self.app_top_bar.hide_cog()
+        self.app_top_bar.show_check()
         self.app_bottom_bar.fab_hide()
 
     def apply_settings(self, **kwargs):
         # TODO:
         self.switch_rifles_list()
         self.app_top_bar.show_cog()
+        toast("Settings saved", duration=1)
 
 
 if __name__ == '__main__':

@@ -1,12 +1,13 @@
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
-from kivymd.uix.button import MDRectangleFlatIconButton
 from kivymd.uix.menu import MDDropdownMenu
+
+from kvgui.components.abstract import FormSelector
 
 Builder.load_file('kvgui/kv/rifle_card.kv')
 
 
-class TwistDirSelector(MDRectangleFlatIconButton):
+class TwistDirSelector(FormSelector):
     def __init__(self, **kwargs):
         super(TwistDirSelector, self).__init__(**kwargs)
         self.init_ui()

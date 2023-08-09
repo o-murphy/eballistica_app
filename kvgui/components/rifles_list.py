@@ -13,10 +13,11 @@ Builder.load_string("""
 <RifleListItem>
     text: "New rifle"
     md_bg_color: "#191c1a"
-    secondary_text: "Twist: 1 in <num> <units>"
-    secondary_font_style: "Caption"
-    tertiary_text: "Sight height: <num> <units>"
-    tertiary_font_style: "Caption"
+    font_style: "H6"
+    secondary_text: "Twist: 1 in {} {}"
+    secondary_font_style: "Subtitle2"
+    tertiary_text: "Sight height: {} {}"
+    tertiary_font_style: "Subtitle2"
 """)
 
 
@@ -88,7 +89,12 @@ class RiflesScreen(Screen):
         self.scroll = MDScrollView()
         self.list = MDList()
 
-        self.list.add_widget(RifleListItem())  # TODO: temporary
+        # TODO: temporary
+        item = RifleListItem()
+        item.secondary_text = item.secondary_text.format('9', 'inch')
+        item.tertiary_text = item.tertiary_text.format('9', 'cm')
+
+        self.list.add_widget(item)
 
         self.scroll.add_widget(self.list)
         self.add_widget(self.scroll)

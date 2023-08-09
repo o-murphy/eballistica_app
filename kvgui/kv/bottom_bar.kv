@@ -1,0 +1,20 @@
+#:import MDActionBottomAppBarButton kivymd.uix.toolbar.MDActionBottomAppBarButton
+
+<AppBottomBar>
+    orientation: 'vertical'
+    adaptive_height: True
+
+    MDBottomAppBar:
+        id: bottom_bar
+        # md_bg_color: "#191c1a"
+        icon_color: "#ffffff"
+        # icon_color: "#8a938c"
+        elevation: 2
+
+        MDFabBottomAppBarButton:
+            id: bottom_bar_fab
+            md_bg_color: "orange"
+            # md_bg_color: app.theme_cls.accent_color
+            icon: "plus"
+            # icon_color:
+            elevation: 8

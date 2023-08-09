@@ -1,3 +1,16 @@
+<AppTopBar>
+    orientation: "vertical"
+    spacing: "12dp"
+    pos_hint: {"top": 1}
+    adaptive_height: True
+
+<TopBar>:
+    type_height: 'medium'
+    headline_text: "Rifles /"
+    title: "eBallistica"
+    anchor_title: "left"
+    elevation: 3
+
 <FormInput>
     # padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
     size_hint_x: 0.3
@@ -18,12 +31,7 @@
 <FormSuffix>
     halign: "left"
     size_hint_x: 0.1
-
-<TwistDirSelector>
-    text: 'Right'
-    size_hint_x: 0.3
-    size_hint_y: None
-    height: dp(30)
+    font_style: 'Subtitle2'
 
 <MD3CardAbs>
     _padding: dp(15)
@@ -38,3 +46,5 @@
 #    height: dp(30)
     icon: 'menu-down'
     icon_size: dp(20)
+    halign: 'left'
+#    rounded_button: True

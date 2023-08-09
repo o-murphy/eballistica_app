@@ -1,24 +1,7 @@
-from kivy.lang import Builder
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.toolbar import MDTopAppBar
 
 from signalslot import Signal
-
-
-Builder.load_string("""
-<AppTopBar>
-    orientation: "vertical"
-    spacing: "12dp"
-    pos_hint: {"top": 1}
-    adaptive_height: True
-
-<TopBar>:
-    type_height: 'medium'
-    headline_text: "Rifles /"
-    title: "eBallistica"
-    anchor_title: "left"
-    elevation: 3
-""")
 
 
 class TopBar(MDTopAppBar):
@@ -32,21 +15,23 @@ class TopBar(MDTopAppBar):
         self.bind_ui()
 
     def init_ui(self):
-        self.right_action_items = []
-        self.append_cog()
+        self.show_cog()
 
     def bind_ui(self):
         self.action_click.connect(self.action_reciever)
 
-    def append_cog(self):
+    def show_cog(self):
         self.right_action_items = [
             ["cog-outline", lambda action: self.action_click.emit(action=action)]
         ]
 
-    def remove_cog(self):
+    def show_check(self):
         self.right_action_items = [
             ["check", lambda action: self.action_click.emit(action=action)]
         ]
+
+    def hide_all(self):
+        self.right_action_items = []
 
     def action_reciever(self, action, **kwargs):
         if action.icon.find('cog') >= 0:
@@ -64,8 +49,15 @@ class AppTopBar(MDBoxLayout):
         self.bar = TopBar()
         self.add_widget(self.bar)
 
-    def hide_cog(self):
-        self.bar.remove_cog()
+    def show_check(self):
+        self.bar.hide_all()
+        self.bar.show_check()
 
     def show_cog(self):
-        self.bar.append_cog()
+        self.bar.hide_all()
+        self.bar.show_cog()
+
+    def hide_all(self):
+        self.bar.hide_all()
+
+
