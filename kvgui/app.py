@@ -1,10 +1,13 @@
 from kivy.core.window import Window
+from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivymd.app import MDApp
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.toolbar import MDActionBottomAppBarButton
 
-from kivymd.app import MDApp
 from kvgui.components import *
+
+from kvgui.components.abstract import *
 
 
 Window.size = (400, 700)
@@ -45,7 +48,8 @@ class EBallisticaApp(MDApp):
         self.screen.add_widget(self.layout)
 
     def bind_ui(self):
-        self.app_top_bar.bar.settings_cicked.connect(self.switch_settings)
+        self.app_top_bar.bar.settings_clicked.connect(self.switch_settings)
+        self.app_top_bar.bar.apply_clicked.connect(self.apply_settings)
         self.app_bottom_bar.action_clicked.connect(self.back_action)
         self.app_bottom_bar.fab.bind(on_release=self.add_action)
 
@@ -83,6 +87,8 @@ class EBallisticaApp(MDApp):
         self.app_screen_manager.transition.direction = 'right'
         self.app_screen_manager.current = 'rifles_screen'
 
+        self.app_top_bar.show_cog()
+
     def switch_rifle_card(self, **kwargs):
         self.app_screen_manager.transition.direction = 'left'
         self.app_screen_manager.current = 'rifle_card'
@@ -95,5 +101,13 @@ class EBallisticaApp(MDApp):
         self.app_screen_manager.transition.direction = 'left'
         self.app_screen_manager.current = 'settings'
 
+        self.app_top_bar.hide_cog()
 
-EBallisticaApp().run()
+    def apply_settings(self, **kwargs):
+        # TODO:
+        self.switch_rifles_list()
+        self.app_top_bar.show_cog()
+
+
+if __name__ == '__main__':
+    pass

@@ -1,0 +1,91 @@
+<RifleCardScreen>
+
+    MDScrollView:
+        MDBoxLayout:
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+            padding: "20dp"
+            spacing: "15dp"
+
+            MD3CardAbs:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: dp(60)
+
+                FormLabel:
+                    id: name_l
+                    text: 'Name'
+                    size_hint_x: 0.2
+
+                FormInput:
+                    id: name_v
+                    text: 'Rifle'
+                    size_hint_x: 0.8
+
+            MD3CardAbs:
+                orientation: 'vertical'
+                size_hint_y: None
+                height: dp(220)
+
+
+                FormLabel:
+                    id: prop_title
+                    text: 'Properties:'
+                    font_style: 'H6'
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: sh_l
+                        text: 'Sight height'
+
+                    FormFloatInput:
+                        id: sh_v
+                        text: '0.0'
+                        input_filter: 'float'
+
+                    FormSuffix:
+                        id: sh_s
+                        text: 'cm'
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: td_l
+                        text: 'Twist direction'
+                        size_hint_x: 0.6
+
+                    TwistDirSelector:
+                        id: td_v
+                        text: 'Right'
+                        icon: 'rotate-right'
+                        size_hint_x: 0.3
+                        size_hint_y: None
+                        height: dp(30)
+
+                    MDWidget:
+                        size_hint_x: 0.1
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: tw_l
+                        text: 'Twist'
+
+                    FormFloatInput:
+                        id: tw_v
+                        text: '0.0'
+                        input_filter: 'float'
+
+                    FormSuffix:
+                        id: tw_s
+                        text: 'inch'
+
+

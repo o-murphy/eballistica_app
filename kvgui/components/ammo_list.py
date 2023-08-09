@@ -4,7 +4,7 @@ from kivymd.uix.scrollview import MDScrollView
 from kivy.uix.screenmanager import Screen
 
 
-Builder.load_file('../kvgui/components/ammo_list/ammo_list.kv')
+Builder.load_file('kvgui/kv/ammo_list.kv')
 
 
 class AmmosList(MDScrollView):

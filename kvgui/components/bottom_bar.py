@@ -16,6 +16,7 @@ Builder.load_string("""
     MDBottomAppBar:
         id: bottom_bar
         # md_bg_color: "#191c1a"
+        icon_color: "#ffffff"
         # icon_color: "#8a938c"
         # elevation: 2
 

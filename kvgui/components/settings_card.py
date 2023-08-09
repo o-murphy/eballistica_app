@@ -1,221 +1,342 @@
 from kivy.lang import Builder
-from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import Screen
-from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.card import MDCard
-from kivymd.uix.dropdownitem import MDDropDownItem
-from kivymd.uix.label import MDLabel
-from kivymd.uix.scrollview import MDScrollView
+from kivymd.app import MDApp
 
+from kvgui.components.abstract import FormSelector
 
 Builder.load_string("""
-<CardTitle>
-    font_style: 'H6'
-    size_hint_y: None
-    height: self.texture_size[1]
+<SettingsScreen>
+    MDScrollView:
+        MDBoxLayout:
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+            padding: "20dp"
+            spacing: "15dp"
+            
+            MD3CardAbs:
+                orientation: 'vertical'
+                size_hint_y: None
+                height: self.minimum_height
+                
+                FormLabel:
+                    id: view_title
+                    text: 'View'
+                    font_style: 'H6'
+                    size_hint: 1, None
+                    height: self.texture_size[1]
+                    
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(30)
+                    spacing: "15dp"
+                    
+                    FormLabel:
+                        id: theme_l
+                        text: 'Theme'
+                        size_hint_x: 0.6
+                    
+                    FormSelector:
+                        id: theme_v
+                        name: 'theme'
+                        text: 'Dark'
+                        size_hint_x: 0.4
+                        size_hint_y: None
+                        height: dp(30)
+                        
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(30)
+                    spacing: "15dp"
+                    
+                    FormLabel:
+                        id: lang_l
+                        text: 'Language'
+                        size_hint_x: 0.6
+                    
+                    FormSelector:
+                        id: lang_v
+                        name: 'lang'
+                        text: 'English'
+                        size_hint_x: 0.4
+                        size_hint_y: None
+                        height: dp(30)
+                        
+            MD3CardAbs:
+                orientation: 'vertical'
+                size_hint_y: None
+                height: self.minimum_height
+                
+                FormLabel:
+                    id: units_title
+                    text: 'Units'
+                    font_style: 'H6'
+                    size_hint: 1, None
+                    height: self.texture_size[1]
+                    
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(30)
+                    spacing: "15dp"
 
-<MD3Card>
-    orientation: "vertical"
-    padding: "20dp"
-    spacing: "15dp"
-    height: self.minimum_height
-    size_hint_y: None
+                    FormLabel:
+                        id: unit_tw_l
+                        text: 'Twist'
+                        size_hint_x: 0.6
+                        height: self.texture_size[1]
+                    
+                    FormSelector:
+                        id: unit_tw_v
+                        name: 'twist'
+                        text: 'inch'
+                        size_hint_x: 0.4
+                        size_hint_y: None
+                        height: dp(30)
+                        
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(30)
+                    spacing: "15dp"
 
-<NamedSelector>
-    orientation: "horizontal"
-    height: self.minimum_height
-    size_hint_y: None
-    
-<InScrollBox>
-    orientation: "vertical"
-    spacing: "15dp"
-    padding: "20dp"
-    height: self.minimum_height
-    size_hint_y: None
+                    FormLabel:
+                        id: unit_sh_l
+                        text: 'Sight height'
+                        size_hint_x: 0.6
+                        height: self.texture_size[1]
+                    
+                    FormSelector:
+                        id: unit_sh_v
+                        name: 'sh'
+                        text: 'cm'
+                        size_hint_x: 0.4
+                        # size_hint_y: None
+                        # height: dp(30)
+                        
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(30)
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: unit_v_l
+                        text: 'Velocity'
+                        size_hint_x: 0.6
+                        height: self.texture_size[1]
+                    
+                    FormSelector:
+                        id: unit_v_v
+                        name: 'v'
+                        text: 'm/s'
+                        size_hint_x: 0.4
+                        # size_hint_y: None
+                        # height: dp(30)
+                        
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(30)
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: unit_dt_l
+                        text: 'Distance'
+                        size_hint_x: 0.6
+                        height: self.texture_size[1]
+                    
+                    FormSelector:
+                        id: unit_dt_v
+                        name: 'dist'
+                        text: 'm'
+                        size_hint_x: 0.4
+                        # size_hint_y: None
+                        # height: dp(30)     
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(30)
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: unit_t_l
+                        text: 'Temperature'
+                        size_hint_x: 0.6
+                        height: self.texture_size[1]
+                    
+                    FormSelector:
+                        id: unit_t_v
+                        name: 'temp'
+                        text: '°C'
+                        size_hint_x: 0.4
+                        # size_hint_y: None
+                        # height: dp(30)     
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(30)
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: unit_w_l
+                        text: 'Weight'
+                        size_hint_x: 0.6
+                        height: self.texture_size[1]
+                    
+                    FormSelector:
+                        id: unit_w_v
+                        name: 'w'
+                        text: 'gr'
+                        size_hint_x: 0.4
+                        # size_hint_y: None
+                        # height: dp(30)     
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(30)
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: unit_ln_l
+                        text: 'Length'
+                        size_hint_x: 0.6
+                        height: self.texture_size[1]
+                    
+                    FormSelector:
+                        id: unit_ln_v
+                        name: 'ln'
+                        text: 'inch'
+                        size_hint_x: 0.4
+                        # size_hint_y: None
+                        # height: dp(30)     
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(30)
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: unit_dm_l
+                        text: 'Diameter'
+                        size_hint_x: 0.6
+                        height: self.texture_size[1]
+                    
+                    FormSelector:
+                        id: unit_dm_v
+                        name: 'diam'
+                        text: 'inch'
+                        size_hint_x: 0.4
+                        # size_hint_y: None
+                        # height: dp(30)     
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(30)
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: unit_ps_l
+                        text: 'Pressure'
+                        size_hint_x: 0.6
+                        height: self.texture_size[1]
+                    
+                    FormSelector:
+                        id: unit_ps_v
+                        name: 'press'
+                        text: 'mmhg'
+                        size_hint_x: 0.4
+                        # size_hint_y: None
+                        # height: dp(30)     
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(30)
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: unit_dp_l
+                        text: 'Drop / Windage'
+                        size_hint_x: 0.6
+                        height: self.texture_size[1]
+                    
+                    FormSelector:
+                        id: unit_dp_v
+                        name: 'drop'
+                        text: 'cm'
+                        size_hint_x: 0.4
+                        # size_hint_y: None
+                        # height: dp(30)     
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(30)
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: unit_an_l
+                        text: 'Angular'
+                        size_hint_x: 0.6
+                        height: self.texture_size[1]
+                    
+                    FormSelector:
+                        id: unit_an_v
+                        name: 'angle'
+                        text: 'mmhg'
+                        size_hint_x: 0.4
+                        # size_hint_y: None
+                        # height: dp(30)     
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(30)
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: unit_ad_l
+                        text: 'Adjustment'
+                        size_hint_x: 0.6
+                        height: self.texture_size[1]
+                    
+                    FormSelector:
+                        id: unit_ad_v
+                        name: 'path'
+                        text: 'cm/100m'
+                        size_hint_x: 0.4
+                        # size_hint_y: None
+                        # height: dp(30)     
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    size_hint_y: None
+                    height: dp(30)
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: unit_e_l
+                        text: 'Energy'
+                        size_hint_x: 0.6
+                        height: self.texture_size[1]
+                    
+                    FormSelector:
+                        id: unit_e_v
+                        name: 'en'
+                        text: 'ft*lb'
+                        size_hint_x: 0.4
+                        # size_hint_y: None
+                        # height: dp(30)     
+
 """)
-
-
-class NamedSelector(BoxLayout):
-    def __init__(self, **kwargs):
-        super(NamedSelector, self).__init__(**kwargs)
-        self.init_ui()
-
-    def init_ui(self):
-        self.label = MDLabel(size_hint_x=.5)
-        self.dropdown = MDDropDownItem(size_hint_x=.5)
-        self.add_widget(self.label)
-        self.add_widget(self.dropdown)
-
-
-class ThemeSelector(NamedSelector):
-
-    def init_ui(self):
-        super(ThemeSelector, self).init_ui()
-        self.label.text = 'Theme'
-
-
-class LanguageSelector(NamedSelector):
-
-    def init_ui(self):
-        super(LanguageSelector, self).init_ui()
-        self.label.text = 'Language'
-
-
-class SightHeightUnitSelector(NamedSelector):
-
-    def init_ui(self):
-        super(SightHeightUnitSelector, self).init_ui()
-        self.label.text = "Sight height"
-
-
-class TwistUnitSelector(NamedSelector):
-
-    def init_ui(self):
-        super(TwistUnitSelector, self).init_ui()
-        self.label.text = "Twist"
-
-
-class VelocityUnitSelector(NamedSelector):
-
-    def init_ui(self):
-        super(VelocityUnitSelector, self).init_ui()
-        self.label.text = "Velocity"
-
-
-class DistanceUnitSelector(NamedSelector):
-
-    def init_ui(self):
-        super(DistanceUnitSelector, self).init_ui()
-        self.label.text = "Distance"
-
-
-class TemperatureUnitSelector(NamedSelector):
-
-    def init_ui(self):
-        super(TemperatureUnitSelector, self).init_ui()
-        self.label.text = "Temperature"
-
-
-class WeightUnitSelector(NamedSelector):
-
-    def init_ui(self):
-        super(WeightUnitSelector, self).init_ui()
-        self.label.text = "Weight"
-
-
-class LengthUnitSelector(NamedSelector):
-
-    def init_ui(self):
-        super(LengthUnitSelector, self).init_ui()
-        self.label.text = "Length"
-
-
-class DiameterUnitSelector(NamedSelector):
-
-    def init_ui(self):
-        super(DiameterUnitSelector, self).init_ui()
-        self.label.text = "Diameter"
-
-
-class PressureUnitSelector(NamedSelector):
-
-    def init_ui(self):
-        super(PressureUnitSelector, self).init_ui()
-        self.label.text = "Pressure"
-
-
-class PathUnitSelector(NamedSelector):
-
-    def init_ui(self):
-        super(PathUnitSelector, self).init_ui()
-        self.label.text = "Path"
-
-
-class AngularUnitSelector(NamedSelector):
-
-    def init_ui(self):
-        super(AngularUnitSelector, self).init_ui()
-        self.label.text = "Angular"
-
-
-class DropUnitSelector(NamedSelector):
-
-    def init_ui(self):
-        super(DropUnitSelector, self).init_ui()
-        self.label.text = "Drop"
-
-
-class EnergyUnitSelector(NamedSelector):
-
-    def init_ui(self):
-        super(EnergyUnitSelector, self).init_ui()
-        self.label.text = "Energy"
-
-
-class CardTitle(MDLabel):
-    pass
-
-
-class MD3Card(MDCard):
-    def __init__(self, **kwargs):
-        super(MD3Card, self).__init__(**kwargs)
-        self.init_ui()
-
-    def init_ui(self):
-        self.title = CardTitle()
-        self.add_widget(self.title)
-
-
-class ViewCard(MD3Card):
-    def init_ui(self):
-        super(ViewCard, self).init_ui()
-        self.title.text = 'View:'
-        self.s_theme = ThemeSelector()
-        self.s_lang = LanguageSelector()
-        self.add_widget(self.s_theme)
-        self.add_widget(self.s_lang)
-
-
-class InfoCard(MD3Card):
-    def init_ui(self):
-        super(InfoCard, self).init_ui()
-        self.title.text = 'Info:'
-
-
-class UnitsCard(MD3Card):
-    def init_ui(self):
-        super(UnitsCard, self).init_ui()
-        self.title.text = 'Units:'
-        self.u_sh = SightHeightUnitSelector()
-        self.u_tw = TwistUnitSelector()
-        self.u_v = VelocityUnitSelector()
-        self.u_dt = DistanceUnitSelector()
-        self.u_t = TemperatureUnitSelector()
-        self.u_w = WeightUnitSelector()
-        self.u_ln = LengthUnitSelector()
-        self.u_dm = DiameterUnitSelector()
-        self.u_ps = PressureUnitSelector()
-        self.u_ph = PathUnitSelector()
-        self.u_a = AngularUnitSelector()
-        self.u_dp = DropUnitSelector()
-        self.u_e = EnergyUnitSelector()
-        self.add_widget(self.u_sh)
-        self.add_widget(self.u_tw)
-        self.add_widget(self.u_v)
-        self.add_widget(self.u_dt)
-        self.add_widget(self.u_t)
-        self.add_widget(self.u_w)
-        self.add_widget(self.u_ln)
-        self.add_widget(self.u_dm)
-        self.add_widget(self.u_ps)
-        self.add_widget(self.u_ph)
-        self.add_widget(self.u_a)
-        self.add_widget(self.u_dp)
-        self.add_widget(self.u_e)
-
-
-class InScrollBox(MDBoxLayout):
-    pass
 
 
 class SettingsScreen(Screen):
@@ -223,18 +344,47 @@ class SettingsScreen(Screen):
         super(SettingsScreen, self).__init__(**kwargs)
         self.name = 'settings'
         self.init_ui()
+        self.bind_ui()
 
     def init_ui(self):
-        self.scroll = MDScrollView()
-        self.layout = InScrollBox()
+        self.theme: FormSelector = self.ids.theme_v
+        self.theme.menu.items = [
+            {"text": "Dark", "on_release": lambda: self.change_theme(action='Dark')},
+            {"text": "Light", "on_release": lambda: self.change_theme(action='Light')},
+        ]
 
-        self.view_card = ViewCard()
-        self.unit_card = UnitsCard()
-        self.info_card = InfoCard()
+        self.twist: FormSelector = self.ids.unit_tw_v
+        self.sh: FormSelector = self.ids.unit_sh_v
 
-        self.layout.add_widget(self.view_card)
-        self.layout.add_widget(self.unit_card)
-        self.layout.add_widget(self.info_card)
+        self.twist.menu.items = [
+            {"text": "inch", "on_release": lambda: self.on_menu_action(caller=self.twist, action='inch')},
+            {"text": "cm", "on_release": lambda: self.on_menu_action(caller=self.twist, action='cm')},
+            {"text": "mm", "on_release": lambda: self.on_menu_action(caller=self.twist, action='mm')},
+            {"text": "ln", "on_release": lambda: self.on_menu_action(caller=self.twist, action='ln')}
+        ]
 
-        self.scroll.add_widget(self.layout)
-        self.add_widget(self.scroll)
+        self.sh.menu.items = [
+            {"text": "inch", "on_release": lambda: self.on_menu_action(caller=self.sh, action='inch')},
+            {"text": "cm", "on_release": lambda: self.on_menu_action(caller=self.sh, action='cm')},
+            {"text": "mm", "on_release": lambda: self.on_menu_action(caller=self.sh, action='mm')},
+            {"text": "ln", "on_release": lambda: self.on_menu_action(caller=self.sh, action='ln')}
+        ]
+
+    def change_theme(self, action):
+        app: MDApp = MDApp.get_running_app()
+        if app:
+            app.theme_cls.theme_style = action
+            self.theme.menu.dismiss()
+
+    def on_menu_action(self, caller, action):
+        caller.text = action
+        caller.menu.dismiss()
+
+    def bind_ui(self):
+        for uid, widget in self.ids.items():
+            if isinstance(widget, FormSelector):
+                widget.bind(on_release=self.show_menu)
+
+    def show_menu(self, caller):
+        if hasattr(caller, 'name') and hasattr(caller, 'menu'):
+            caller.menu.open()

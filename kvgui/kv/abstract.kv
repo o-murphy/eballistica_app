@@ -1,0 +1,40 @@
+<FormInput>
+    # padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
+    size_hint_x: 0.3
+    pos_hint: {'center_x': 0.5, 'center_y': 0.6}
+
+<FormFloatInput>
+    # padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
+    size_hint_x: 0.3
+    pos_hint: {'center_x': 0.5, 'center_y': 0.6}
+
+
+<FormLabel>
+    # halign: "left"
+    size_hint_x: 0.6
+    padding: dp(5)
+    font_style: 'Subtitle2'
+
+<FormSuffix>
+    halign: "left"
+    size_hint_x: 0.1
+
+<TwistDirSelector>
+    text: 'Right'
+    size_hint_x: 0.3
+    size_hint_y: None
+    height: dp(30)
+
+<MD3CardAbs>
+    _padding: dp(15)
+    _spacing: dp(15)
+    padding: self._padding
+    spacing: self._spacing
+
+<FormSelector>
+    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+    size_hint_x: 0.3
+    size_hint_y: None
+#    height: dp(30)
+    icon: 'menu-down'
+    icon_size: dp(20)
