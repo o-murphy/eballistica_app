@@ -18,10 +18,10 @@ jobs:
       # - name: Setup Android SDK
       #  uses: android-actions/setup-android@v2
 
-      - name: Set up Python 3.11.10
+      - name: Set up Python 3.11
         uses: actions/setup-python@v2
         with:
-          python-version: 3.11.10
+          python-version: 3.11
           
       # Add caching step for Python dependencies
       - name: Cache Python dependencies
