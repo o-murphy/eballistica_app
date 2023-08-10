@@ -9,6 +9,7 @@ from kivymd.toast import toast
 
 from kvgui.components import abstract
 from kvgui.components.ammo_card import AmmoCardScreen
+from kvgui.components.shot_card import ShotCardScreen
 from kvgui.modules import signals as sig
 assert abstract
 
@@ -27,12 +28,14 @@ class AppScreenManager(ScreenManager):
         self.rifle_card_screen = RifleCardScreen()
         self.settings_screen = SettingsScreen()
         self.ammo_card_screen = AmmoCardScreen()
+        self.shot_card_screen = ShotCardScreen()
 
         self.add_widget(self.rifles_screen)
         self.add_widget(self.ammos_screen)
         self.add_widget(self.rifle_card_screen)
         self.add_widget(self.settings_screen)
         self.add_widget(self.ammo_card_screen)
+        self.add_widget(self.shot_card_screen)
 
 
 class EBallisticaApp(MDApp):
@@ -93,23 +96,23 @@ class EBallisticaApp(MDApp):
             self.switch_rifles_list('left')
         elif current == 'ammo_card':
             self.switch_ammos_list('right')
+        elif current == 'shot_card':
+            self.switch_ammos_list('right')
 
     def bot_fab_action(self, caller=None, **kwargs):
         current = self.app_screen_manager.current
         fab_icon = caller.icon
-        if fab_icon == 'plus':
-            if current == 'rifles_screen':
-                self.switch_rifle_card('left')
-            elif current == 'ammos_screen':
-                self.switch_rifles_list('left')
-
-        elif fab_icon == 'check':
-            if current == 'rifle_card':
-                self.save_rifle_card()
-            elif current == 'ammo_card':
-                self.save_ammo_card()
-
-
+        # if fab_icon == 'plus':
+        if current == 'rifles_screen':
+            self.switch_rifle_card('left')
+        elif current == 'ammos_screen':
+            self.switch_rifles_list('left')
+        elif current == 'rifle_card':
+            self.save_rifle_card()
+        elif current == 'ammo_card':
+            self.save_ammo_card()
+        elif current == 'shot_card':
+            self.save_shot_card()
 
     def save_rifle_card(self):
         # Todo:
@@ -120,6 +123,11 @@ class EBallisticaApp(MDApp):
         # Todo:
         self.switch_ammos_list('right')
         toast("Ammo data saved", duration=1)
+
+    def save_shot_card(self):
+        # Todo:
+        self.switch_ammos_list('right')
+        toast("Shot data saved", duration=1)
 
     def edit_rifle(self, caller=None, **kwargs):
         # TODO
@@ -139,13 +147,13 @@ class EBallisticaApp(MDApp):
 
     def switch_shot_edit(self, direction='left', caller=None, **kwargs):
         self.app_screen_manager.transition.direction = direction
-        # TODO:
-        ...
+        self.app_screen_manager.current = 'shot_card'
+        self.app_bottom_bar.fab_applying()
+        self.app_top_bar.hide_all()
 
     def switch_rifles_list(self, direction='left', caller=None, **kwargs):
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'rifles_screen'
-        self.app_bottom_bar.fab_show()
         self.app_bottom_bar.fab_add_new()
         self.app_top_bar.show_cog()
 
@@ -171,7 +179,6 @@ class EBallisticaApp(MDApp):
     def switch_settings(self, direction='left', caller=None, **kwargs):
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'settings'
-
         self.app_top_bar.show_check()
         self.app_bottom_bar.fab_hide()
 

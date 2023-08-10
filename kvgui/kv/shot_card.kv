@@ -1,0 +1,182 @@
+<ShotCardScreen>:
+
+    MDScrollView:
+        MDBoxLayout:
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+            padding: "20dp"
+            spacing: "15dp"
+
+            MD3CardAbs:
+                orientation: 'vertical'
+                size_hint_y: None
+                height: dp(120)
+
+                FormLabel:
+                    id: target_l
+                    text: 'Target'
+                    font_style: 'H6'
+                    size_hint: 1, None
+                    height: self.texture_size[1]
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: dt_l
+                        text: 'Distance'
+
+                    FormFloatInput:
+                        id: dt_v
+                        input_filter: 'float'
+
+                    FormSuffix:
+                        id: dt_s
+                        text: 'm'
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: la_l
+                        text: 'Look angle'
+
+                    FormFloatInput:
+                        id: la_v
+                        input_filter: 'float'
+
+                    FormSuffix:
+                        id: la_s
+                        text: '°'
+
+            MD3CardAbs:
+                orientation: 'vertical'
+                size_hint_y: None
+                height: dp(280)
+
+                FormLabel:
+                    id: atmo_l
+                    text: 'Atmosphere'
+                    font_style: 'H6'
+                    size_hint: 1, None
+                    height: self.texture_size[1]
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: alt_l
+                        text: 'Altitude'
+
+                    FormFloatInput:
+                        id: alt_v
+                        input_filter: 'float'
+
+                    FormSuffix:
+                        id: alt_s
+                        text: 'm'
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: ps_l
+                        text: 'Pressure'
+
+                    FormFloatInput:
+                        id: ps_v
+                        input_filter: 'float'
+
+                    FormSuffix:
+                        id: ps_s
+                        text: 'mmHg'
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: t_l
+                        text: 'Temperature'
+
+                    FormFloatInput:
+                        id: t_v
+                        input_filter: 'float'
+
+                    FormSuffix:
+                        id: t_s
+                        text: '°C'
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: h_l
+                        text: 'Humidity'
+
+                    FormFloatInput:
+                        id: h_v
+                        input_filter: 'float'
+
+                    FormSuffix:
+                        id: h_s
+                        text: '%'
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: ws_l
+                        text: 'Wind speed'
+
+                    FormFloatInput:
+                        id: ws_v
+                        input_filter: 'float'
+
+                    FormSuffix:
+                        id: ws_s
+                        text: '%'
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: wa_l
+                        text: 'Wind angle'
+
+                    FormFloatInput:
+                        id: wa_v
+                        input_filter: 'float'
+
+                    FormSuffix:
+                        id: wa_s
+                        text: '%'
+
+            MD3CardAbs:
+                orientation: 'vertical'
+                size_hint_y: None
+                height: dp(60)
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: "15dp"
+
+                    MDRaisedButton:
+                        id: one_shot
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        size_hint: 1, None
+                        text: 'One shot'
+
+                    MDRaisedButton:
+                        id: trajectory
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        size_hint: 1, None
+                        text: 'Trajectory'

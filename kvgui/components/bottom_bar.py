@@ -43,9 +43,11 @@ class AppBottomBar(MDBoxLayout):
         # self.bar.allow_hidden = False
 
     def fab_applying(self):
+        self.fab_show()
         self.fab.icon = 'check'
         self.fab._md_bg_color = "teal"
 
     def fab_add_new(self):
+        self.fab_show()
         self.fab.icon = 'plus'
         self.fab._md_bg_color = "orange"

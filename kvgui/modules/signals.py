@@ -19,3 +19,6 @@ ammo_del_act = Signal(args=['caller'], name='ammo_edit_act')
 
 ammo_dm_change = Signal(args=['caller'], name='ammo_dm_change')
 ammo_powder_sens_act = Signal(args=['caller'], name='ammo_powder_sens_act')
+
+one_shot_act = Signal(args=['caller'], name='one_shot_act')
+trajectory_act = Signal(args=['caller'], name='trajectory_act')
