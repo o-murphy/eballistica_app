@@ -1,6 +1,7 @@
 from kivy.gesture import GestureDatabase
 from kivy.uix.boxlayout import BoxLayout
 from kivy.gesture import Gesture
+from kvgui.modules import signals as sig
 
 
 
@@ -26,7 +27,9 @@ class GestureBox(BoxLayout):
         super(GestureBox, self).__init__(**kwargs)
 
     def on_left_to_right_line(self):
-        self.parent.parent.current = 'ammos_screen'
+
+        print('catch')
+        sig.bot_bar_back_act.emit()
 
 #To recognize a gesture, you’ll need to start recording each individual event in the
 #touch_down handler, add the data points for each call to touch_move , and then do the
@@ -39,21 +42,6 @@ class GestureBox(BoxLayout):
 
     def on_touch_move(self, touch):
         touch.ud['gesture_path'].append((touch.x, touch.y))
-
-
-        # if 'gesture_path' in touch.ud:
-        #     #create a gesture object
-        #     gesture = Gesture()
-        #     #add the movement coordinates
-        #     gesture.add_stroke(touch.ud['gesture_path'])
-        #     #normalize so thwu willtolerate size variations
-        #     gesture.normalize()
-        #     #minscore to be attained for a match to be true
-        #     match = gestures.find(gesture, minscore=0.3)
-        #     if match:
-        #         print("{} happened".format(match[1].name))
-        #         self.dispatch('on_{}'.format(match[1].name))
-
         super(GestureBox, self).on_touch_move(touch)
 
     def on_touch_up(self, touch):

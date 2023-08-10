@@ -42,7 +42,7 @@ class EBallisticaApp(MDApp):
 
     def init_ui(self):
         self.screen = Screen()
-        self.layout = MDBoxLayout()
+        self.layout = GestureBox()
         self.layout.orientation = 'vertical'
 
         self.app_top_bar = AppTopBar()
@@ -69,6 +69,8 @@ class EBallisticaApp(MDApp):
         sig.ammo_edit_act.connect(self.edit_ammo)
         sig.ammo_del_act.connect(self.del_ammo)
         sig.ammo_item_touch.connect(self.switch_shot_edit)
+
+        sig.bot_bar_back_act.connect(self.back_action)
 
     def build(self):
         self.theme_cls.theme_style = 'Dark'
@@ -106,7 +108,7 @@ class EBallisticaApp(MDApp):
         if current == 'rifles_screen':
             self.switch_rifle_card('left')
         elif current == 'ammos_screen':
-            self.switch_rifles_list('left')
+            self.switch_shot_edit('left')
         elif current == 'rifle_card':
             self.save_rifle_card()
         elif current == 'ammo_card':
