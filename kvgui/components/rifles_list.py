@@ -7,6 +7,7 @@ from kivymd.uix.scrollview import MDScrollView
 from kivy.uix.screenmanager import Screen
 
 from signalslot import Signal
+from kvgui.modules import signals as sig
 
 
 Builder.load_string("""
@@ -22,9 +23,6 @@ Builder.load_string("""
 
 
 class RifleListItem(ThreeLineListItem, TouchBehavior):
-    menu_action = Signal(args=['action'], name='menu_action')
-    short_touch = Signal(args=['item'], name='short_touch')
-    long_touch = Signal(args=['item'], name='long_touch')
 
     def __init__(self, *args, **kwargs):
         super(RifleListItem, self).__init__(*args, **kwargs)
@@ -38,7 +36,7 @@ class RifleListItem(ThreeLineListItem, TouchBehavior):
         ...
 
     def bind_ui(self):
-        self.menu_action.connect(self.on_menu_action)
+        ...
 
     def on_long_touch(self, touch, *args):
         self.is_long_touch = True
@@ -46,10 +44,9 @@ class RifleListItem(ThreeLineListItem, TouchBehavior):
 
     def on_touch_up(self, touch):
         if not self.is_long_touch:
-            self.short_touch.emit()
-            MDApp.get_running_app().switch_ammos_list()
+            sig.rifle_item_touch.emit(caller=self)
         else:
-            self.long_touch.emit()
+            sig.rifle_item_long_touch.emit(caller=self)
         self.is_long_touch = False
 
     def show_menu(self):
@@ -57,11 +54,11 @@ class RifleListItem(ThreeLineListItem, TouchBehavior):
         menu_items = [
             {
                 "text": "Edit", "leading_icon": "pencil-outline",
-                "on_release": lambda: self.menu_action.emit(action='Edit')
+                "on_release": lambda: self.on_menu_action(action='Edit')
             },
             {
                 "text": "Delete", "leading_icon": "delete-outline",
-                "on_release": lambda: self.menu_action.emit(action='Delete')
+                "on_release": lambda: self.on_menu_action(action='Delete')
             },
         ]
         self.menu = MDDropdownMenu(
@@ -71,17 +68,16 @@ class RifleListItem(ThreeLineListItem, TouchBehavior):
 
     def on_menu_action(self, action, **kwargs):
         if action == 'Edit':
-            MDApp.get_running_app().switch_rifle_card()
+            sig.rifle_edit_act.emit(caller=self)
+        elif action == 'Delete':
+            sig.rifle_del_act.emit(caller=self)
         self.menu.dismiss()
 
 
 class RiflesScreen(Screen):
-    menu_action = Signal(args=['action'], name='menu_action')
-    short_touch = Signal(args=['item'], name='short_touch')
-    long_touch = Signal(args=['item'], name='long_touch')
 
-    def __init__(self, *args, **kwargs):
-        super(RiflesScreen, self).__init__(*args, **kwargs)
+    def __init__(self, **kwargs):
+        super(RiflesScreen, self).__init__(**kwargs)
         self.name = 'rifles_screen'
         self.init_ui()
 
@@ -94,7 +90,12 @@ class RiflesScreen(Screen):
         item.secondary_text = item.secondary_text.format('9', 'inch')
         item.tertiary_text = item.tertiary_text.format('9', 'cm')
 
+        item2 = RifleListItem()
+        item2.secondary_text = item2.secondary_text.format('9', 'inch')
+        item2.tertiary_text = item2.tertiary_text.format('9', 'cm')
+
         self.list.add_widget(item)
+        self.list.add_widget(item2)
 
         self.scroll.add_widget(self.list)
         self.add_widget(self.scroll)

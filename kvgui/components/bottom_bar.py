@@ -1,8 +1,8 @@
-from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.floatlayout import MDFloatLayout
-from kivymd.uix.toolbar import MDActionBottomAppBarButton, MDFabBottomAppBarButton, MDBottomAppBar
 from kivy.lang import Builder
-from signalslot import Signal
+from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.toolbar import MDActionBottomAppBarButton, MDFabBottomAppBarButton
+
+from kvgui.modules import signals as sig
 
 Builder.load_file('kvgui/kv/bottom_bar.kv')
 
@@ -12,9 +12,6 @@ class BottomAction(MDActionBottomAppBarButton):
 
 
 class AppBottomBar(MDBoxLayout):
-    action_clicked = Signal(args=['action'], name='action_clicked')
-    back_act_clicked = Signal(args=['action'], name='back_act_clicked')
-    fab_clicked = Signal(name='fab_clicked')
 
     def __init__(self, *args, **kwargs):
         super(AppBottomBar, self).__init__(*args, **kwargs)
@@ -23,18 +20,17 @@ class AppBottomBar(MDBoxLayout):
 
     def init_ui(self):
         self.bar = self.ids.bottom_bar
-        back_action = BottomAction(icon='arrow-left',
-                                   on_release=lambda action: self.action_clicked.emit(action=action))
+        back_action = BottomAction(icon='arrow-left', on_release=self.on_action)
         self.bar.action_items = [back_action]
         self.fab: MDFabBottomAppBarButton = self.ids.bottom_bar_fab
 
-
     def bind_ui(self):
-        self.action_clicked.connect(self.on_action)
+        self.fab.bind(on_release=lambda caller: sig.bot_bar_fab_act.emit(caller=caller))
 
     def on_action(self, action, **kwargs):
         if action.icon.find('left') >= 0:
-            self.back_act_clicked.emit()
+            # self.back_act_clicked.emit()
+            sig.bot_bar_back_act.emit()
 
     def fab_hide(self):
         self.fab.opacity = 0
@@ -53,4 +49,3 @@ class AppBottomBar(MDBoxLayout):
     def fab_add_new(self):
         self.fab.icon = 'plus'
         self.fab._md_bg_color = "orange"
-

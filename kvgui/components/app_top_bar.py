@@ -1,13 +1,11 @@
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.toolbar import MDTopAppBar
 
-from signalslot import Signal
+
+from kvgui.modules import signals as sig
 
 
 class TopBar(MDTopAppBar):
-    action_click = Signal(args=['action'], name='action_click')
-    settings_clicked = Signal(name='settings_cicked')
-    apply_clicked = Signal(name='apply_clicked')
 
     def __init__(self, **kwargs):
         super(TopBar, self).__init__(**kwargs)
@@ -18,16 +16,16 @@ class TopBar(MDTopAppBar):
         self.show_cog()
 
     def bind_ui(self):
-        self.action_click.connect(self.action_reciever)
+        ...
 
     def show_cog(self):
         self.right_action_items = [
-            ["cog-outline", lambda action: self.action_click.emit(action=action)]
+            ["cog-outline", self.action_reciever]
         ]
 
     def show_check(self):
         self.right_action_items = [
-            ["check", lambda action: self.action_click.emit(action=action)]
+            ["check", self.action_reciever]
         ]
 
     def hide_all(self):
@@ -35,9 +33,9 @@ class TopBar(MDTopAppBar):
 
     def action_reciever(self, action, **kwargs):
         if action.icon.find('cog') >= 0:
-            self.settings_clicked.emit()
+            sig.top_bar_cog_act.emit()
         elif action.icon.find('check') >= 0:
-            self.apply_clicked.emit()
+            sig.top_bar_apply_act.emit()
 
 
 class AppTopBar(MDBoxLayout):
