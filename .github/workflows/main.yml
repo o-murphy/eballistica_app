@@ -1,9 +1,9 @@
 name: CI
 on:
   push:
-    branches: [ main ]
+    branches: [ "autobuild-android" ]
   pull_request:
-    branches: [ main ]
+    branches: [ "autobuild-android" ]
   schedule:
     - cron: '0 0 1,15 * *'
 
