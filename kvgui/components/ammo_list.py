@@ -1,26 +1,13 @@
 from kivy.lang import Builder
-from kivymd.app import MDApp
+from kivy.uix.screenmanager import Screen
 from kivymd.uix.behaviors import TouchBehavior
 from kivymd.uix.list import ThreeLineListItem, MDList
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.scrollview import MDScrollView
-from kivy.uix.screenmanager import Screen
 
-from signalslot import Signal
 from kvgui.modules import signals as sig
 
-
-Builder.load_string("""
-<AmmoListItem>
-    text: "New rifle"
-    md_bg_color: "#191c1a"
-    font_style: "H6"
-    secondary_text: "Twist: 1 in {} {}"
-    secondary_font_style: "Subtitle2"
-    tertiary_text: "Sight height: {} {}"
-    tertiary_font_style: "Subtitle2"
-""")
-
+Builder.load_file('kvgui/kv/ammo_list_item.kv')
 
 
 class AmmoListItem(ThreeLineListItem, TouchBehavior):
