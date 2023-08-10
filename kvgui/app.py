@@ -86,72 +86,90 @@ class EBallisticaApp(MDApp):
     def back_action(self, **kwargs):
         current = self.app_screen_manager.current
         if current == 'ammos_screen':
-            self.switch_rifles_list()
+            self.switch_rifles_list('right')
         elif current == 'rifle_card':
-            self.switch_rifles_list()
+            self.switch_rifles_list('right')
         elif current == 'settings':
-            self.switch_rifles_list()
+            self.switch_rifles_list('left')
+        elif current == 'ammo_card':
+            self.switch_ammos_list('right')
 
-    def bot_fab_action(self, caller, **kwargs):
+    def bot_fab_action(self, caller=None, **kwargs):
         current = self.app_screen_manager.current
         fab_icon = caller.icon
-        if current == 'rifles_screen' and fab_icon == 'plus':
-            self.switch_rifle_card()
-        elif current == 'rifle_card' and fab_icon == 'check':
-            self.save_rifle_card()
+        if fab_icon == 'plus':
+            if current == 'rifles_screen':
+                self.switch_rifle_card('left')
+            elif current == 'ammos_screen':
+                self.switch_rifles_list('left')
 
-    def switch_shot_edit(self, caller, **kwargs):
-        # TODO:
-        ...
+        elif fab_icon == 'check':
+            if current == 'rifle_card':
+                self.save_rifle_card()
+            elif current == 'ammo_card':
+                self.save_ammo_card()
 
-    def switch_rifles_list(self, **kwargs):
-        self.app_screen_manager.transition.direction = 'right'
-        self.app_screen_manager.current = 'rifles_screen'
-        self.app_bottom_bar.fab_show()
-        self.app_bottom_bar.fab_add_new()
-        self.app_top_bar.show_cog()
 
-    def edit_rifle(self, caller, **kwargs):
+
+    def save_rifle_card(self):
+        # Todo:
+        self.switch_rifles_list('right')
+        toast("Rifle data saved", duration=1)
+
+    def save_ammo_card(self):
+        # Todo:
+        self.switch_ammos_list('right')
+        toast("Ammo data saved", duration=1)
+
+    def edit_rifle(self, caller=None, **kwargs):
         # TODO
-        self.switch_rifle_card()
+        self.switch_rifle_card('left')
 
     def del_rifle(self, caller, **kwargs):
         # TODO
         ...
 
-    def edit_ammo(self, caller, **kwargs):
+    def edit_ammo(self, caller=None, **kwargs):
         # TODO
-        self.switch_ammo_card()
+        self.switch_ammo_card('left')
 
     def del_ammo(self, caller, **kwargs):
         # TODO
         ...
 
-    def switch_ammo_card(self, **kwargs):
-        self.app_screen_manager.transition.direction = 'left'
+    def switch_shot_edit(self, direction='left', caller=None, **kwargs):
+        self.app_screen_manager.transition.direction = direction
+        # TODO:
+        ...
+
+    def switch_rifles_list(self, direction='left', caller=None, **kwargs):
+        self.app_screen_manager.transition.direction = direction
+        self.app_screen_manager.current = 'rifles_screen'
+        self.app_bottom_bar.fab_show()
+        self.app_bottom_bar.fab_add_new()
+        self.app_top_bar.show_cog()
+
+    def switch_ammo_card(self, direction='left', caller=None, **kwargs):
+        self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'ammo_card'
         self.app_bottom_bar.fab_applying()
         self.app_top_bar.hide_all()
 
-    def switch_rifle_card(self, **kwargs):
-        self.app_screen_manager.transition.direction = 'left'
+    def switch_rifle_card(self, direction='left', caller=None, **kwargs):
+        self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'rifle_card'
         self.app_bottom_bar.fab_applying()
         self.app_top_bar.hide_all()
 
-    def save_rifle_card(self):
+    def switch_ammos_list(self, direction='left', caller=None, **kwargs):
         # Todo:
-        self.switch_rifles_list()
-        toast("Rifle data saved", duration=1)
-
-    def switch_ammos_list(self, caller, **kwargs):
-        # Todo:
-        self.app_screen_manager.transition.direction = 'left'
+        self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'ammos_screen'
         self.app_top_bar.hide_all()
+        self.app_bottom_bar.fab_add_new()
 
-    def switch_settings(self, **kwargs):
-        self.app_screen_manager.transition.direction = 'left'
+    def switch_settings(self, direction='left', caller=None, **kwargs):
+        self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'settings'
 
         self.app_top_bar.show_check()
@@ -159,7 +177,7 @@ class EBallisticaApp(MDApp):
 
     def apply_settings(self, **kwargs):
         # TODO:
-        self.switch_rifles_list()
+        self.switch_rifles_list('right')
         self.app_top_bar.show_cog()
         toast("Settings saved", duration=1)
 

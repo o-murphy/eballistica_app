@@ -9,7 +9,7 @@ from kivymd.uix.textfield import MDTextField
 Builder.load_file('kvgui/kv/abstract.kv')
 
 
-from kvgui.components.spinbox import MDUnitsInput
+from kvgui.components.numeric_field import MDUnitsInput
 
 
 class MD3CardAbs(MDCard):

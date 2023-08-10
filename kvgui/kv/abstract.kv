@@ -12,15 +12,13 @@
     elevation: 3
 
 <FormInput>
-    # padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
     size_hint_x: 0.3
     pos_hint: {'center_x': 0.5, 'center_y': 0.6}
 
 <FormFloatInput>
-    # padding_y: [self.height / 2.0 - (self.line_height / 2.0) * len(self._lines), 0]
     size_hint_x: 0.3
     pos_hint: {'center_x': 0.5, 'center_y': 0.6}
-
+    halign: 'right'
 
 <FormLabel>
     # halign: "left"
@@ -48,3 +46,11 @@
     icon_size: dp(20)
     halign: 'left'
 #    rounded_button: True
+
+<BCSelector>
+    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+    size_hint_x: 0.3
+    size_hint_y: None
+    icon: 'menu-down'
+    icon_size: dp(20)
+    halign: 'left'

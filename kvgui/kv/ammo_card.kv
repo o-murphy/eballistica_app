@@ -26,20 +26,227 @@
             MD3CardAbs:
                 orientation: 'vertical'
                 size_hint_y: None
-                height: dp(220)
+                height: dp(400)
 
                 FormLabel:
                     id: prop_title
                     text: 'Properties'
                     font_style: 'H6'
+                    size_hint: 1, None
+                    height: self.texture_size[1]
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: dm_l
+                        text: 'Diameter'
+
+                    FormFloatInput:
+                        id: dm_v
+                        input_filter: 'float'
+
+                    FormSuffix:
+                        id: dm_s
+                        text: 'inch'
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: w_l
+                        text: 'Weight'
+
+                    FormFloatInput:
+                        id: w_v
+                        input_filter: 'float'
+
+                    FormSuffix:
+                        id: w_s
+                        text: 'gr'
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: ln_l
+                        text: 'Length'
+
+                    FormFloatInput:
+                        id: ln_v
+                        input_filter: 'float'
+
+                    FormSuffix:
+                        id: ln_s
+                        text: 'inch'
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: mv_l
+                        text: 'Muzzle velocity'
+
+                    FormFloatInput:
+                        id: mv_v
+                        input_filter: 'float'
+
+                    FormSuffix:
+                        id: mv_s
+                        text: 'm/s'
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: td_l
+                        text: 'Drag model'
+                        size_hint_x: 0.6
+
+                    DragModelSelector:
+                        id: unit_t_v
+                        name: 'temp'
+                        text: 'G7'
+                        size_hint_x: 0.4
+
+                    BCSelector:
+                        id: unit_t_v
+                        name: 'temp'
+                        text: 'BC: 0.275'
+                        size_hint_x: 0.4
+                        icon: ""
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: pws_l
+                        text: 'Powder sensitivity'
+
+                    FormFloatInput:
+                        id: pws_v
+                        input_filter: 'float'
+
+                    FormSuffix:
+                        id: pws_s
+                        text: '%'
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: pwt_l
+                        text: 'Powder temperature'
+
+                    FormFloatInput:
+                        id: pwt_v
+                        input_filter: 'float'
+
+                    FormSuffix:
+                        id: pwt_s
+                        text: '°C'
+
+                MDRectangleFlatButton:
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    size_hint: 1, None
+                    text: 'Calculate powder sensitivity'
 
             MD3CardAbs:
                 orientation: 'vertical'
                 size_hint_y: None
-                height: dp(220)
+                height: dp(240)
 
                 FormLabel:
                     id: prop_title
                     text: 'Zeroing'
                     font_style: 'H6'
+                    size_hint: 1, None
+                    height: self.texture_size[1]
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: zd_l
+                        text: 'Zeroing distance'
+
+                    FormFloatInput:
+                        id: sd_v
+                        input_filter: 'float'
+
+                    FormSuffix:
+                        id: zd_s
+                        text: 'm'
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: alt_l
+                        text: 'Altitude'
+
+                    FormFloatInput:
+                        id: alt_v
+                        input_filter: 'float'
+
+                    FormSuffix:
+                        id: alt_s
+                        text: 'm'
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: ps_l
+                        text: 'Pressure'
+
+                    FormFloatInput:
+                        id: ps_v
+                        input_filter: 'float'
+
+                    FormSuffix:
+                        id: ps_s
+                        text: 'mmHg'
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: t_l
+                        text: 'Temperature'
+
+                    FormFloatInput:
+                        id: t_v
+                        input_filter: 'float'
+
+                    FormSuffix:
+                        id: t_s
+                        text: '°C'
+
+                MDBoxLayout:
+                    orientation: 'horizontal'
+                    spacing: "15dp"
+
+                    FormLabel:
+                        id: h_l
+                        text: 'Humidity'
+
+                    FormFloatInput:
+                        id: h_v
+                        input_filter: 'float'
+
+                    FormSuffix:
+                        id: h_s
+                        text: 'm'
 
