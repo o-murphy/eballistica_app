@@ -1,0 +1,45 @@
+<AmmoCardScreen>:
+
+    MDScrollView:
+        MDBoxLayout:
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+            padding: "20dp"
+            spacing: "15dp"
+
+            MD3CardAbs:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: dp(60)
+
+                FormLabel:
+                    id: name_l
+                    text: 'Name'
+                    size_hint_x: 0.2
+
+                FormInput:
+                    id: name_v
+                    text: 'New Ammo'
+                    size_hint_x: 0.8
+
+            MD3CardAbs:
+                orientation: 'vertical'
+                size_hint_y: None
+                height: dp(220)
+
+                FormLabel:
+                    id: prop_title
+                    text: 'Properties'
+                    font_style: 'H6'
+
+            MD3CardAbs:
+                orientation: 'vertical'
+                size_hint_y: None
+                height: dp(220)
+
+                FormLabel:
+                    id: prop_title
+                    text: 'Zeroing'
+                    font_style: 'H6'
+

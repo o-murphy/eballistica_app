@@ -8,6 +8,7 @@ from kvgui.components import *
 from kivymd.toast import toast
 
 from kvgui.components import abstract
+from kvgui.components.ammo_card import AmmoCardScreen
 from kvgui.modules import signals as sig
 assert abstract
 
@@ -25,11 +26,13 @@ class AppScreenManager(ScreenManager):
         self.ammos_screen = AmmosScreen()
         self.rifle_card_screen = RifleCardScreen()
         self.settings_screen = SettingsScreen()
+        self.ammo_card_screen = AmmoCardScreen()
 
         self.add_widget(self.rifles_screen)
         self.add_widget(self.ammos_screen)
         self.add_widget(self.rifle_card_screen)
         self.add_widget(self.settings_screen)
+        self.add_widget(self.ammo_card_screen)
 
 
 class EBallisticaApp(MDApp):
@@ -118,11 +121,17 @@ class EBallisticaApp(MDApp):
 
     def edit_ammo(self, caller, **kwargs):
         # TODO
-        self.switch_rifle_card()
+        self.switch_ammo_card()
 
     def del_ammo(self, caller, **kwargs):
         # TODO
         ...
+
+    def switch_ammo_card(self, **kwargs):
+        self.app_screen_manager.transition.direction = 'left'
+        self.app_screen_manager.current = 'ammo_card'
+        self.app_bottom_bar.fab_applying()
+        self.app_top_bar.hide_all()
 
     def switch_rifle_card(self, **kwargs):
         self.app_screen_manager.transition.direction = 'left'
