@@ -12,7 +12,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        
+      - name: Accept Android SDK licenses
+        run: yes | sdkmanager --licenses
 
       # used to cache dependencies with a timeout
       - name: Get Date
