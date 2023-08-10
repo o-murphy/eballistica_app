@@ -110,15 +110,15 @@
 
                     DragModelSelector:
                         id: unit_t_v
-                        name: 'temp'
+                        name: 'dm_select'
                         text: 'G7'
-                        size_hint_x: 0.4
+                        size_hint_x: 0.3
 
                     BCSelector:
                         id: unit_t_v
-                        name: 'temp'
+                        name: 'bc_select'
                         text: 'BC: 0.275'
-                        size_hint_x: 0.4
+                        size_hint_x: 0.3
                         icon: ""
 
                 MDBoxLayout:
@@ -154,6 +154,7 @@
                         text: '°C'
 
                 MDRectangleFlatButton:
+                    id: pws_act
                     pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                     size_hint: 1, None
                     text: 'Calculate powder sensitivity'
@@ -248,5 +249,5 @@
 
                     FormSuffix:
                         id: h_s
-                        text: 'm'
+                        text: '%'
 
