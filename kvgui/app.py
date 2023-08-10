@@ -106,7 +106,7 @@ class EBallisticaApp(MDApp):
         if current == 'rifles_screen':
             self.switch_rifle_card('left')
         elif current == 'ammos_screen':
-            self.switch_rifles_list('left')
+            self.switch_shot_edit('left')
         elif current == 'rifle_card':
             self.save_rifle_card()
         elif current == 'ammo_card':
