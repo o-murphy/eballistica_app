@@ -7,7 +7,7 @@ from kvgui.components.numeric_field import MDUnitsInput
 from kvgui.modules import signals as sig
 from kvgui.modules.translator import translate as tr
 from units import Convertor, Distance
-from datatypes.dbworker import TwistDir
+from kvgui.defines import TwistDir
 
 Builder.load_file('kvgui/kv/rifle_card.kv')
 
