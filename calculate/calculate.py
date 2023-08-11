@@ -145,8 +145,6 @@ def calculate_powder_sens(ret_list):
 
         return temp_modifier
 
-
-
     coeffs = []
     for i in range(len(ret_list) - 1):
         t0, v0 = ret_list[i]

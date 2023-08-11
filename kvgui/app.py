@@ -187,7 +187,8 @@ class EBallisticaApp(MDApp):
     def switch_settings(self, direction='left', caller=None, **kwargs):
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'settings'
-        self.app_top_bar.show_check()
+        # self.app_top_bar.show_check()
+        self.app_top_bar.hide_all()
         self.app_bottom_bar.fab_hide()
 
     def apply_settings(self, **kwargs):

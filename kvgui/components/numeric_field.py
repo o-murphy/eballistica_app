@@ -97,7 +97,7 @@ class MDUnitsInput(MDSpinBox):
         return self._convertor
 
     @convertor.setter
-    def set_convertor(self, value):
+    def convertor(self, value):
         self._convertor = value
 
     @property
