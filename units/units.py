@@ -161,7 +161,7 @@ class Distance(AbstractUnit):
         elif units == Distance.NauticalMile:
             name = 'nm'
         elif units == Distance.Line:
-            name = 'unit_length'
+            name = 'ln'
         elif units == Distance.Millimeter:
             name = 'mm'
         elif units == Distance.Centimeter:
@@ -274,7 +274,7 @@ class Pressure(AbstractUnit):
 
     # def __str__(self):
     #     default = self._defined_units
-    #     unit_velocity_value = self.from_default(self._value, default)
+    #     v = self.from_default(self._value, default)
     #     if default == Pressure.MmHg:
     #         name = 'mmHg'
     #         accuracy = 0
@@ -294,7 +294,7 @@ class Pressure(AbstractUnit):
     #         name = '?'
     #         accuracy = 6
     #
-    #     return f'{round(unit_velocity_value, accuracy)} {name}'
+    #     return f'{round(v, accuracy)} {name}'
 
     MmHg = Unit.MmHg
     InHg = Unit.InHg
