@@ -14,7 +14,7 @@ from kvgui.modules import signals as sig
 assert abstract
 
 
-Window.size = (400, 700)
+# Window.size = (400, 700)
 
 
 class AppScreenManager(ScreenManager):
