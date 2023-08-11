@@ -100,7 +100,7 @@ class TrajectoryTable(GesturedTableView, QtStyleTools):
             self, 'Save file', f'table_{filename}', filter="CSV (*.csv)"
         )
         if filename:
-            with open(filename, 'unit_weight', newline='') as csvfile:
+            with open(filename, 'w', newline='') as csvfile:
                 writer = csv.writer(csvfile, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
                 writer.writerows(data)
 
@@ -254,7 +254,7 @@ class TrajectoryGraph(QtWidgets.QWidget):
             self, 'Save file', f'drag_{filename}', filter="PNG (*.png)"
         )
         if filename:
-            with open(filename, 'unit_weight', newline='') as csvfile:
+            with open(filename, 'w', newline='') as csvfile:
                 writer = csv.writer(csvfile, delimiter=';', quotechar='|', quoting=csv.QUOTE_MINIMAL)
                 writer.writerow(['Mach', 'CD'])
                 writer.writerows(self._drag)
