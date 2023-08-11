@@ -56,6 +56,7 @@ class EBallisticaApp(MDApp):
         self.screen.add_widget(self.layout)
 
     def bind_ui(self):
+        Window.bind(on_keyboard=self.droid_back_act)
         sig.top_bar_cog_act.connect(self.switch_settings)
         sig.top_bar_apply_act.connect(self.apply_settings)
 
@@ -83,6 +84,11 @@ class EBallisticaApp(MDApp):
 
     def on_start(self):
         ...
+        
+    def droid_back_act(self,window,key,*args):
+        if key == 27:
+            sig.bot_bar_back_act.emit()
+                
 
     def on_bottom_action_buttons(self, action: MDActionBottomAppBarButton):
         if action.icon == "arrow-left":

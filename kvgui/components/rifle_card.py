@@ -15,32 +15,21 @@ class TwistDirSelector(FormSelector):
         self.value = "Right"  # TODO: must be Enum
 
     def init_ui(self):
-        self.menu = MDDropdownMenu(
-            caller=self,
-            items=[
-                {"text": "Right", "leading_icon": "rotate-right",
-                 "on_release": lambda: self.on_menu(action="Right")},
-                {"text": "Left", "leading_icon": "rotate-left",
-                 "on_release": lambda: self.on_menu(action="Left")},
-            ],
-        )
+        ...
 
     def bind_ui(self):
-        self.bind(on_release=self.show_menu)
+        self.bind(on_release=self.change_twist)
 
-    def show_menu(self, *args, **kwargs):
-        self.menu.open()
-
-    def on_menu(self, action):
-        if action == 'Right':
-            self.icon = "rotate-right"
-            self.text = 'Right'
-            self.value = action
-        elif action == 'Left':
+    def change_twist(self, *args, **kwargs):
+        if self.value == 'Right':
             self.icon = "rotate-left"
             self.text = 'Left'
-            self.value = action
-        self.menu.dismiss()
+            self.value = 'Left'
+
+        elif self.value == 'Left':
+            self.icon = "rotate-right"
+            self.text = 'Right'
+            self.value = 'Right'
 
 
 class RifleCardScreen(Screen):
