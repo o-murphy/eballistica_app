@@ -23,38 +23,39 @@ ammo_powder_sens_act = Signal(args=['caller'], name='ammo_powder_sens_act')
 one_shot_act = Signal(args=['caller'], name='one_shot_act')
 trajectory_act = Signal(args=['caller'], name='trajectory_act')
 
-set_sh_unit_change = Signal(args=['unit'], name='set_sh_unit')
-set_tw_unit_change = Signal(args=['unit'], name='set_tw_unit')
-set_v_unit_change = Signal(args=['unit'], name='set_v_unit')
-set_dt_unit_change = Signal(args=['unit'], name='set_dt_unit')
-set_t_unit_change = Signal(args=['unit'], name='set_t_unit')
-set_w_unit_change = Signal(args=['unit'], name='set_w_unit')
+set_unit_velocity = Signal(args=['unit'], name='set_v_unit')  # TODO: Deprecated
+set_unit_distance = Signal(args=['unit'], name='set_dt_unit')  # TODO: Deprecated
+set_unit_temperature = Signal(args=['unit'], name='set_t_unit')  # TODO: Deprecated
+set_unit_weight = Signal(args=['unit'], name='set_w_unit')  # TODO: Deprecated
 
-set_ln_unit_change = Signal(args=['unit'], name='set_ln_unit')
-set_dm_unit_change = Signal(args=['unit'], name='set_dm_unit')
-set_ps_unit_change = Signal(args=['unit'], name='set_ps_unit')
-set_dp_unit_change = Signal(args=['unit'], name='set_dp_unit')
-set_an_unit_change = Signal(args=['unit'], name='set_an_unit')
-set_ad_unit_change = Signal(args=['unit'], name='set_ad_unit')
-set_e_unit_change = Signal(args=['unit'], name='set_e_unit')
+set_unit_length = Signal(args=['unit'], name='set_ln_unit')  # TODO: Deprecated
+set_unit_diameter = Signal(args=['unit'], name='set_dm_unit')  # TODO: Deprecated
+set_unit_pressure = Signal(args=['unit'], name='set_ps_unit')  # TODO: Deprecated
+set_unit_drop = Signal(args=['unit'], name='set_dp_unit')  # TODO: Deprecated
+set_unit_angular = Signal(args=['unit'], name='set_an_unit')  # TODO: Deprecated
+set_unit_adjustment = Signal(args=['unit'], name='set_unit_adjustment')  # TODO: Deprecated
+set_unit_energy = Signal(args=['unit'], name='set_e_unit')  # TODO: Deprecated
 
-set_theme_changed = Signal(args=['theme'], name='set_theme')
-set_lang_changed = Signal(args=['lang'], name='set_lang')
+set_theme = Signal(args=['theme'], name='set_theme')
+set_lang = Signal(args=['lang'], name='set_lang')
 
 load_set_theme = Signal(args=['theme'], name='load_set_theme')
 load_set_lang = Signal(args=['lang'], name='load_set_theme')
 
-load_set_sh_unit_change = Signal(args=['unit'], name='load_set_sh_unit')
-load_set_tw_unit_change = Signal(args=['unit'], name='load_set_tw_unit')
-load_set_v_unit_change = Signal(args=['unit'], name='load_set_v_unit')
-load_set_dt_unit_change = Signal(args=['unit'], name='load_set_dt_unit')
-load_set_t_unit_change = Signal(args=['unit'], name='load_set_t_unit')
-load_set_w_unit_change = Signal(args=['unit'], name='load_set_w_unit')
+load_unit_sight_height = Signal(args=['unit'], name='load_set_sh_unit')
+load_unit_twist = Signal(args=['unit'], name='load_set_tw_unit')
+load_unit_velocity = Signal(args=['unit'], name='load_set_v_unit')
+load_unit_distance = Signal(args=['unit'], name='load_set_dt_unit')
+load_unit_temperature = Signal(args=['unit'], name='load_set_t_unit')
+load_unit_weight = Signal(args=['unit'], name='load_set_w_unit')
 
-load_set_ln_unit_change = Signal(args=['unit'], name='load_set_ln_unit')
-load_set_dm_unit_change = Signal(args=['unit'], name='load_set_dm_unit')
-load_set_ps_unit_change = Signal(args=['unit'], name='load_set_ps_unit')
-load_set_dp_unit_change = Signal(args=['unit'], name='load_set_dp_unit')
-load_set_an_unit_change = Signal(args=['unit'], name='load_set_an_unit')
-load_set_ad_unit_change = Signal(args=['unit'], name='load_set_ad_unit')
-load_set_e_unit_change = Signal(args=['unit'], name='load_set_e_unit')
+load_unit_length = Signal(args=['unit'], name='load_set_ln_unit')
+load_unit_diameter = Signal(args=['unit'], name='load_set_dm_unit')
+load_unit_pressure = Signal(args=['unit'], name='load_set_ps_unit')
+load_unit_drop = Signal(args=['unit'], name='load_set_dp_unit')
+load_unit_angular = Signal(args=['unit'], name='load_set_an_unit')
+load_unit_adjustment = Signal(args=['unit'], name='load_set_unit_adjustment')
+load_unit_energy = Signal(args=['unit'], name='load_set_e_unit')
+
+set_setting = Signal(args=['target', 'value'], name='set_setting')
+load_setting = Signal(name='load_setting')

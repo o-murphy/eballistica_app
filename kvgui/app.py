@@ -63,7 +63,7 @@ class EBallisticaApp(MDApp):
     def bind_ui(self):
         Window.bind(on_keyboard=self.droid_back_act)
 
-        sig.set_theme_changed.connect(self.change_theme)
+        sig.set_theme.connect(self.change_theme)
 
         sig.top_bar_cog_act.connect(self.switch_settings)
         # sig.top_bar_apply_act.connect(self.apply_settings)

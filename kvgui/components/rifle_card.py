@@ -51,27 +51,30 @@ class RifleCardScreen(Screen):
             if hasattr(child, 'text') and not isinstance(child, MDTextField):
                 child.text = tr(child.text, ctx='RifleCard')
 
-        self.sh_v: MDUnitsInput = self.ids.sh_v
-        self.sh_s = self.ids.sh_s
+        self.sight_height: MDUnitsInput = self.ids.sh_v
+        self.sight_height_suffix = self.ids.sh_s
 
-        self.td_l = self.ids.td_l
-        self.td_v = self.ids.td_v
+        self.twist_dir = self.ids.td_v
 
-        self.tw_v = self.ids.tw_v
-        self.tw_s = self.ids.tw_s
+        self.twist = self.ids.tw_v
+        self.twist_suffix = self.ids.tw_s
 
     def bind_ui(self):
         # setup convertors
-        sig.set_sh_unit_change.connect(self.set_sh_units)
-        sig.set_tw_unit_change.connect(self.set_tw_units)
+        # sig.set_unit_sight_height.connect(self.set_sh_units)
+        # sig.set_unit_twist.connect(self.set_tw_units)
+        sig.set_setting.connect(self.set_setting)
 
     def on_enter(self, *args):
         ...
 
-    def set_sh_units(self, unit, **kwargs):
-        self.sh_v.convertor = Convertor(Distance, Distance.Centimeter, unit)
-        self.sh_s.text = tr(Distance.name(unit), 'Unit')
+    def set_setting(self, **kwargs):
+        if 'unit_twist' in kwargs:
+            unit = kwargs['unit_twist']
+            self.twist.convertor = Convertor(Distance, Distance.Inch, unit)
+            self.twist_suffix.text = tr(Distance.name(unit), 'Unit')
+        elif 'unit_sight_height' in kwargs:
+            unit = kwargs['unit_sight_height']
+            self.sight_height.convertor = Convertor(Distance, Distance.Centimeter, unit)
+            self.sight_height_suffix.text = tr(Distance.name(unit), 'Unit')
 
-    def set_tw_units(self, unit, **kwargs):
-        self.tw_v.convertor = Convertor(Distance, Distance.Inch, unit)
-        self.tw_s.text = tr(Distance.name(unit), 'Unit')

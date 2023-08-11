@@ -4,19 +4,19 @@ from kvgui.modules import signals as sig
 DEFAULT_SETTINGS = {
   "lang": "English",
   "theme": "Dark",
-  "shUnits": 16,
-  "twistUnits": 10,
-  "vUnits": 60,
-  "distUnits": 17,
-  "tempUnits": 51,
-  "wUnits": 70,
-  "lnUnits": 10,
-  "dUnits": 10,
-  "pUnits": 40,
-  "dropUnits": 16,
-  "angleUnits": 1,
-  "adjUnits": 7,
-  "eUnits": 30
+  "unit_sight_height": 16,
+  "unit_twist": 10,
+  "unit_velocity": 60,
+  "unit_distance": 17,
+  "unit_temperature": 51,
+  "unit_weight": 70,
+  "unit_length": 10,
+  "unit_diameter": 10,
+  "unit_pressure": 40,
+  "unit_drop": 16,
+  "unit_angular": 1,
+  "unit_adjustment": 7,
+  "unit_energy": 30
 }
 
 
@@ -59,39 +59,42 @@ class AppSettings:
         sig.load_set_theme.emit(theme=self.theme)
         sig.load_set_lang.emit(lang=self.lang)
 
-        sig.load_set_sh_unit_change.emit(unit=self.shUnits)
-        sig.load_set_tw_unit_change.emit(unit=self.twistUnits)
-        sig.load_set_v_unit_change.emit(unit=self.vUnits)
-        sig.load_set_dt_unit_change.emit(unit=self.distUnits)
-        sig.load_set_t_unit_change.emit(unit=self.tempUnits)
-        sig.load_set_w_unit_change.emit(unit=self.wUnits)
+        sig.load_unit_sight_height.emit(unit=self.unit_sight_height)
+        sig.load_unit_twist.emit(unit=self.unit_twist)
+        sig.load_unit_velocity.emit(unit=self.unit_velocity)
+        sig.load_unit_distance.emit(unit=self.unit_distance)
+        sig.load_unit_temperature.emit(unit=self.unit_temperature)
+        sig.load_unit_weight.emit(unit=self.unit_weight)
 
-        sig.load_set_ln_unit_change.emit(unit=self.lnUnits)
-        sig.load_set_dm_unit_change.emit(unit=self.dUnits)
-        sig.load_set_ps_unit_change.emit(unit=self.pUnits)
-        sig.load_set_dp_unit_change.emit(unit=self.dropUnits)
-        sig.load_set_an_unit_change.emit(unit=self.angleUnits)
-        sig.load_set_ad_unit_change.emit(unit=self.adjUnits)
-        sig.load_set_e_unit_change.emit(unit=self.eUnits)
+        sig.load_unit_length.emit(unit=self.unit_length)
+        sig.load_unit_diameter.emit(unit=self.unit_diameter)
+        sig.load_unit_pressure.emit(unit=self.unit_pressure)
+        sig.load_unit_drop.emit(unit=self.unit_drop)
+        sig.load_unit_angular.emit(unit=self.unit_angle)
+        sig.load_unit_adjustment.emit(unit=self.unit_adjustment)
+        sig.load_unit_energy.emit(unit=self.unit_energy)
+
+        # for k, v in self._dict.items():
+        #     sig.load_setting.emit(target=k, value=v)
 
     def bind_on_set(self):
-        sig.set_theme_changed.connect(self.update)
-        sig.set_lang_changed.connect(self.update)
-        
-        sig.set_sh_unit_change.connect(lambda unit, **kw: self.update(shUnits=unit))
-        sig.set_tw_unit_change.connect(lambda unit, **kw: self.update(twistUnits=unit))
-        sig.set_v_unit_change.connect(lambda unit, **kw: self.update(vUnits=unit))
-        sig.set_dt_unit_change.connect(lambda unit, **kw: self.update(distUnits=unit))
-        sig.set_t_unit_change.connect(lambda unit, **kw: self.update(tempUnits=unit))
-        sig.set_w_unit_change.connect(lambda unit, **kw: self.update(wUnits=unit))
+        sig.set_theme.connect(self.update)
+        sig.set_lang.connect(self.update)
 
-        sig.set_ln_unit_change.connect(lambda unit, **kw: self.update(lnUnits=unit))
-        sig.set_dm_unit_change.connect(lambda unit, **kw: self.update(dUnits=unit))
-        sig.set_ps_unit_change.connect(lambda unit, **kw: self.update(pUnits=unit))
-        sig.set_dp_unit_change.connect(lambda unit, **kw: self.update(dropUnits=unit))
-        sig.set_an_unit_change.connect(lambda unit, **kw: self.update(angleUnits=unit))
-        sig.set_ad_unit_change.connect(lambda unit, **kw: self.update(adjUnits=unit))
-        sig.set_e_unit_change.connect(lambda unit, **kw: self.update(eUnits=unit))
+        sig.set_unit_velocity.connect(lambda unit, **kw: self.update(unit_velocity=unit))
+        sig.set_unit_distance.connect(lambda unit, **kw: self.update(unit_distance=unit))
+        sig.set_unit_temperature.connect(lambda unit, **kw: self.update(unit_temperature=unit))
+        sig.set_unit_weight.connect(lambda unit, **kw: self.update(unit_weight=unit))
+
+        sig.set_unit_length.connect(lambda unit, **kw: self.update(unit_length=unit))
+        sig.set_unit_diameter.connect(lambda unit, **kw: self.update(unit_diameter=unit))
+        sig.set_unit_pressure.connect(lambda unit, **kw: self.update(unit_pressure=unit))
+        sig.set_unit_drop.connect(lambda unit, **kw: self.update(unit_drop=unit))
+        sig.set_unit_angular.connect(lambda unit, **kw: self.update(unit_angle=unit))
+        sig.set_unit_adjustment.connect(lambda unit, **kw: self.update(unit_adjustment=unit))
+        sig.set_unit_energy.connect(lambda unit, **kw: self.update(unit_energy=unit))
+
+        sig.set_setting.connect(self.update)
 
 
 app_settings = AppSettings()
