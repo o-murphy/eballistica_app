@@ -36,6 +36,8 @@ class FormSelector(MDRectangleFlatIconButton):
     def __init__(self, *args, **kwargs):
         super(FormSelector, self).__init__(*args, **kwargs)
         self.init_ui()
+        self.unit_class = None
+        self.units_specified: list = []
 
     def init_ui(self):
         self.menu = MDDropdownMenu(caller=self)

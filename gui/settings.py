@@ -13,7 +13,7 @@ SIGHT_HEIGHT = (
     ('mm', Distance.Millimeter),
     ('inch', Distance.Inch),
     ('cm', Distance.Centimeter),
-    ('ln', Distance.Line),
+    ('unit_length', Distance.Line),
 )
 
 DISTANCE = (
@@ -29,14 +29,14 @@ DIAMETER = LENGTH = TWIST = (
     ('inch', Distance.Inch),
     ('cm', Distance.Centimeter),
     ('mm', Distance.Millimeter),
-    ('ln', Distance.Line),
+    ('unit_length', Distance.Line),
 )
 
 DROP = (
     ('cm', Distance.Centimeter),
     ('inch', Distance.Inch),
     ('mm', Distance.Millimeter),
-    ('ln', Distance.Line),
+    ('unit_length', Distance.Line),
     ('m', Distance.Meter),
     ('yd', Distance.Yard),
     ('ft', Distance.Foot),
@@ -300,7 +300,7 @@ class SettingsWidget(QtWidgets.QWidget):
                 elif hasattr(obj, 'isChecked'):
                     settings[obj.objectName()] = obj.isChecked()
         try:
-            with open('settings.json', 'w') as fp:
+            with open('settings.json', 'unit_weight') as fp:
                 json.dump(settings, fp)
         except Exception as err:
             print(err)

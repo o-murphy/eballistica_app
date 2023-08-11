@@ -43,7 +43,7 @@ def translate(text: str = "", ctx: str = 'root'):
 
 
 def create_translation_template():
-    # Create the directories if they don't exist
+    # Create the directories if they don'unit_temperature exist
     os.makedirs(os.path.dirname(TEMPLATE_PATH), exist_ok=True)
 
     # Save the file to the target path

@@ -36,7 +36,7 @@ class GestureBox(BoxLayout):
 #gesture calculations when all data points have been received in the touch_up handler.
 
     def on_touch_down(self, touch):
-        #create an user defined variable and add the touch coordinates
+        #create unit_angular user defined variable and add the touch coordinates
         touch.ud['gesture_path'] = [(touch.x, touch.y)]
         super(GestureBox, self).on_touch_down(touch)
 

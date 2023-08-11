@@ -31,12 +31,12 @@
                         size_hint_x: 0.05
 
                     FormLabel:
-                        id: theme_l
+                        id: theme_label
                         text: 'Theme'
                         size_hint_x: 0.5
 
                     FormSelector:
-                        id: theme_v
+                        id: theme
                         name: 'theme'
                         text: 'Dark'
                         size_hint_x: 0.45
@@ -56,12 +56,12 @@
                         size_hint_x: 0.05
 
                     FormLabel:
-                        id: lang_l
+                        id: lang_label
                         text: 'Language'
                         size_hint_x: 0.5
 
                     FormSelector:
-                        id: lang_v
+                        id: lang
                         name: 'lang'
                         text: 'English'
                         size_hint_x: 0.45
@@ -88,15 +88,15 @@
                     spacing: "15dp"
 
                     FormLabel:
-                        id: unit_tw_l
+                        id: unit_twist_label
                         text: 'Twist'
                         size_hint_x: 0.6
                         height: self.texture_size[1]
 
                     FormSelector:
-                        id: unit_tw_v
+                        id: unit_twist
                         name: 'twist'
-                        text: 'inch'
+                        text: ''
                         size_hint_x: 0.4
                         size_hint_y: None
                         height: dp(30)
@@ -108,15 +108,15 @@
                     spacing: "15dp"
 
                     FormLabel:
-                        id: unit_sh_l
+                        id: unit_sight_height_label
                         text: 'Sight height'
                         size_hint_x: 0.6
                         height: self.texture_size[1]
 
                     FormSelector:
-                        id: unit_sh_v
+                        id: unit_sight_height
                         name: 'sh'
-                        text: 'cm'
+                        text: ''
                         size_hint_x: 0.4
                         # size_hint_y: None
                         # height: dp(30)
@@ -128,15 +128,15 @@
                     spacing: "15dp"
 
                     FormLabel:
-                        id: unit_v_l
+                        id: unit_velocity_label
                         text: 'Velocity'
                         size_hint_x: 0.6
                         height: self.texture_size[1]
 
                     FormSelector:
-                        id: unit_v_v
+                        id: unit_velocity
                         name: 'v'
-                        text: 'm/s'
+                        text: ''
                         size_hint_x: 0.4
                         # size_hint_y: None
                         # height: dp(30)
@@ -148,15 +148,15 @@
                     spacing: "15dp"
 
                     FormLabel:
-                        id: unit_dt_l
+                        id: unit_distance_label
                         text: 'Distance'
                         size_hint_x: 0.6
                         height: self.texture_size[1]
 
                     FormSelector:
-                        id: unit_dt_v
+                        id: unit_distance
                         name: 'dist'
-                        text: 'm'
+                        text: ''
                         size_hint_x: 0.4
                         # size_hint_y: None
                         # height: dp(30)
@@ -168,15 +168,15 @@
                     spacing: "15dp"
 
                     FormLabel:
-                        id: unit_t_l
+                        id: unit_temperature_label
                         text: 'Temperature'
                         size_hint_x: 0.6
                         height: self.texture_size[1]
 
                     FormSelector:
-                        id: unit_t_v
+                        id: unit_temperature
                         name: 'temp'
-                        text: '°C'
+                        text: ''
                         size_hint_x: 0.4
                         # size_hint_y: None
                         # height: dp(30)
@@ -188,15 +188,15 @@
                     spacing: "15dp"
 
                     FormLabel:
-                        id: unit_w_l
+                        id: unit_weight_label
                         text: 'Weight'
                         size_hint_x: 0.6
                         height: self.texture_size[1]
 
                     FormSelector:
-                        id: unit_w_v
+                        id: unit_weight
                         name: 'w'
-                        text: 'gr'
+                        text: ''
                         size_hint_x: 0.4
                         # size_hint_y: None
                         # height: dp(30)
@@ -208,15 +208,15 @@
                     spacing: "15dp"
 
                     FormLabel:
-                        id: unit_ln_l
+                        id: unit_length_label
                         text: 'Length'
                         size_hint_x: 0.6
                         height: self.texture_size[1]
 
                     FormSelector:
-                        id: unit_ln_v
+                        id: unit_length
                         name: 'ln'
-                        text: 'inch'
+                        text: ''
                         size_hint_x: 0.4
                         # size_hint_y: None
                         # height: dp(30)
@@ -228,15 +228,15 @@
                     spacing: "15dp"
 
                     FormLabel:
-                        id: unit_dm_l
+                        id: unit_diameter_label
                         text: 'Diameter'
                         size_hint_x: 0.6
                         height: self.texture_size[1]
 
                     FormSelector:
-                        id: unit_dm_v
+                        id: unit_diameter
                         name: 'diam'
-                        text: 'inch'
+                        text: ''
                         size_hint_x: 0.4
                         # size_hint_y: None
                         # height: dp(30)
@@ -248,15 +248,15 @@
                     spacing: "15dp"
 
                     FormLabel:
-                        id: unit_ps_l
+                        id: unit_pressure_label
                         text: 'Pressure'
                         size_hint_x: 0.6
                         height: self.texture_size[1]
 
                     FormSelector:
-                        id: unit_ps_v
+                        id: unit_pressure
                         name: 'press'
-                        text: 'mmhg'
+                        text: ''
                         size_hint_x: 0.4
                         # size_hint_y: None
                         # height: dp(30)
@@ -268,15 +268,15 @@
                     spacing: "15dp"
 
                     FormLabel:
-                        id: unit_dp_l
+                        id: unit_drop_label
                         text: 'Drop / Windage'
                         size_hint_x: 0.6
                         height: self.texture_size[1]
 
                     FormSelector:
-                        id: unit_dp_v
+                        id: unit_drop
                         name: 'drop'
-                        text: 'cm'
+                        text: ''
                         size_hint_x: 0.4
                         # size_hint_y: None
                         # height: dp(30)
@@ -288,15 +288,15 @@
                     spacing: "15dp"
 
                     FormLabel:
-                        id: unit_an_l
+                        id: unit_angular_label
                         text: 'Angular'
                         size_hint_x: 0.6
                         height: self.texture_size[1]
 
                     FormSelector:
-                        id: unit_an_v
-                        name: 'angle'
-                        text: 'mil'
+                        id: unit_angular
+                        name: ''
+                        text: ''
                         size_hint_x: 0.4
                         # size_hint_y: None
                         # height: dp(30)
@@ -308,15 +308,15 @@
                     spacing: "15dp"
 
                     FormLabel:
-                        id: unit_ad_l
+                        id: unit_adjustment_label
                         text: 'Adjustment'
                         size_hint_x: 0.6
                         height: self.texture_size[1]
 
                     FormSelector:
-                        id: unit_ad_v
+                        id: unit_adjustment
                         name: 'path'
-                        text: 'cm/100m'
+                        text: ''
                         size_hint_x: 0.4
                         # size_hint_y: None
                         # height: dp(30)
@@ -328,15 +328,15 @@
                     spacing: "15dp"
 
                     FormLabel:
-                        id: unit_e_l
+                        id: unit_energy_label
                         text: 'Energy'
                         size_hint_x: 0.6
                         height: self.texture_size[1]
 
                     FormSelector:
-                        id: unit_e_v
+                        id: unit_energy
                         name: 'en'
-                        text: 'ft*lb'
+                        text: ''
                         size_hint_x: 0.4
                         # size_hint_y: None
                         # height: dp(30)
