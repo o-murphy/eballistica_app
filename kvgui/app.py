@@ -1,16 +1,16 @@
 from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivymd.app import MDApp
-from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.toast import toast
 from kivymd.uix.toolbar import MDActionBottomAppBarButton
 
 from kvgui.components import *
-from kivymd.toast import toast
-
 from kvgui.components import abstract
 from kvgui.components.ammo_card import AmmoCardScreen
 from kvgui.components.shot_card import ShotCardScreen
 from kvgui.modules import signals as sig
+from kvgui.modules.translator import create_translation_template
+
 assert abstract
 
 
@@ -55,10 +55,16 @@ class EBallisticaApp(MDApp):
 
         self.screen.add_widget(self.layout)
 
+    def change_theme(self, theme='Dark', **kwargs):
+        self.theme_cls.theme_style = theme
+
     def bind_ui(self):
         Window.bind(on_keyboard=self.droid_back_act)
+
+        sig.set_theme_changed.connect(self.change_theme)
+
         sig.top_bar_cog_act.connect(self.switch_settings)
-        sig.top_bar_apply_act.connect(self.apply_settings)
+        # sig.top_bar_apply_act.connect(self.apply_settings)
 
         sig.bot_bar_back_act.connect(self.back_action)
         sig.bot_bar_fab_act.connect(self.bot_fab_action)
@@ -73,6 +79,9 @@ class EBallisticaApp(MDApp):
 
         sig.bot_bar_back_act.connect(self.back_action)
 
+        self.app_screen_manager.rifles_screen.on_enter = self.app_top_bar.show_cog
+        self.app_screen_manager.rifles_screen.on_leave = self.app_top_bar.hide_all
+
     def build(self):
         self.theme_cls.theme_style = 'Dark'
         self.theme_cls.material_style = "M3"
@@ -84,11 +93,10 @@ class EBallisticaApp(MDApp):
 
     def on_start(self):
         ...
-        
+
     def droid_back_act(self,window,key,*args):
         if key == 27:
             sig.bot_bar_back_act.emit()
-                
 
     def on_bottom_action_buttons(self, action: MDActionBottomAppBarButton):
         if action.icon == "arrow-left":
@@ -157,45 +165,44 @@ class EBallisticaApp(MDApp):
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'shot_card'
         self.app_bottom_bar.fab_applying()
-        self.app_top_bar.hide_all()
 
     def switch_rifles_list(self, direction='left', caller=None, **kwargs):
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'rifles_screen'
         self.app_bottom_bar.fab_add_new()
-        self.app_top_bar.show_cog()
 
     def switch_ammo_card(self, direction='left', caller=None, **kwargs):
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'ammo_card'
         self.app_bottom_bar.fab_applying()
-        self.app_top_bar.hide_all()
 
     def switch_rifle_card(self, direction='left', caller=None, **kwargs):
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'rifle_card'
         self.app_bottom_bar.fab_applying()
-        self.app_top_bar.hide_all()
 
     def switch_ammos_list(self, direction='left', caller=None, **kwargs):
         # Todo:
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'ammos_screen'
-        self.app_top_bar.hide_all()
         self.app_bottom_bar.fab_add_new()
 
     def switch_settings(self, direction='left', caller=None, **kwargs):
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'settings'
-        # self.app_top_bar.show_check()
-        self.app_top_bar.hide_all()
         self.app_bottom_bar.fab_hide()
 
-    def apply_settings(self, **kwargs):
-        # TODO:
-        self.switch_rifles_list('right')
-        self.app_top_bar.show_cog()
-        toast("Settings saved", duration=1)
+    # def apply_settings(self, **kwargs):
+    #     # TODO:
+    #     self.switch_rifles_list('right')
+    #     self.app_top_bar.show_cog()
+    #     toast("Settings saved", duration=1)
+
+    def on_stop(self):
+        # TODO: temporary
+        print('creating translation template')
+        create_translation_template()
+        print('created')
 
 
 if __name__ == '__main__':

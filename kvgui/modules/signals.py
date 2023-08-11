@@ -36,3 +36,6 @@ set_dp_unit_change = Signal(args=['unit'], name='set_dp_unit')
 set_an_unit_change = Signal(args=['unit'], name='set_an_unit')
 set_ad_unit_change = Signal(args=['unit'], name='set_ad_unit')
 set_e_unit_change = Signal(args=['unit'], name='set_e_unit')
+
+set_theme_changed = Signal(args=['theme'], name='set_theme')
+set_lang_changed = Signal(args=['lang'], name='set_lang')

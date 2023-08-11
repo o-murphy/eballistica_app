@@ -18,6 +18,12 @@ class SettingsScreen(Screen):
         self.init_ui()
         self.bind_ui()
 
+    # def on_enter(self, *args):
+    #     ...
+    #
+    # def on_leave(self, *args):
+    #     ...
+
     def init_ui(self):
         self.theme: FormSelector = self.ids.theme_v
 
@@ -185,10 +191,8 @@ class SettingsScreen(Screen):
             self.theme.icon = "weather-night"
             self.theme.text = 'Dark'
 
-        app: MDApp = MDApp.get_running_app()
-        if app:
-            app.theme_cls.theme_style = self.theme.text
-            self.theme.menu.dismiss()
+        sig.set_theme_changed.emit(theme=self.theme.text)
+        self.theme.menu.dismiss()
 
     def change_lang(self, action):
         # TODO:

@@ -69,6 +69,7 @@ class AmmoCardScreen(Screen):
             if hasattr(child, 'text') and not isinstance(child, MDTextField):
                 child.text = tr(child.text, ctx='RifleCard')
 
+        # convertable values
         self.dm_v = self.ids.dm_v
         self.dm_s = self.ids.dm_s
         self.w_v = self.ids.w_v
@@ -78,16 +79,10 @@ class AmmoCardScreen(Screen):
         self.mv_v = self.ids.mv_v
         self.mv_s = self.ids.mv_s
 
-        self.dm_select = self.ids.dm_select
-        self.bc_select = self.ids.bc_select
-        self.powder_sens_calc: MDRectangleFlatButton = self.ids.pws_act
-
-        self.pws_v = self.ids.pws_v
-        self.pws_s = self.ids.pws_s
+        # convertable values
         self.pwt_v = self.ids.pwt_v
         self.pwt_s = self.ids.pwt_s
-        self.pws_act = self.ids.pws_act
-        self.sd_v = self.ids.sd_v
+        self.zd_v = self.ids.zd_v
         self.zd_s = self.ids.zd_s
         self.alt_v = self.ids.alt_v
         self.alt_s = self.ids.alt_s
@@ -95,15 +90,25 @@ class AmmoCardScreen(Screen):
         self.ps_s = self.ids.ps_s
         self.t_v = self.ids.t_v
         self.t_s = self.ids.t_s
+
+        # not need conversion values
+        self.pws_v = self.ids.pws_v
         self.h_v = self.ids.h_v
-        self.h_s = self.ids.h_s
+
+        # special actions
+        self.dm_select = self.ids.dm_select
+        self.bc_select = self.ids.bc_select
+        self.pws_act: MDRectangleFlatButton = self.ids.pws_act
 
     def bind_ui(self):
-        self.powder_sens_calc.bind(on_release=lambda x: sig.ammo_powder_sens_act.emit(caller=self))
+        self.pws_act.bind(on_release=lambda x: sig.ammo_powder_sens_act.emit(caller=self))
         sig.set_dm_unit_change.connect(self.dm_unit_change)
         sig.set_w_unit_change.connect(self.w_unit_change)
         sig.set_v_unit_change.connect(self.mv_unit_change)
         sig.set_v_unit_change.connect(self.mv_unit_change)
+        sig.set_t_unit_change.connect(self.t_unit_change)
+        sig.set_dt_unit_change.connect(self.dt_unit_change)
+        sig.set_ps_unit_change.connect(self.ps_unit_change)
 
     def on_enter(self, *args):
         ...
@@ -123,3 +128,19 @@ class AmmoCardScreen(Screen):
     def mv_unit_change(self, unit, **kwargs):
         self.mv_v.convertor = Convertor(Velocity, Velocity.MPS, unit)
         self.mv_s.text = tr(Velocity.name(unit), 'RifleCard')
+
+    def t_unit_change(self, unit, **kwargs):
+        self.pwt_v.convertor = Convertor(Temperature, Temperature.Celsius, unit)
+        self.pwt_s.text = tr(Temperature.name(unit), 'RifleCard')
+        self.t_v.convertor = Convertor(Temperature, Temperature.Celsius, unit)
+        self.t_s.text = tr(Temperature.name(unit), 'RifleCard')
+
+    def dt_unit_change(self, unit, **kwargs):
+        self.zd_v.convertor = Convertor(Distance, Distance.Meter, unit)
+        self.zd_s.text = tr(Distance.name(unit), 'RifleCard')
+        self.alt_v.convertor = Convertor(Distance, Distance.Meter, unit)
+        self.alt_s.text = tr(Distance.name(unit), 'RifleCard')
+
+    def ps_unit_change(self, unit, **kwargs):
+        self.ps_v.convertor = Convertor(Pressure, Pressure.MmHg, unit)
+        self.ps_s.text = tr(Pressure.name(unit), 'RifleCard')

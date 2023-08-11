@@ -51,14 +51,12 @@ class RifleCardScreen(Screen):
             if hasattr(child, 'text') and not isinstance(child, MDTextField):
                 child.text = tr(child.text, ctx='RifleCard')
 
-        self.sh = self.ids.sh_l
         self.sh_v: MDUnitsInput = self.ids.sh_v
         self.sh_s = self.ids.sh_s
 
         self.td_l = self.ids.td_l
         self.td_v = self.ids.td_v
 
-        self.tw_l = self.ids.tw_l
         self.tw_v = self.ids.tw_v
         self.tw_s = self.ids.tw_s
 
