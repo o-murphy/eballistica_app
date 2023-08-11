@@ -56,7 +56,7 @@ class EBallisticaApp(MDApp):
         self.screen.add_widget(self.layout)
 
     def bind_ui(self):
-        Window.bind(on_keyboard=self.Android_back_click)
+        Window.bind(on_keyboard=self.droid_back_act)
         sig.top_bar_cog_act.connect(self.switch_settings)
         sig.top_bar_apply_act.connect(self.apply_settings)
 
