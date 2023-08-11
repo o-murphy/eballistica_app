@@ -88,4 +88,11 @@ jobs:
         with:
           name: build-artifacts
           path: bin
+
+      - name: Upload and Send to Telegram
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TG_USER_ID }}
+          token: ${{ secrets.TG_GITHUB_ARTIFACTS_TOKEN }}
+          document: ./bin/* # Change the path to match your artifacts
           
