@@ -67,7 +67,7 @@ class AmmoCardScreen(Screen):
         for uid in self.ids:
             child = self.ids[uid]
             if hasattr(child, 'text') and not isinstance(child, MDTextField):
-                child.text = tr(child.text, ctx='RifleCard')
+                child.text = tr(child.text, ctx='AmmoCard')
 
         # convertable values
         self.dm_v = self.ids.dm_v
@@ -102,6 +102,7 @@ class AmmoCardScreen(Screen):
 
     def bind_ui(self):
         self.pws_act.bind(on_release=lambda x: sig.ammo_powder_sens_act.emit(caller=self))
+
         sig.set_dm_unit_change.connect(self.dm_unit_change)
         sig.set_w_unit_change.connect(self.w_unit_change)
         sig.set_v_unit_change.connect(self.mv_unit_change)
@@ -115,32 +116,32 @@ class AmmoCardScreen(Screen):
 
     def dm_unit_change(self, unit, **kwargs):
         self.dm_v.convertor = Convertor(Distance, Distance.Centimeter, unit)
-        self.dm_s.text = tr(Distance.name(unit), 'RifleCard')
+        self.dm_s.text = tr(Distance.name(unit), 'Unit')
 
     def w_unit_change(self, unit, **kwargs):
         self.w_v.convertor = Convertor(Weight, Weight.Grain, unit)
-        self.w_s.text = tr(Weight.name(unit), 'RifleCard')
+        self.w_s.text = tr(Weight.name(unit), 'Unit')
 
     def ln_unit_change(self, unit, **kwargs):
         self.ln_v.convertor = Convertor(Distance, Distance.Inch, unit)
-        self.ln_s.text = tr(Distance.name(unit), 'RifleCard')
+        self.ln_s.text = tr(Distance.name(unit), 'Unit')
 
     def mv_unit_change(self, unit, **kwargs):
         self.mv_v.convertor = Convertor(Velocity, Velocity.MPS, unit)
-        self.mv_s.text = tr(Velocity.name(unit), 'RifleCard')
+        self.mv_s.text = tr(Velocity.name(unit), 'Unit')
 
     def t_unit_change(self, unit, **kwargs):
         self.pwt_v.convertor = Convertor(Temperature, Temperature.Celsius, unit)
-        self.pwt_s.text = tr(Temperature.name(unit), 'RifleCard')
+        self.pwt_s.text = tr(Temperature.name(unit), 'Unit')
         self.t_v.convertor = Convertor(Temperature, Temperature.Celsius, unit)
-        self.t_s.text = tr(Temperature.name(unit), 'RifleCard')
+        self.t_s.text = tr(Temperature.name(unit), 'Unit')
 
     def dt_unit_change(self, unit, **kwargs):
         self.zd_v.convertor = Convertor(Distance, Distance.Meter, unit)
-        self.zd_s.text = tr(Distance.name(unit), 'RifleCard')
+        self.zd_s.text = tr(Distance.name(unit), 'Unit')
         self.alt_v.convertor = Convertor(Distance, Distance.Meter, unit)
-        self.alt_s.text = tr(Distance.name(unit), 'RifleCard')
+        self.alt_s.text = tr(Distance.name(unit), 'Unit')
 
     def ps_unit_change(self, unit, **kwargs):
         self.ps_v.convertor = Convertor(Pressure, Pressure.MmHg, unit)
-        self.ps_s.text = tr(Pressure.name(unit), 'RifleCard')
+        self.ps_s.text = tr(Pressure.name(unit), 'Unit')

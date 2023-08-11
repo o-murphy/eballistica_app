@@ -10,7 +10,9 @@ from kvgui.components.ammo_card import AmmoCardScreen
 from kvgui.components.shot_card import ShotCardScreen
 from kvgui.modules import signals as sig
 from kvgui.modules.translator import create_translation_template
+from kvgui.modules.settings import app_settings
 
+assert app_settings
 assert abstract
 
 
@@ -89,6 +91,9 @@ class EBallisticaApp(MDApp):
 
         self.init_ui()
         self.bind_ui()
+
+        app_settings.bind_on_load()
+        app_settings.bind_on_set()
         return self.screen
 
     def on_start(self):
@@ -203,6 +208,7 @@ class EBallisticaApp(MDApp):
         print('creating translation template')
         create_translation_template()
         print('created')
+        app_settings.save_settings()
 
 
 if __name__ == '__main__':

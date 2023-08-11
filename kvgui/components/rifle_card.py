@@ -70,8 +70,8 @@ class RifleCardScreen(Screen):
 
     def set_sh_units(self, unit, **kwargs):
         self.sh_v.convertor = Convertor(Distance, Distance.Centimeter, unit)
-        self.sh_s.text = tr(Distance.name(unit), 'RifleCard')
+        self.sh_s.text = tr(Distance.name(unit), 'Unit')
 
     def set_tw_units(self, unit, **kwargs):
         self.tw_v.convertor = Convertor(Distance, Distance.Inch, unit)
-        self.tw_s.text = tr(Distance.name(unit), 'RifleCard')
+        self.tw_s.text = tr(Distance.name(unit), 'Unit')
