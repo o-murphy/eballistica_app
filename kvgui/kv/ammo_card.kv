@@ -109,13 +109,13 @@
                         size_hint_x: 0.6
 
                     DragModelSelector:
-                        id: unit_t_v
+                        id: dm_select
                         name: 'dm_select'
                         text: 'G7'
                         size_hint_x: 0.3
 
                     BCSelector:
-                        id: unit_t_v
+                        id: bc_select
                         name: 'bc_select'
                         text: 'BC: 0.275'
                         size_hint_x: 0.3
@@ -165,7 +165,7 @@
                 height: dp(240)
 
                 FormLabel:
-                    id: prop_title
+                    id: zero_title
                     text: 'Zeroing'
                     font_style: 'H6'
                     size_hint: 1, None
@@ -180,7 +180,7 @@
                         text: 'Zeroing distance'
 
                     FormFloatInput:
-                        id: sd_v
+                        id: zd_v
                         input_filter: 'float'
 
                     FormSuffix:

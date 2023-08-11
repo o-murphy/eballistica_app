@@ -1,7 +1,6 @@
 from kvgui.app import EBallisticaApp
 
 
-
 def main(argv):
     EBallisticaApp().run()
 
