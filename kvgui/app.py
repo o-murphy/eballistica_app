@@ -139,17 +139,17 @@ class EBallisticaApp(MDApp):
     def save_rifle_card(self):
         # Todo:
         self.switch_rifles_list('right')
-        toast("Rifle data saved", duration=1)
+        self.toast("Rifle data saved", duration=1)
 
     def save_ammo_card(self):
         # Todo:
         self.switch_ammos_list('right')
-        toast("Ammo data saved", duration=1)
+        self.toast("Ammo data saved", duration=1)
 
     def save_shot_card(self):
         # Todo:
         self.switch_ammos_list('right')
-        toast("Shot data saved", duration=1)
+        self.toast("Shot data saved", duration=1)
 
     def edit_rifle(self, caller=None, **kwargs):
         # TODO
