@@ -1,4 +1,6 @@
 import json
+import logging
+
 from kvgui.modules import signals as sig
 
 DEFAULT_SETTINGS = {
@@ -35,6 +37,7 @@ class AppSettings:
     def update(self, **kwargs):
         print("update:", kwargs)
         self._dict.update(kwargs)
+        self.save_settings()
 
     def load_settings(self):
         try:
@@ -44,16 +47,16 @@ class AppSettings:
                     if k not in config:
                         config[k] = DEFAULT_SETTINGS[k]
                 self._dict = config
-        except Exception:
+        except Exception as exc:
+            logging.error(exc)
             self._dict = DEFAULT_SETTINGS
-        print(self._dict)
 
     def save_settings(self):
         try:
             with open('kvgui/settings.json', 'w', encoding='utf-8') as fp:
                 json.dump(self._dict, fp)
-        except Exception:
-            pass
+        except Exception as exc:
+            logging.error(exc)
 
     def bind_on_load(self):
         sig.load_set_theme.emit(theme=self.theme)

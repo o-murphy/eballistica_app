@@ -65,3 +65,10 @@ class TwistValue(MeasureValue):
         super(TwistValue, self).__init__(*args, **kwargs)
         self.id = 'twist'
         self.convertor = Convertor(Distance, Distance.Centimeter, Distance.Centimeter)
+
+
+class DistanceValue(MeasureValue):
+    def __init__(self, *args, **kwargs):
+        super(DistanceValue, self).__init__(*args, **kwargs)
+        self.id = 'twist'
+        self.convertor = Convertor(Distance, Distance.Meter, Distance.Meter)

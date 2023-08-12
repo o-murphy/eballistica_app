@@ -3,6 +3,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivymd.app import MDApp
 from kivymd.toast import toast
 from kivymd.uix.toolbar import MDActionBottomAppBarButton
+from kivy import platform
 
 from kvgui.components import *
 from kvgui.components import abstract
@@ -203,12 +204,19 @@ class EBallisticaApp(MDApp):
     #     self.app_top_bar.show_cog()
     #     toast("Settings saved", duration=1)
 
+    def toast(self, text='', duration=2.5):
+        try:
+            if platform == 'android':
+                toast(text=text, gravity=80, length_long=duration)
+            else:
+                toast(text=text, duration=duration)
+        except Exception:
+            toast(text=text)
+
     def on_stop(self):
         # TODO: temporary
         print('creating translation template')
         create_translation_template()
-        print('created')
-        app_settings.save_settings()
 
 
 if __name__ == '__main__':

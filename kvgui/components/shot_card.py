@@ -1,8 +1,8 @@
-from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.textfield import MDTextField
 
+from kvgui.components.measure_widgets import *
 from kvgui.modules import signals as sig
 from kvgui.modules.translator import translate as tr
 from units import *
@@ -24,8 +24,8 @@ class ShotCardScreen(Screen):
                 child.text = tr(child.text, ctx='ShotCard')
 
         # convertable values
-        self.dt_v = self.ids.dt_v
-        self.dt_s = self.ids.dt_s
+        self.distance: DistanceValue = self.ids.distance
+        self.distance_suffix = self.ids.distance_suffix
         self.la_v = self.ids.la_v
         self.la_s = self.ids.la_s
         self.alt_v = self.ids.alt_v
@@ -50,35 +50,6 @@ class ShotCardScreen(Screen):
         self.one_shot.bind(on_release=lambda x: sig.one_shot_act.emit(caller=self))
         self.trajectory.bind(on_release=lambda x: sig.trajectory_act.emit(caller=self))
 
-        # sig.set_unit_distance.connect(self.dt_unit_change)
-        # sig.set_unit_velocity.connect(self.v_unit_change)
-        # sig.set_unit_temperature.connect(self.t_unit_change)
-        # sig.set_unit_pressure.connect(self.ps_unit_change)
-        # sig.set_unit_angular.connect(self.an_unit_change)
 
     def on_enter(self, *args):
         ...
-
-    def an_unit_change(self, unit, **kwargs):
-        self.wa_v.convertor = Convertor(Angular, Angular.Degree, unit)
-        self.wa_s.text = tr(Velocity.name(unit), 'Unit')
-        self.la_v.convertor = Convertor(Angular, Angular.Degree, unit)
-        self.la_s.text = tr(Velocity.name(unit), 'Unit')
-
-    def v_unit_change(self, unit, **kwargs):
-        self.ws_v.convertor = Convertor(Velocity, Velocity.MPS, unit)
-        self.ws_s.text = tr(Velocity.name(unit), 'Unit')
-
-    def t_unit_change(self, unit, **kwargs):
-        self.t_v.convertor = Convertor(Temperature, Temperature.Celsius, unit)
-        self.t_s.text = tr(Temperature.name(unit), 'Unit')
-
-    def dt_unit_change(self, unit, **kwargs):
-        self.dt_v.convertor = Convertor(Distance, Distance.Meter, unit)
-        self.dt_s.text = tr(Distance.name(unit), 'Unit')
-        self.alt_v.convertor = Convertor(Distance, Distance.Meter, unit)
-        self.alt_s.text = tr(Distance.name(unit), 'Unit')
-
-    def ps_unit_change(self, unit, **kwargs):
-        self.ps_v.convertor = Convertor(Pressure, Pressure.MmHg, unit)
-        self.ps_s.text = tr(Pressure.name(unit), 'Unit')
