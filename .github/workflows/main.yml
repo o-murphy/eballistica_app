@@ -82,7 +82,7 @@ jobs:
 
       - name: Update buildozer.spec with extracted requirements
         run: |
-          sed -i.bak "s/requirements =.*/requirements = ${{ steps.update_requirements.outputs.requirements }}/" buildozer.spec
+          sed -i.bak "s|requirements =.*|requirements = python3,${{ steps.update_requirements.outputs.requirements }}|" buildozer.spec
 
       - name: Upload Artifacts (buildozer.spec)
         uses: actions/upload-artifact@v2
