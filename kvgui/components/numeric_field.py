@@ -5,9 +5,9 @@ from kivy.properties import partial
 from kivymd.uix.textfield import MDTextField
 
 
-class MDSpinBox(MDTextField):
+class MDNumericField(MDTextField):
     def __init__(self, *args, **kwargs):
-        super(MDSpinBox, self).__init__(*args, **kwargs)
+        super(MDNumericField, self).__init__(*args, **kwargs)
         self._value: float = 0
         self.max_value: float = 100
         self.min_value: float = 0
@@ -33,7 +33,7 @@ class MDSpinBox(MDTextField):
             self._increment()
         elif keycode == (274, 'down'):
             self._decrement()
-        super(MDSpinBox, self).keyboard_on_key_down(window, keycode, text, modifiers)
+        super(MDNumericField, self).keyboard_on_key_down(window, keycode, text, modifiers)
 
     def _increment(self):
         self.value += self.step
@@ -53,7 +53,7 @@ class MDSpinBox(MDTextField):
 
     def on_focus(self, instance, isFocused):
         self._set_cursor_right(instance)
-        super(MDSpinBox, self).on_focus(instance, isFocused)
+        super(MDNumericField, self).on_focus(instance, isFocused)
 
     def on_double_tap(self):
         Clock.schedule_once(lambda dt: self.select_all())
@@ -77,7 +77,7 @@ class MDSpinBox(MDTextField):
             except ValueError as err:
                 logging.warning(err)
 
-        super(MDSpinBox, self).set_text(instance, self._formatted(self._value))
+        super(MDNumericField, self).set_text(instance, self._formatted(self._value))
         self._set_cursor_right(instance)
 
     def insert_text(self, substring, from_undo=False):
@@ -86,44 +86,5 @@ class MDSpinBox(MDTextField):
         return super().insert_text(substring, from_undo=from_undo)
 
 
-class MDUnitsInput(MDSpinBox):
-    def __init__(self, *args, **kwargs):
-        super(MDUnitsInput, self).__init__(*args, **kwargs)
-
-        self._convertor = None
-
-    @property
-    def convertor(self):
-        return self._convertor
-
-    @convertor.setter
-    def convertor(self, value):
-        self._convertor = value
-
-    @property
-    def raw_value(self):
-        if self._convertor is not None:
-            return self._convertor.toRaw(self.value)
-        else:
-            return self.value
-
-    @raw_value.setter
-    def raw_value(self, value):
-        if self._convertor is not None:
-            self.value = self._convertor.fromRaw(value)
-        else:
-            self.value = value
-
-
-
-
 if __name__ == '__main__':
-    from kivymd.app import MDApp
-
-    class SpinBoxApp(MDApp):
-        
-        def build(self):
-            spinbox = MDUnitsInput()
-            return spinbox
-
-    SpinBoxApp().run()
+    ...

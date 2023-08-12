@@ -2,8 +2,8 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivymd.uix.textfield import MDTextField
 
-from kvgui.components.abstract import FormSelector
-from kvgui.components.numeric_field import MDUnitsInput
+from kvgui.components.abstract import FormSelector, FormSuffix
+from kvgui.components.measure_widgets import SightHeightValue, TwistValue, MeasureValue
 from kvgui.modules import signals as sig
 from kvgui.modules.translator import translate as tr
 from units import Convertor, Distance
@@ -51,30 +51,42 @@ class RifleCardScreen(Screen):
             if hasattr(child, 'text') and not isinstance(child, MDTextField):
                 child.text = tr(child.text, ctx='RifleCard')
 
-        self.sight_height: MDUnitsInput = self.ids.sh_v
-        self.sight_height_suffix = self.ids.sh_s
+        self.sight_height: SightHeightValue = self.ids.sight_height
+        self.sight_height_suffix = self.ids.sight_height_suffix
 
         self.twist_dir = self.ids.td_v
 
-        self.twist = self.ids.tw_v
-        self.twist_suffix = self.ids.tw_s
+        self.twist: TwistValue = self.ids.twist
+        self.twist_suffix = self.ids.twist_suffix
 
     def bind_ui(self):
-        # setup convertors
-        # sig.set_unit_sight_height.connect(self.set_sh_units)
-        # sig.set_unit_twist.connect(self.set_tw_units)
-        sig.set_setting.connect(self.set_setting)
+        sig.set_setting.connect(self.on_set_settings)
 
     def on_enter(self, *args):
         ...
 
-    def set_setting(self, **kwargs):
-        if 'unit_twist' in kwargs:
-            unit = kwargs['unit_twist']
-            self.twist.convertor = Convertor(Distance, Distance.Inch, unit)
-            self.twist_suffix.text = tr(Distance.name(unit), 'Unit')
-        elif 'unit_sight_height' in kwargs:
-            unit = kwargs['unit_sight_height']
-            self.sight_height.convertor = Convertor(Distance, Distance.Centimeter, unit)
-            self.sight_height_suffix.text = tr(Distance.name(unit), 'Unit')
+    def on_set_settings(self, **kwargs):
+        for key, val in kwargs.items():
+
+            target_key = key.replace('unit_', '')
+            # print(target_key)
+            found_child: MeasureValue = self.ids.get(target_key)
+            if isinstance(found_child, MeasureValue):
+                print(target_key, found_child)
+                found_child.unit = val
+                measure = found_child.convertor.measure
+                found_suffix = self.ids.get(target_key + '_suffix')
+                if isinstance(found_suffix, FormSuffix):
+                    found_suffix.text = tr(measure.name(val), 'Unit')
+
+    # def set_setting(self, **kwargs):
+    #
+    #     if 'unit_twist' in kwargs:
+    #         unit = kwargs['unit_twist']
+    #         self.twist.convertor = Convertor(Distance, Distance.Inch, unit)
+    #         self.twist_suffix.text = tr(Distance.name(unit), 'Unit')
+    #     elif 'unit_sight_height' in kwargs:
+    #         unit = kwargs['unit_sight_height']
+    #         self.sight_height.convertor = Convertor(Distance, Distance.Centimeter, unit)
+    #         self.sight_height_suffix.text = tr(Distance.name(unit), 'Unit')
 

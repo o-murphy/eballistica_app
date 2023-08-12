@@ -103,13 +103,13 @@ class AmmoCardScreen(Screen):
     def bind_ui(self):
         self.pws_act.bind(on_release=lambda x: sig.ammo_powder_sens_act.emit(caller=self))
 
-        sig.set_unit_diameter.connect(self.dm_unit_change)
-        sig.set_unit_weight.connect(self.w_unit_change)
-        sig.set_unit_velocity.connect(self.mv_unit_change)
-        sig.set_unit_velocity.connect(self.mv_unit_change)
-        sig.set_unit_temperature.connect(self.t_unit_change)
-        sig.set_unit_distance.connect(self.dt_unit_change)
-        sig.set_unit_pressure.connect(self.ps_unit_change)
+        # sig.set_unit_diameter.connect(self.dm_unit_change)
+        # sig.set_unit_weight.connect(self.w_unit_change)
+        # sig.set_unit_velocity.connect(self.mv_unit_change)
+        # sig.set_unit_velocity.connect(self.mv_unit_change)
+        # sig.set_unit_temperature.connect(self.t_unit_change)
+        # sig.set_unit_distance.connect(self.dt_unit_change)
+        # sig.set_unit_pressure.connect(self.ps_unit_change)
 
     def on_enter(self, *args):
         ...

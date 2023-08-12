@@ -23,18 +23,18 @@ ammo_powder_sens_act = Signal(args=['caller'], name='ammo_powder_sens_act')
 one_shot_act = Signal(args=['caller'], name='one_shot_act')
 trajectory_act = Signal(args=['caller'], name='trajectory_act')
 
-set_unit_velocity = Signal(args=['unit'], name='set_v_unit')  # TODO: Deprecated
-set_unit_distance = Signal(args=['unit'], name='set_dt_unit')  # TODO: Deprecated
-set_unit_temperature = Signal(args=['unit'], name='set_t_unit')  # TODO: Deprecated
-set_unit_weight = Signal(args=['unit'], name='set_w_unit')  # TODO: Deprecated
-
-set_unit_length = Signal(args=['unit'], name='set_ln_unit')  # TODO: Deprecated
-set_unit_diameter = Signal(args=['unit'], name='set_dm_unit')  # TODO: Deprecated
-set_unit_pressure = Signal(args=['unit'], name='set_ps_unit')  # TODO: Deprecated
-set_unit_drop = Signal(args=['unit'], name='set_dp_unit')  # TODO: Deprecated
-set_unit_angular = Signal(args=['unit'], name='set_an_unit')  # TODO: Deprecated
-set_unit_adjustment = Signal(args=['unit'], name='set_unit_adjustment')  # TODO: Deprecated
-set_unit_energy = Signal(args=['unit'], name='set_e_unit')  # TODO: Deprecated
+# set_unit_velocity = Signal(args=['unit'], name='set_v_unit')  # TODO: Deprecated
+# set_unit_distance = Signal(args=['unit'], name='set_dt_unit')  # TODO: Deprecated
+# set_unit_temperature = Signal(args=['unit'], name='set_t_unit')  # TODO: Deprecated
+# set_unit_weight = Signal(args=['unit'], name='set_w_unit')  # TODO: Deprecated
+#
+# set_unit_length = Signal(args=['unit'], name='set_ln_unit')  # TODO: Deprecated
+# set_unit_diameter = Signal(args=['unit'], name='set_dm_unit')  # TODO: Deprecated
+# set_unit_pressure = Signal(args=['unit'], name='set_ps_unit')  # TODO: Deprecated
+# set_unit_drop = Signal(args=['unit'], name='set_dp_unit')  # TODO: Deprecated
+# set_unit_angular = Signal(args=['unit'], name='set_an_unit')  # TODO: Deprecated
+# set_unit_adjustment = Signal(args=['unit'], name='set_unit_adjustment')  # TODO: Deprecated
+# set_unit_energy = Signal(args=['unit'], name='set_e_unit')  # TODO: Deprecated
 
 set_theme = Signal(args=['theme'], name='set_theme')
 set_lang = Signal(args=['lang'], name='set_lang')

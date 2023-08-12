@@ -50,11 +50,11 @@ class ShotCardScreen(Screen):
         self.one_shot.bind(on_release=lambda x: sig.one_shot_act.emit(caller=self))
         self.trajectory.bind(on_release=lambda x: sig.trajectory_act.emit(caller=self))
 
-        sig.set_unit_distance.connect(self.dt_unit_change)
-        sig.set_unit_velocity.connect(self.v_unit_change)
-        sig.set_unit_temperature.connect(self.t_unit_change)
-        sig.set_unit_pressure.connect(self.ps_unit_change)
-        sig.set_unit_angular.connect(self.an_unit_change)
+        # sig.set_unit_distance.connect(self.dt_unit_change)
+        # sig.set_unit_velocity.connect(self.v_unit_change)
+        # sig.set_unit_temperature.connect(self.t_unit_change)
+        # sig.set_unit_pressure.connect(self.ps_unit_change)
+        # sig.set_unit_angular.connect(self.an_unit_change)
 
     def on_enter(self, *args):
         ...
