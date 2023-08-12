@@ -2,6 +2,7 @@ from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivymd.app import MDApp
 from kivymd.toast import toast
+from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.toolbar import MDActionBottomAppBarButton
 from kivy import platform
 
@@ -45,7 +46,7 @@ class EBallisticaApp(MDApp):
 
     def init_ui(self):
         self.screen = Screen()
-        self.layout = GestureBox()
+        self.layout = MDBoxLayout()
         self.layout.orientation = 'vertical'
 
         self.app_top_bar = AppTopBar()
@@ -115,7 +116,7 @@ class EBallisticaApp(MDApp):
         elif current == 'rifle_card':
             self.switch_rifles_list('right')
         elif current == 'settings':
-            self.switch_rifles_list('left')
+            self.switch_rifles_list('right')
         elif current == 'ammo_card':
             self.switch_ammos_list('right')
         elif current == 'shot_card':

@@ -2,12 +2,11 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivymd.uix.textfield import MDTextField
 
-from kvgui.components.abstract import FormSelector, FormSuffix
-from kvgui.components.measure_widgets import SightHeightValue, TwistValue, MeasureValue
+from kvgui.components.abstract import FormSelector
+from kvgui.components.measure_widgets import SightHeightValue, TwistValue
+from kvgui.defines import TwistDir
 from kvgui.modules import signals as sig
 from kvgui.modules.translator import translate as tr
-from units import Convertor, Distance
-from kvgui.defines import TwistDir
 
 Builder.load_file('kvgui/kv/rifle_card.kv')
 
@@ -66,27 +65,11 @@ class RifleCardScreen(Screen):
         ...
 
     def on_set_settings(self, **kwargs):
-        for key, val in kwargs.items():
 
-            target_key = key.replace('unit_', '')
-            # print(target_key)
-            found_child: MeasureValue = self.ids.get(target_key)
-            if isinstance(found_child, MeasureValue):
-                print(target_key, found_child)
-                found_child.unit = val
-                measure = found_child.convertor.measure
-                found_suffix = self.ids.get(target_key + '_suffix')
-                if isinstance(found_suffix, FormSuffix):
-                    found_suffix.text = tr(measure.name(val), 'Unit')
+        def set_unit_for_target(target, target_suffix, key):
+            if kwargs.get(key):
+                target.unit = kwargs.get(key)
+                target_suffix.text = tr(target.measure.name(target.unit), 'Unit')
 
-    # def set_setting(self, **kwargs):
-    #
-    #     if 'unit_twist' in kwargs:
-    #         unit = kwargs['unit_twist']
-    #         self.twist.convertor = Convertor(Distance, Distance.Inch, unit)
-    #         self.twist_suffix.text = tr(Distance.name(unit), 'Unit')
-    #     elif 'unit_sight_height' in kwargs:
-    #         unit = kwargs['unit_sight_height']
-    #         self.sight_height.convertor = Convertor(Distance, Distance.Centimeter, unit)
-    #         self.sight_height_suffix.text = tr(Distance.name(unit), 'Unit')
-
+        set_unit_for_target(self.twist, self.twist_suffix, 'unit_distance')
+        set_unit_for_target(self.sight_height, self.sight_height_suffix, 'unit_distance')

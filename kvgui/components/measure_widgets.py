@@ -1,6 +1,6 @@
 from kivy.lang import Builder
 from kvgui.components.numeric_field import MDNumericField
-from units import Convertor, Distance, Unit
+from units import *
 import units.ext
 
 
@@ -30,13 +30,17 @@ class MeasureValue(MDNumericField):
         self.decimals = value.measure.accuracy(value.unit)
 
     @property
+    def measure(self):
+        return self.convertor.measure
+
+    @property
     def unit(self):
         return self.convertor.unit
 
     @unit.setter
     def unit(self, unit: Unit):
-        print(unit)
-        self.convertor = Convertor(self.convertor.measure, unit, self.convertor.default_unit)
+        if unit:
+            self.convertor = Convertor(self.convertor.measure, unit, self.convertor.default_unit)
 
     @property
     def raw_value(self):
@@ -70,5 +74,57 @@ class TwistValue(MeasureValue):
 class DistanceValue(MeasureValue):
     def __init__(self, *args, **kwargs):
         super(DistanceValue, self).__init__(*args, **kwargs)
-        self.id = 'twist'
+        self.id = 'distance'
         self.convertor = Convertor(Distance, Distance.Meter, Distance.Meter)
+
+
+class AltitudeValue(DistanceValue):
+    def __init__(self, *args, **kwargs):
+        super(AltitudeValue, self).__init__(*args, **kwargs)
+        self.id = 'altitude'
+
+
+class AngularValue(MeasureValue):
+    def __init__(self, *args, **kwargs):
+        super(AngularValue, self).__init__(*args, **kwargs)
+        self.id = 'angular'
+        self.convertor = Convertor(Angular, Angular.Degree, Angular.Degree)
+
+
+class LookAngleValue(AngularValue):
+    def __init__(self, *args, **kwargs):
+        super(LookAngleValue, self).__init__(*args, **kwargs)
+        self.id = 'look_angle'
+
+
+class PressureValue(MeasureValue):
+    def __init__(self, *args, **kwargs):
+        super(PressureValue, self).__init__(*args, **kwargs)
+        self.id = 'pressure'
+        self.convertor = Convertor(Pressure, Pressure.MmHg, Pressure.MmHg)
+
+
+class TemperatureValue(MeasureValue):
+    def __init__(self, *args, **kwargs):
+        super(TemperatureValue, self).__init__(*args, **kwargs)
+        self.id = 'temperature'
+        self.convertor = Convertor(Temperature, Temperature.Celsius, Temperature.Celsius)
+
+
+class VelocityValue(MeasureValue):
+    def __init__(self, *args, **kwargs):
+        super(VelocityValue, self).__init__(*args, **kwargs)
+        self.id = 'velocity'
+        self.convertor = Convertor(Velocity, Velocity.MPS, Velocity.MPS)
+
+
+class WindSpeedValue(VelocityValue):
+    def __init__(self, *args, **kwargs):
+        super(WindSpeedValue, self).__init__(*args, **kwargs)
+        self.id = 'wind_speed'
+
+
+class WindAngleValue(AngularValue):
+    def __init__(self, *args, **kwargs):
+        super(WindAngleValue, self).__init__(*args, **kwargs)
+        self.id = 'wind_angle'

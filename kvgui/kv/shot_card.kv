@@ -34,23 +34,23 @@
 
                     FormSuffix:
                         id: distance_suffix
-                        text: 'm'
+                        text: ''
 
                 MDBoxLayout:
                     orientation: 'horizontal'
                     spacing: "15dp"
 
                     FormLabel:
-                        id: la_l
+                        id: look_angle_label
                         text: 'Look angle'
 
-                    MeasureValue:
-                        id: la_v
+                    LookAngleValue:
+                        id: look_angle
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: la_s
-                        text: '°'
+                        id: look_angle_suffix
+                        text: ''
 
             MD3CardAbs:
                 orientation: 'vertical'
@@ -69,96 +69,96 @@
                     spacing: "15dp"
 
                     FormLabel:
-                        id: alt_l
+                        id: altitude_label
                         text: 'Altitude'
 
-                    MeasureValue:
-                        id: alt_v
+                    AltitudeValue:
+                        id: altitude
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: alt_s
-                        text: 'm'
+                        id: altitude_suffix
+                        text: ''
 
                 MDBoxLayout:
                     orientation: 'horizontal'
                     spacing: "15dp"
 
                     FormLabel:
-                        id: ps_l
+                        id: pressure_label
                         text: 'Pressure'
 
-                    MeasureValue:
-                        id: ps_v
+                    PressureValue:
+                        id: pressure
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: ps_s
-                        text: 'mmHg'
+                        id: pressure_suffix
+                        text: ''
 
                 MDBoxLayout:
                     orientation: 'horizontal'
                     spacing: "15dp"
 
                     FormLabel:
-                        id: t_l
+                        id: temperature_label
                         text: 'Temperature'
 
-                    MeasureValue:
-                        id: t_v
+                    TemperatureValue:
+                        id: temperature
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: t_s
-                        text: '°C'
+                        id: temperature_suffix
+                        text: ''
 
                 MDBoxLayout:
                     orientation: 'horizontal'
                     spacing: "15dp"
 
                     FormLabel:
-                        id: h_l
+                        id: humidity_l
                         text: 'Humidity'
 
                     MeasureValue:
-                        id: h_v
+                        id: humidity
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: h_s
-                        text: '%'
+                        id: humidity_s
+                        text: ''
 
                 MDBoxLayout:
                     orientation: 'horizontal'
                     spacing: "15dp"
 
                     FormLabel:
-                        id: ws_l
+                        id: wind_speed_label
                         text: 'Wind speed'
 
-                    MeasureValue:
-                        id: ws_v
+                    WindSpeedValue:
+                        id: wind_speed
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: ws_s
-                        text: '%'
+                        id: wind_speed_suffix
+                        text: ''
 
                 MDBoxLayout:
                     orientation: 'horizontal'
                     spacing: "15dp"
 
                     FormLabel:
-                        id: wa_l
+                        id: wind_dir_label
                         text: 'Wind angle'
 
-                    MeasureValue:
-                        id: wa_v
+                    WindAngleValue:
+                        id: wind_angle
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: wa_s
-                        text: '%'
+                        id: wind_angle_suffix
+                        text: ''
 
             MD3CardAbs:
                 orientation: 'vertical'

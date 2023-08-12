@@ -43,16 +43,15 @@ class DragModelSelector(FormSelector):
         )
 
     def bind_ui(self):
-        self.bind(on_release=self.show_menu)
+        self.bind(on_release=self.showeight_menu)
 
-    def show_menu(self, *args, **kwargs):
+    def showeight_menu(self, *args, **kwargs):
         self.menu.open()
 
     def on_menu(self, action):
         self.text = action
         self.value = action
         self.menu.dismiss()
-        sig.ammo_dm_change.emit(caller=self)
 
 
 class AmmoCardScreen(Screen):
@@ -70,78 +69,38 @@ class AmmoCardScreen(Screen):
                 child.text = tr(child.text, ctx='AmmoCard')
 
         # convertable values
-        self.dm_v = self.ids.dm_v
-        self.dm_s = self.ids.dm_s
-        self.w_v = self.ids.w_v
-        self.w_s = self.ids.w_s
-        self.ln_v = self.ids.ln_v
-        self.ln_s = self.ids.ln_s
-        self.mv_v = self.ids.mv_v
-        self.mv_s = self.ids.mv_s
+        self.diameter = self.ids.diameter
+        self.diameter_s = self.ids.diameter_s
+        self.weight = self.ids.weight
+        self.weight_s = self.ids.weight_s
+        self.length = self.ids.length
+        self.length_s = self.ids.length_s
+        self.muzzleelocity = self.ids.muzzleelocity
+        self.muzzleelocity_s = self.ids.muzzleelocity_s
 
         # convertable values
-        self.pwt_v = self.ids.pwt_v
-        self.pwt_s = self.ids.pwt_s
-        self.zd_v = self.ids.zd_v
-        self.zd_s = self.ids.zd_s
-        self.alt_v = self.ids.alt_v
-        self.alt_s = self.ids.alt_s
-        self.ps_v = self.ids.ps_v
-        self.ps_s = self.ids.ps_s
-        self.t_v = self.ids.t_v
-        self.t_s = self.ids.t_s
+        self.powder_temp = self.ids.powder_temp
+        self.powder_temp_s = self.ids.powder_temp_s
+        self.zero_dist = self.ids.zero_dist
+        self.zero_dist_s = self.ids.zero_dist_s
+        self.altitude = self.ids.altitude
+        self.altitude_s = self.ids.altitude_s
+        self.pressure = self.ids.pressure
+        self.pressure_s = self.ids.pressure_s
+        self.temperature = self.ids.temperature
+        self.temperature_s = self.ids.temperature_s
 
         # not need conversion values
-        self.pws_v = self.ids.pws_v
-        self.h_v = self.ids.h_v
+        self.powder_sens = self.ids.powder_sens
+        self.humidity = self.ids.humidity
 
         # special actions
-        self.dm_select = self.ids.dm_select
+        self.diameter_select = self.ids.diameter_select
         self.bc_select = self.ids.bc_select
-        self.pws_act: MDRectangleFlatButton = self.ids.pws_act
+        self.powder_sens_act: MDRectangleFlatButton = self.ids.powder_sens_act
 
     def bind_ui(self):
-        self.pws_act.bind(on_release=lambda x: sig.ammo_powder_sens_act.emit(caller=self))
-
-        # sig.set_unit_diameter.connect(self.dm_unit_change)
-        # sig.set_unit_weight.connect(self.w_unit_change)
-        # sig.set_unit_velocity.connect(self.mv_unit_change)
-        # sig.set_unit_velocity.connect(self.mv_unit_change)
-        # sig.set_unit_temperature.connect(self.t_unit_change)
-        # sig.set_unit_distance.connect(self.dt_unit_change)
-        # sig.set_unit_pressure.connect(self.ps_unit_change)
+        self.powder_sens_act.bind(on_release=lambda x: sig.ammo_powder_sens_act.emit(caller=self))
 
     def on_enter(self, *args):
         ...
-
-    def dm_unit_change(self, unit, **kwargs):
-        self.dm_v.convertor = Convertor(Distance, Distance.Centimeter, unit)
-        self.dm_s.text = tr(Distance.name(unit), 'Unit')
-
-    def w_unit_change(self, unit, **kwargs):
-        self.w_v.convertor = Convertor(Weight, Weight.Grain, unit)
-        self.w_s.text = tr(Weight.name(unit), 'Unit')
-
-    def ln_unit_change(self, unit, **kwargs):
-        self.ln_v.convertor = Convertor(Distance, Distance.Inch, unit)
-        self.ln_s.text = tr(Distance.name(unit), 'Unit')
-
-    def mv_unit_change(self, unit, **kwargs):
-        self.mv_v.convertor = Convertor(Velocity, Velocity.MPS, unit)
-        self.mv_s.text = tr(Velocity.name(unit), 'Unit')
-
-    def t_unit_change(self, unit, **kwargs):
-        self.pwt_v.convertor = Convertor(Temperature, Temperature.Celsius, unit)
-        self.pwt_s.text = tr(Temperature.name(unit), 'Unit')
-        self.t_v.convertor = Convertor(Temperature, Temperature.Celsius, unit)
-        self.t_s.text = tr(Temperature.name(unit), 'Unit')
-
-    def dt_unit_change(self, unit, **kwargs):
-        self.zd_v.convertor = Convertor(Distance, Distance.Meter, unit)
-        self.zd_s.text = tr(Distance.name(unit), 'Unit')
-        self.alt_v.convertor = Convertor(Distance, Distance.Meter, unit)
-        self.alt_s.text = tr(Distance.name(unit), 'Unit')
-
-    def ps_unit_change(self, unit, **kwargs):
-        self.ps_v.convertor = Convertor(Pressure, Pressure.MmHg, unit)
-        self.ps_s.text = tr(Pressure.name(unit), 'Unit')
