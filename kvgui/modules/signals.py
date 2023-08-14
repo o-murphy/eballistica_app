@@ -48,3 +48,5 @@ set_settings = Signal(args=['target', 'value'], name='set_settings')
 load_setting = Signal(name='load_setting')
 
 drag_model_edit_act = Signal(args=['drag_model'], name='drag_model_edit_act')
+
+translator_update = Signal()

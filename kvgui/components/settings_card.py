@@ -5,7 +5,7 @@ from kvgui.components.abstract import FormSelector
 from kvgui.components.mixines import MapIdsMixine
 from kvgui.components.unit_widgets import *
 from kvgui.modules import signals as sig
-from kvgui.modules.translator import translate as tr
+from kvgui.modules.translator import translate as tr, app_translator
 from units import *
 
 Builder.load_file('kvgui/kv/settings_card.kv')
@@ -29,7 +29,7 @@ class SettingsScreen(Screen, MapIdsMixine):
     def on_pre_enter(self, *args):  # Note: Definition that may translate ui automatically
         self.translate_ui()
 
-    def translate_ui(self):
+    def translate_ui(self, **kwargs):
         self.ids.view_title.text = tr('View', ctx='SettingsScreen')
         self.ids.theme_label.text = tr('Theme', ctx='SettingsScreen')
         self.ids.theme.text = tr('Dark', ctx='SettingsScreen')
@@ -58,6 +58,8 @@ class SettingsScreen(Screen, MapIdsMixine):
 
         sig.load_setting.connect(self.on_load_settings)
 
+        sig.translator_update.connect(self.translate_ui)
+
         for k, uid in self.ids.items():
             if isinstance(uid, UnitSelector):
                 uid.bind(on_release=self.on_unit_dropdown)
@@ -78,9 +80,13 @@ class SettingsScreen(Screen, MapIdsMixine):
         caller.menu.dismiss()
 
     def on_lang_dropdown(self, caller: LanguageSelector = None):
+        # self.lang.menu.items = [
+        #     {"text": "English", "on_release": lambda: self.change_lang(lang='English')},
+        #     {"text": "Ukrainian", "on_release": lambda: self.change_lang(lang='Ukrainian')},
+        # ]
         self.lang.menu.items = [
-            {"text": "English", "on_release": lambda: self.change_lang(lang='English')},
-            {"text": "Ukrainian", "on_release": lambda: self.change_lang(lang='Ukrainian')},
+            {"text": lang, "on_release": lambda lang=lang: self.change_lang(lang=lang)}
+            for lang in app_translator.translations
         ]
         self.lang.menu.open()
 

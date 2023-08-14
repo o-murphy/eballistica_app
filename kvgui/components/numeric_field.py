@@ -14,6 +14,7 @@ class MDNumericField(MDTextField):
         self.decimals: int = 2
         self.step: float = 0.1
         self.input_filter = 'float'
+        self.input_type = 'number'
         self.value = 0
 
     @property

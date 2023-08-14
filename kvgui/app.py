@@ -1,26 +1,31 @@
 from kivy import platform
 from kivy.core.window import Window
+from kivy.metrics import dp
+from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivymd.app import MDApp
 from kivymd.toast import toast
 from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.button import MDRaisedButton, MDRectangleFlatButton
+from kivymd.uix.dialog import MDDialog
+from kivymd.uix.label import MDLabel
 from kivymd.uix.toolbar import MDActionBottomAppBarButton
 
 from datatypes.defines import DragModel
 from kvgui.components import *
 from kvgui.components import abstract
+from kvgui.components.abstract import MD3CardAbs
 from kvgui.components.ammo_card import AmmoCardScreen
 from kvgui.components.dm_bc_editor import BCEditor
 from kvgui.components.dm_cdm_editor import CDMEditor
 from kvgui.components.shot_card import ShotCardScreen
 from kvgui.modules import signals as sig
 from kvgui.modules.settings import app_settings
-from kvgui.modules.translator import create_translation_template
+# from kvgui.modules.translator import create_translation_template
 from kvgui.modules.translator import translate as tr
 
 assert app_settings
 assert abstract
-
 
 if platform == 'win':
     Window.size = (500, 700)
@@ -137,6 +142,36 @@ class EBallisticaApp(MDApp):
             self.switch_ammos_list('right')
         elif current in ['bc_editor_screen', 'cdm_editor_screen']:
             self.switch_ammo_card('right')
+        elif current == 'rifles_screen':
+            # self.stop()
+            self.show_exit_confirmation(self)
+
+    def show_exit_confirmation(self, instance):
+        # Todo: refactor
+        self.dialog = MDDialog(
+            text=tr('Are you sure you want to exit?', 'root'),
+            buttons=[
+                MDRaisedButton(
+                    text=tr("No", 'root'),
+                    theme_text_color="Custom",
+                    # text_color=self.theme_cls.se,
+                    on_release=lambda x: self.close_exit_dialog(False)
+                ),
+                MDRectangleFlatButton(
+                    text=tr("Yes", 'root'),
+                    theme_text_color="Custom",
+                    text_color=self.theme_cls.primary_color,
+                    on_release=lambda x: self.close_exit_dialog(True)
+                ),
+            ],
+        )
+        self.dialog.open()
+
+    def close_exit_dialog(self, action):
+        if action:
+            self.close_app()
+        else:
+            self.dialog.dismiss()
 
     def bot_fab_action(self, caller=None, **kwargs):
         current = self.app_screen_manager.current
@@ -189,8 +224,7 @@ class EBallisticaApp(MDApp):
         self.app_screen_manager.current = 'shot_card'
         self.app_bottom_bar.fab_applying()
         self.app_top_bar.breadcrumb = [
-            tr('Rifles', 'Breadcrumb'), '{rifle name}', tr('Ammos', 'Breadcrumb'),
-            '{ammo name}', tr('Shot data', 'Breadcrumb')
+            'Rifles', '{rifle name}', 'Ammos', '{ammo name}', 'Shot data'
         ]
 
     def switch_rifles_list(self, direction='left', caller=None, **kwargs):
@@ -204,28 +238,27 @@ class EBallisticaApp(MDApp):
         self.app_screen_manager.current = 'ammo_card'
         self.app_bottom_bar.fab_applying()
         self.app_top_bar.breadcrumb = [
-            tr('Rifles', 'Breadcrumb'), '{rifle name}', tr('Ammos', 'Breadcrumb'),
-            '{ammo name}', tr('Properties', 'Breadcrumb')
+            'Rifles', '{rifle name}', 'Ammos', '{ammo name}', 'Properties'
         ]
 
     def switch_rifle_card(self, direction='left', caller=None, **kwargs):
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'rifle_card'
         self.app_bottom_bar.fab_applying()
-        self.app_top_bar.breadcrumb = [tr('Rifles', 'Breadcrumb'), '<rifle name>']
+        self.app_top_bar.breadcrumb = ['Rifles', '<rifle name>']
 
     def switch_ammos_list(self, direction='left', caller=None, **kwargs):
         # Todo:
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'ammos_screen'
         self.app_bottom_bar.fab_add_new()
-        self.app_top_bar.breadcrumb = [tr('Rifles', 'Breadcrumb'), '{rifle name}', tr('Ammos', 'Breadcrumb')]
+        self.app_top_bar.breadcrumb = ['Rifles', '<rifle name>', 'Ammos', 'Breadcrumb']
 
     def switch_settings(self, direction='left', caller=None, **kwargs):
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'settings'
         self.app_bottom_bar.fab_hide()
-        self.app_top_bar.breadcrumb = [tr('Settings', 'Breadcrumb')]
+        self.app_top_bar.breadcrumb = ['Settings']
 
     def switch_drag_model_edit(self, drag_model: DragModel, **kwargs):
         self.app_screen_manager.transition.direction = 'left'
@@ -245,9 +278,10 @@ class EBallisticaApp(MDApp):
             toast(text=text)
 
     def on_stop(self):
-        # TODO: temporary
-        print('creating translation template')
-        create_translation_template()
+        # # TODO: temporary
+        # print('creating translation template')
+        # create_translation_template()
+        pass
 
 
 if __name__ == '__main__':

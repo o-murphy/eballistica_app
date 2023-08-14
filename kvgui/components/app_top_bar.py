@@ -3,6 +3,8 @@ from kivymd.uix.toolbar import MDTopAppBar
 
 
 from kvgui.modules import signals as sig
+from kvgui.modules.translator import translate as tr
+
 
 
 class TopBar(MDTopAppBar):
@@ -42,10 +44,19 @@ class AppTopBar(MDBoxLayout):
     def __init__(self, **kwargs):
         super(AppTopBar, self).__init__(**kwargs)
         self.init_ui()
+        self.bind_ui()
+
+        self._breadcrumb_value = None
 
     def init_ui(self):
         self.top_bar = TopBar()
         self.add_widget(self.top_bar)
+
+    def bind_ui(self):
+        sig.translator_update.connect(self.update_breadcrumb)
+
+    def update_breadcrumb(self, **kwargs):
+        self.breadcrumb = self._breadcrumb_value
 
     @property
     def headline_text(self):
@@ -57,10 +68,12 @@ class AppTopBar(MDBoxLayout):
 
     @property
     def breadcrumb(self):
-        return self.top_bar.headline_text.split(' / ')
+        return self._breadcrumb_value
 
     @breadcrumb.setter
     def breadcrumb(self, texts: list[str]):
+        self._breadcrumb_value = texts
+        texts = [tr(string, 'Breadcrumb') for string in texts]
         self.top_bar.headline_text = ' / '.join(texts)
 
     def show_check(self):
