@@ -1,14 +1,12 @@
-from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivymd.uix.button import MDRectangleFlatButton
 from kivymd.uix.menu import MDDropdownMenu
-from kivymd.uix.textfield import MDTextField
 
 from kvgui.components.abstract import FormSelector
+from kvgui.components.mapid import MapIdsMixine
 from kvgui.components.measure_widgets import *
 from kvgui.modules import signals as sig
 from kvgui.modules.translator import translate as tr
-from units import *
 
 Builder.load_file('kvgui/kv/ammo_card.kv')
 
@@ -55,7 +53,7 @@ class DragModelSelector(FormSelector):
         self.menu.dismiss()
 
 
-class AmmoCardScreen(Screen):
+class AmmoCardScreen(Screen, MapIdsMixine):
     def __init__(self, **kwargs):
         super(AmmoCardScreen, self).__init__(**kwargs)
         self.name = 'ammo_card'
@@ -63,42 +61,26 @@ class AmmoCardScreen(Screen):
         self.bind_ui()
 
     def init_ui(self):
+        super(AmmoCardScreen, self).init_ui()
+        self.translate_ui()
 
-        for uid in self.ids:
-            child = self.ids[uid]
-            if hasattr(child, 'text') and not isinstance(child, MDTextField):
-                child.text = tr(child.text, ctx='AmmoCard')
+    def translate_ui(self):
+        self.name_label.text = tr('Name', 'AmmoCard')
+        self.prop_title.text = tr('Properties', 'AmmoCard')
+        self.diameter_label.text = tr('Diameter', 'AmmoCard')
+        self.weight_label.text = tr('Weight', 'AmmoCard')
+        self.length_label.text = tr('Length', 'AmmoCard')
+        self.muzzle_velocity_label.text = tr('Muzzle velocity', 'AmmoCard')
+        self.dm_label.text = tr('Drag model', 'AmmoCard')
+        self.powder_sens_label.text = tr('Powder sensitivity', 'AmmoCard')
+        self.powder_temp_label.text = tr('Powder temperature', 'AmmoCard')
+        self.zero_dist_label.text = tr('Zero distance', 'AmmoCard')
+        self.altitude_label.text = tr('Altitude', 'AmmoCard')
+        self.pressure_label.text = tr('Pressure', 'AmmoCard')
+        self.temperature_label.text = tr('Temperature', 'AmmoCard')
+        self.humidity_label.text = tr('Humidity', 'AmmoCard')
 
-        # convertable values
-        self.diameter: DiameterValue = self.ids.diameter
-        self.diameter_suffix = self.ids.diameter_suffix
-        self.weight: WeightValue = self.ids.weight
-        self.weight_suffix = self.ids.weight_suffix
-        self.length: LengthValue = self.ids.length
-        self.length_suffix = self.ids.length_suffix
-        self.muzzle_velocity: MuzzleValue = self.ids.muzzle_velocity
-        self.muzzle_velocity_suffix = self.ids.muzzle_velocity_suffix
-
-        # convertable values
-        self.powder_temp: PowderTempValue = self.ids.powder_temp
-        self.powder_temp_suffix = self.ids.powder_temp_suffix
-        self.zero_dist: ZeroDistValue = self.ids.zero_dist
-        self.zero_dist_suffix = self.ids.zero_dist_suffix
-        self.altitude: AltitudeValue = self.ids.altitude
-        self.altitude_suffix = self.ids.altitude_suffix
-        self.pressure: PressureValue = self.ids.pressure
-        self.pressure_suffix = self.ids.pressure_suffix
-        self.temperature: TemperatureValue = self.ids.temperature
-        self.temperature_suffix = self.ids.temperature_suffix
-
-        # not need conversion values
-        self.powder_sens = self.ids.powder_sens
-        self.humidity = self.ids.humidity
-
-        # special actions
-        self.dm_select = self.ids.dm_select
-        self.bc_select = self.ids.bc_select
-        self.powder_sens_act: MDRectangleFlatButton = self.ids.powder_sens_act
+        self.powder_sens_act.text = tr('Calculate powder sensitivity', 'AmmoCard')
 
     def bind_ui(self):
         self.powder_sens_act.bind(on_release=lambda x: sig.ammo_powder_sens_act.emit(caller=self))
@@ -118,6 +100,3 @@ class AmmoCardScreen(Screen):
         set_unit_for_target(self.weight, self.weight_suffix, 'unit_weight')
         set_unit_for_target(self.length, self.length_suffix, 'unit_length')
         set_unit_for_target(self.muzzle_velocity, self.muzzle_velocity_suffix, 'unit_velocity')
-
-    def on_enter(self, *args):
-        ...

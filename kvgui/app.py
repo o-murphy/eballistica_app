@@ -1,19 +1,19 @@
+from kivy import platform
 from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivymd.uix.textfield import MDTextField
 from kivymd.app import MDApp
 from kivymd.toast import toast
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.toolbar import MDActionBottomAppBarButton
-from kivy import platform
 
 from kvgui.components import *
 from kvgui.components import abstract
 from kvgui.components.ammo_card import AmmoCardScreen
 from kvgui.components.shot_card import ShotCardScreen
 from kvgui.modules import signals as sig
-from kvgui.modules.translator import create_translation_template
 from kvgui.modules.settings import app_settings
+from kvgui.modules.translator import create_translation_template
+from kvgui.modules.translator import translate as tr
 
 assert app_settings
 assert abstract
@@ -59,6 +59,7 @@ class EBallisticaApp(MDApp):
         self.layout.add_widget(self.app_bottom_bar)
 
         self.screen.add_widget(self.layout)
+        self.switch_rifles_list()
 
     def change_theme(self, theme='Dark', **kwargs):
         self.theme_cls.theme_style = theme
@@ -102,7 +103,7 @@ class EBallisticaApp(MDApp):
     def on_start(self):
         ...
 
-    def droid_back_act(self,window,key,*args):
+    def droid_back_act(self, window, key, *args):
         if key == 27:
             sig.bot_bar_back_act.emit()
 
@@ -141,17 +142,17 @@ class EBallisticaApp(MDApp):
     def save_rifle_card(self):
         # Todo:
         self.switch_rifles_list('right')
-        self.toast("Rifle data saved", duration=1)
+        self.toast(tr("Rifle data saved"), duration=1)
 
     def save_ammo_card(self):
         # Todo:
         self.switch_ammos_list('right')
-        self.toast("Ammo data saved", duration=1)
+        self.toast(tr("Ammo data saved"), duration=1)
 
     def save_shot_card(self):
         # Todo:
         self.switch_ammos_list('right')
-        self.toast("Shot data saved", duration=1)
+        self.toast(tr("Shot data saved"), duration=1)
 
     def edit_rifle(self, caller=None, **kwargs):
         # TODO
@@ -173,38 +174,44 @@ class EBallisticaApp(MDApp):
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'shot_card'
         self.app_bottom_bar.fab_applying()
+        self.app_top_bar.breadcrumb = [
+            tr('Rifles', 'Breadcrumb'), '{rifle name}', tr('Ammos', 'Breadcrumb'),
+            '{ammo name}', tr('Shot data', 'Breadcrumb')
+        ]
 
     def switch_rifles_list(self, direction='left', caller=None, **kwargs):
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'rifles_screen'
         self.app_bottom_bar.fab_add_new()
+        self.app_top_bar.breadcrumb = [tr('Rifles', 'Breadcrumb')]
 
     def switch_ammo_card(self, direction='left', caller=None, **kwargs):
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'ammo_card'
         self.app_bottom_bar.fab_applying()
+        self.app_top_bar.breadcrumb = [
+            tr('Rifles', 'Breadcrumb'), '{rifle name}', tr('Ammos', 'Breadcrumb'),
+            '{ammo name}', tr('Properties', 'Breadcrumb')
+        ]
 
     def switch_rifle_card(self, direction='left', caller=None, **kwargs):
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'rifle_card'
         self.app_bottom_bar.fab_applying()
+        self.app_top_bar.breadcrumb = [tr('Rifles', 'Breadcrumb'), '<rifle name>']
 
     def switch_ammos_list(self, direction='left', caller=None, **kwargs):
         # Todo:
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'ammos_screen'
         self.app_bottom_bar.fab_add_new()
+        self.app_top_bar.breadcrumb = [tr('Rifles', 'Breadcrumb'), '{rifle name}', tr('Ammos', 'Breadcrumb')]
 
     def switch_settings(self, direction='left', caller=None, **kwargs):
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'settings'
         self.app_bottom_bar.fab_hide()
-
-    # def apply_settings(self, **kwargs):
-    #     # TODO:
-    #     self.switch_rifles_list('right')
-    #     self.app_top_bar.show_cog()
-    #     toast("Settings saved", duration=1)
+        self.app_top_bar.breadcrumb = [tr('Settings', 'Breadcrumb')]
 
     def toast(self, text='', duration=2.5):
         try:

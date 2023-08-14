@@ -2,6 +2,7 @@ from kivy.uix.screenmanager import Screen
 from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.textfield import MDTextField
 
+from kvgui.components.mapid import MapIdsMixine
 from kvgui.components.measure_widgets import *
 from kvgui.modules import signals as sig
 from kvgui.modules.translator import translate as tr
@@ -9,7 +10,7 @@ from kvgui.modules.translator import translate as tr
 Builder.load_file('kvgui/kv/shot_card.kv')
 
 
-class ShotCardScreen(Screen):
+class ShotCardScreen(Screen, MapIdsMixine):
     def __init__(self, **kwargs):
         super(ShotCardScreen, self).__init__(**kwargs)
         self.name = 'shot_card'
@@ -17,33 +18,20 @@ class ShotCardScreen(Screen):
         self.bind_ui()
 
     def init_ui(self):
-        for uid in self.ids:
-            child = self.ids[uid]
-            if hasattr(child, 'text') and not isinstance(child, MDTextField):
-                child.text = tr(child.text, ctx='ShotCard')
+        super(ShotCardScreen, self).init_ui()
+        self.translate_ui()
 
-        # convertable values
-        self.distance: DistanceValue = self.ids.distance
-        self.distance_suffix = self.ids.distance_suffix
-        self.look_angle: LookAngleValue = self.ids.look_angle
-        self.look_angle_suffix = self.ids.look_angle_suffix
-        self.altitude: AltitudeValue = self.ids.altitude
-        self.altitude_suffix = self.ids.altitude_suffix
-        self.pressure: PressureValue = self.ids.pressure
-        self.pressure_suffix = self.ids.pressure_suffix
-        self.temperature: TemperatureValue = self.ids.temperature
-        self.temperature_suffix = self.ids.temperature_suffix
-        self.wind_speed: WindSpeedValue = self.ids.wind_speed
-        self.wind_speed_suffix = self.ids.wind_speed_suffix
-        self.wind_angle: WindAngleValue = self.ids.wind_angle
-        self.wind_angle_suffix = self.ids.wind_angle_suffix
-
-        # not need conversion values
-        self.humidity = self.ids.humidity
-
-        # special actions
-        self.one_shot: MDRaisedButton = self.ids.one_shot
-        self.trajectory: MDRaisedButton = self.ids.trajectory
+    def translate_ui(self):
+        self.target_label.text = tr('Target', 'ShotCard')
+        self.distance_label.text = tr('Distance', 'ShotCard')
+        self.look_angle_label.text = tr('Look angle', 'ShotCard')
+        self.atmo_label.text = tr('Atmosphere', 'ShotCard')
+        self.altitude_label.text = tr('Altitude', 'ShotCard')
+        self.pressure_label.text = tr('Pressure', 'ShotCard')
+        self.temperature_label.text = tr('Temperature', 'ShotCard')
+        self.humidity_label.text = tr('Humidity', 'ShotCard')
+        self.wind_speed_label.text = tr('Wind speed', 'ShotCard')
+        self.wind_dir_label.text = tr('Wind angle', 'ShotCard')
 
     def bind_ui(self):
         self.one_shot.bind(on_release=lambda x: sig.one_shot_act.emit(caller=self))

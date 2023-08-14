@@ -44,18 +44,34 @@ class AppTopBar(MDBoxLayout):
         self.init_ui()
 
     def init_ui(self):
-        self.bar = TopBar()
-        self.add_widget(self.bar)
+        self.top_bar = TopBar()
+        self.add_widget(self.top_bar)
+
+    @property
+    def headline_text(self):
+        return self.top_bar.headline_text
+
+    @headline_text.setter
+    def headline_text(self, text):
+        self.top_bar.headline_text = text
+
+    @property
+    def breadcrumb(self):
+        return self.top_bar.headline_text.split(' / ')
+
+    @breadcrumb.setter
+    def breadcrumb(self, texts: list[str]):
+        self.top_bar.headline_text = ' / '.join(texts)
 
     def show_check(self):
-        self.bar.hide_all()
-        self.bar.show_check()
+        self.top_bar.hide_all()
+        self.top_bar.show_check()
 
     def show_cog(self):
-        self.bar.hide_all()
-        self.bar.show_cog()
+        self.top_bar.hide_all()
+        self.top_bar.show_cog()
 
     def hide_all(self):
-        self.bar.hide_all()
+        self.top_bar.hide_all()
 
 

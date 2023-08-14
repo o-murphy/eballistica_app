@@ -1,0 +1,130 @@
+{
+  "meta": {
+    "language": "Ukrainian",
+    "author": "o-murphy",
+    "version": "0.0.1",
+    "date": "14.08.2023",
+    "code": "ua"
+  },
+  "context": {
+    "Language": {
+      "English": "English",
+      "Ukrainian": "Українська"
+    },
+    "RifleCard": {
+      "": "",
+      "Name": "Назва",
+      "Properties": "Властивості",
+      "Sight height": "Висота ствола",
+      "Twist direction": "Нарізи"
+    },
+    "SettingsScreen": {
+      "View": "Вигляд",
+      "Theme": "Тема",
+      "Dark": "Темна",
+      "Language": "Мова",
+      "Twist": "Твіст",
+      "Sight height": "Висота ствола",
+      "Velocity": "Швидкість",
+      "Distance": "Відстань",
+      "Temperature": "Температура",
+      "Weight": "Вага",
+      "Length": "Довжина",
+      "Diameter": "Діаметр",
+      "Pressure": "Тиск",
+      "Drop / Windage": "Drop / Windage",
+      "Angular": "Кутові величини",
+      "Adjustment": "Поправки",
+      "Energy": "Енергія"
+    },
+    "ShotCard": {
+      "Target": "Ціль",
+      "Distance": "Дистанція",
+      "Look angle": "Кут",
+      "Atmosphere": "Атмосфера",
+      "Altitude": "Висота",
+      "Pressure": "Тиск",
+      "Temperature": "Температура",
+      "Wind speed": "Швидкість вітру",
+      "Wind angle": "Напрям вітру",
+      "Humidity": "Вологість"
+    },
+    "Unit": {
+      "cm": "см",
+      "inch": "дюйм",
+      "m/s": "м/с",
+      "m": "м",
+      "°C": "°C",
+      "gr": "грн",
+      "mmHg": "мм.рт.ст",
+      "mil": "міл",
+      "cm/100m": "см/100м",
+      "ft·lb": "ft·lb",
+      "g": "г",
+      "kg": "кг",
+      "lb": "lb",
+      "N": "N",
+      "oz": "oz",
+      "mm": "мм",
+      "ln": "лін.",
+      "ft/s": "фут/с",
+      "km/h": "км/г",
+      "kt": "kt",
+      "km": "км",
+      "ft": "фут",
+      "yd": "ярд",
+      "mi": "милі",
+      "nm": "мор. милі.",
+      "°F": "°F",
+      "°K": "°K",
+      "°R": "°R",
+      "hPa": "hPa",
+      "?": "?",
+      "psi": "psi",
+      "moa": "moa",
+      "mrad": "mrad",
+      "rad": "rad",
+      "in/100yd": "дм/100ярд",
+      "ths": "ths",
+      "°": "°",
+      "J": "Дж"
+    },
+    "AmmoCard": {
+      "Name": "Назва",
+      "Properties": "Властивості",
+      "Diameter": "Діаметр",
+      "Weight": "Вага",
+      "Length": "Довжина",
+      "Muzzle velocity": "Початкова швидкість",
+      "Drag model": "Драг-модель",
+      "Powder sensitivity": "Чутливість пороху",
+      "Powder temperature": "Температура пороху",
+      "Zero distance": "Дистанція пристрілки",
+      "Altitude": "Висотa",
+      "Pressure": "Тиск",
+      "Temperature": "Температура",
+      "Humidity": "Вологість",
+      "Calculate powder sensitivity": "Розрахувати чутливість пороху"
+    },
+    "root": {
+      "Rifle data saved": "Зброя збережена",
+      "Ammo data saved": "Набій збережено",
+      "Shot data saved": "Параметри стрільби збережено"
+    },
+    "Breadcrumb": {
+      "Rifles": "Зброя",
+      "Ammos": "Набої",
+      "Shot data": "Умови стрільби",
+      "Properties": "Властивості",
+      "Settings": "Налаштування"
+    },
+    "RifleItem": {
+      "New rifle": "Нова гвинтівка",
+      "Twist:": "Твіст:",
+      "Sight height:": "Висота прицілу:"
+    },
+    "AmmoItem": {
+      "New ammo": "Новий набій"
+    }
+  }
+}

@@ -3,6 +3,7 @@ from kivy.uix.screenmanager import Screen
 from kivymd.uix.textfield import MDTextField
 
 from kvgui.components.abstract import FormSelector
+from kvgui.components.mapid import MapIdsMixine
 from kvgui.components.measure_widgets import SightHeightValue, TwistValue
 from datatypes.defines import TwistDir
 from kvgui.modules import signals as sig
@@ -11,7 +12,7 @@ from kvgui.modules.translator import translate as tr
 Builder.load_file('kvgui/kv/rifle_card.kv')
 
 
-class TwistDirSelector(FormSelector):
+class TwistDirSelector(FormSelector, MapIdsMixine):
     def __init__(self, **kwargs):
         super(TwistDirSelector, self).__init__(**kwargs)
         self.init_ui()
@@ -36,7 +37,7 @@ class TwistDirSelector(FormSelector):
             self.value = TwistDir.Right
 
 
-class RifleCardScreen(Screen):
+class RifleCardScreen(Screen, MapIdsMixine):
     def __init__(self, **kwargs):
         super(RifleCardScreen, self).__init__(**kwargs)
         self.name = 'rifle_card'
@@ -44,19 +45,15 @@ class RifleCardScreen(Screen):
         self.bind_ui()
 
     def init_ui(self):
+        super(RifleCardScreen, self).init_ui()
+        self.translate_ui()
 
-        for uid in self.ids:
-            child = self.ids[uid]
-            if hasattr(child, 'text') and not isinstance(child, MDTextField):
-                child.text = tr(child.text, ctx='RifleCard')
-
-        self.sight_height: SightHeightValue = self.ids.sight_height
-        self.sight_height_suffix = self.ids.sight_height_suffix
-
-        self.twist_dir = self.ids.td_v
-
-        self.twist: TwistValue = self.ids.twist
-        self.twist_suffix = self.ids.twist_suffix
+    def translate_ui(self):
+        self.name_label.text = tr('Name', 'RifleCard')
+        self.prop_title_label.text = tr('Properties', 'RifleCard')
+        self.sight_height_label.text = tr('Sight height', 'RifleCard')
+        self.twist_label.text = tr('Sight height', 'RifleCard')
+        self.twist_dir_label.text = tr('Twist direction', 'RifleCard')
 
     def bind_ui(self):
         sig.set_settings.connect(self.on_set_settings)
@@ -73,5 +70,5 @@ class RifleCardScreen(Screen):
                     target.unit = unit
                     target_suffix.text = tr(target.measure.name(target.unit), 'Unit')
 
-        set_unit_for_target(self.twist, self.twist_suffix, 'unit_distance')
-        set_unit_for_target(self.sight_height, self.sight_height_suffix, 'unit_distance')
+        set_unit_for_target(self.twist, self.twist_suffix, 'unit_twist')
+        set_unit_for_target(self.sight_height, self.sight_height_suffix, 'unit_sight_height')

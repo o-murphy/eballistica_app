@@ -6,6 +6,7 @@ from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.scrollview import MDScrollView
 
 from kvgui.modules import signals as sig
+from kvgui.modules.translator import translate as tr
 
 Builder.load_file('kvgui/kv/ammo_list_item.kv')
 
@@ -21,7 +22,7 @@ class AmmoListItem(ThreeLineListItem, TouchBehavior):
         self.bind_ui()
 
     def init_ui(self):
-        ...
+        self.text = tr('New ammo', "AmmoItem")
 
     def bind_ui(self):
         ...
@@ -41,11 +42,11 @@ class AmmoListItem(ThreeLineListItem, TouchBehavior):
 
         menu_items = [
             {
-                "text": "Edit", "leading_icon": "pencil-outline",
+                "text": tr("Edit", "AmmoItem"), "leading_icon": "pencil-outline",
                 "on_release": lambda: self.on_menu_action(action='Edit')
             },
             {
-                "text": "Delete", "leading_icon": "delete-outline",
+                "text": tr("Delete", "AmmoItem"), "leading_icon": "delete-outline",
                 "on_release": lambda: self.on_menu_action(action='Delete')
             },
         ]

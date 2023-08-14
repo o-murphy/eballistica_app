@@ -1,7 +1,8 @@
 from kivy.lang import Builder
 from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.toolbar import MDActionBottomAppBarButton, MDFabBottomAppBarButton
+from kivymd.uix.toolbar import MDActionBottomAppBarButton
 
+from kvgui.components.mapid import MapIdsMixine
 from kvgui.modules import signals as sig
 
 Builder.load_file('kvgui/kv/bottom_bar.kv')
@@ -11,7 +12,7 @@ class BottomAction(MDActionBottomAppBarButton):
     pass
 
 
-class AppBottomBar(MDBoxLayout):
+class AppBottomBar(MDBoxLayout, MapIdsMixine):
 
     def __init__(self, *args, **kwargs):
         super(AppBottomBar, self).__init__(*args, **kwargs)
@@ -19,13 +20,12 @@ class AppBottomBar(MDBoxLayout):
         self.bind_ui()
 
     def init_ui(self):
-        self.bar = self.ids.bottom_bar
+        super(AppBottomBar, self).init_ui()
         back_action = BottomAction(icon='arrow-left', on_release=self.on_action)
-        self.bar.action_items = [back_action]
-        self.fab: MDFabBottomAppBarButton = self.ids.bottom_bar_fab
+        self.bottom_bar.action_items = [back_action]
 
     def bind_ui(self):
-        self.fab.bind(on_release=lambda caller: sig.bot_bar_fab_act.emit(caller=caller))
+        self.bottom_bar_fab.bind(on_release=lambda caller: sig.bot_bar_fab_act.emit(caller=caller))
 
     def on_action(self, action, **kwargs):
         if action.icon.find('left') >= 0:
@@ -33,21 +33,21 @@ class AppBottomBar(MDBoxLayout):
             sig.bot_bar_back_act.emit()
 
     def fab_hide(self):
-        self.fab.opacity = 0
-        self.fab.disabled = True
-        # self.bar.allow_hidden = True
+        self.bottom_bar_fab.opacity = 0
+        self.bottom_bar_fab.disabled = True
+        # self.bottob_bar.allow_hidden = True
 
     def fab_show(self):
-        self.fab.opacity = 1
-        self.fab.disabled = False
-        # self.bar.allow_hidden = False
+        self.bottom_bar_fab.opacity = 1
+        self.bottom_bar_fab.disabled = False
+        # self.bottob_bar.allow_hidden = False
 
     def fab_applying(self):
         self.fab_show()
-        self.fab.icon = 'check'
-        self.fab._md_bg_color = "teal"
+        self.bottom_bar_fab.icon = 'check'
+        self.bottom_bar_fab._md_bg_color = "teal"
 
     def fab_add_new(self):
         self.fab_show()
-        self.fab.icon = 'plus'
-        self.fab._md_bg_color = "orange"
+        self.bottom_bar_fab.icon = 'plus'
+        self.bottom_bar_fab._md_bg_color = "orange"

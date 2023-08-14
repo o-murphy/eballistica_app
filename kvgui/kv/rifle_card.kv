@@ -15,12 +15,12 @@
                 height: dp(60)
 
                 FormLabel:
-                    id: name_l
+                    id: name_label
                     text: 'Name'
                     size_hint_x: 0.2
 
                 FormInput:
-                    id: name_v
+                    id: name_input
                     text: 'New Rifle'
                     size_hint_x: 0.8
 
@@ -30,7 +30,7 @@
                 height: dp(220)
 
                 FormLabel:
-                    id: prop_title
+                    id: prop_title_label
                     text: 'Properties'
                     font_style: 'H6'
 
@@ -55,12 +55,12 @@
                     spacing: "15dp"
 
                     FormLabel:
-                        id: td_l
+                        id: twist_dir_label
                         text: 'Twist direction'
                         size_hint_x: 0.6
 
                     TwistDirSelector:
-                        id: td_v
+                        id: twist_dir
                         text: 'Right'
                         icon: 'rotate-right'
                         size_hint_x: 0.3

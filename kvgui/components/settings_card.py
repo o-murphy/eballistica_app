@@ -2,6 +2,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
 from kvgui.components.abstract import FormSelector
+from kvgui.components.mapid import MapIdsMixine
 from kvgui.components.unit_widgets import *
 from kvgui.modules import signals as sig
 from kvgui.modules.translator import translate as tr
@@ -10,11 +11,11 @@ from units import *
 Builder.load_file('kvgui/kv/settings_card.kv')
 
 
-class LanguageSelector(FormSelector):
+class LanguageSelector(FormSelector, MapIdsMixine):
     pass
 
 
-class SettingsScreen(Screen):
+class SettingsScreen(Screen, MapIdsMixine):
     def __init__(self, **kwargs):
         super(SettingsScreen, self).__init__(**kwargs)
         self.name = 'settings'
@@ -22,23 +23,7 @@ class SettingsScreen(Screen):
         self.bind_ui()
 
     def init_ui(self):
-        self.theme: FormSelector = self.ids.theme
-        self.lang: FormSelector = self.ids.lang
-
-        self.unit_twist: TwistUnits = self.ids.unit_twist
-        self.unit_sight_height: SightHeightUnits = self.ids.unit_sight_height
-        self.unit_velocity: VelocityUnits = self.ids.unit_velocity
-        self.unit_distance: DistanceUnits = self.ids.unit_distance
-        self.unit_temperature: TemperatureUnits = self.ids.unit_temperature
-        self.unit_weight: WeightUnits = self.ids.unit_weight
-        self.unit_length: LengthUnits = self.ids.unit_length
-        self.unit_diameter: DiameterUnits = self.ids.unit_diameter
-        self.unit_pressure: PressureUnits = self.ids.unit_pressure
-        self.unit_drop: PropUnits = self.ids.unit_drop
-        self.unit_angular: AngularUnits = self.ids.unit_angular
-        self.unit_adjustment: AdjustmentUnits = self.ids.unit_adjustment
-        self.unit_energy: EnergyUnits = self.ids.unit_energy
-
+        super(SettingsScreen, self).init_ui()
         self.translate_ui()
 
     def translate_ui(self):
@@ -46,7 +31,6 @@ class SettingsScreen(Screen):
         self.ids.theme_label.text = tr('Theme', ctx='SettingsScreen')
         self.ids.theme.text = tr('Dark', ctx='SettingsScreen')
         self.ids.lang_label.text = tr('Language', ctx='SettingsScreen')
-        self.ids.lang.text = tr('English', ctx='SettingsScreen')
         self.ids.unit_twist_label.text = tr('Twist', ctx='SettingsScreen')
         self.ids.unit_sight_height_label.text = tr('Sight height', ctx='SettingsScreen')
         self.ids.unit_velocity_label.text = tr('Velocity', ctx='SettingsScreen')
