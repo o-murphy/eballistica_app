@@ -19,7 +19,8 @@ assert app_settings
 assert abstract
 
 
-# Window.size = (400, 700)
+if platform == 'win':
+    Window.size = (500, 700)
 
 
 class AppScreenManager(ScreenManager):
