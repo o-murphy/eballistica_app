@@ -2,8 +2,9 @@ from kivy.uix.screenmanager import Screen
 from kivymd.uix.button import MDRectangleFlatButton
 from kivymd.uix.menu import MDDropdownMenu
 
+from datatypes.defines import DragModel
 from kvgui.components.abstract import FormSelector
-from kvgui.components.mapid import MapIdsMixine
+from kvgui.components.mixines import MapIdsMixine
 from kvgui.components.measure_widgets import *
 from kvgui.modules import signals as sig
 from kvgui.modules.translator import translate as tr
@@ -29,15 +30,15 @@ class DragModelSelector(FormSelector):
         super(DragModelSelector, self).__init__(**kwargs)
         self.init_ui()
         self.bind_ui()
-        self.value = "G7"
+        self.value = DragModel.G7
 
     def init_ui(self):
         self.menu = MDDropdownMenu(
             caller=self,
             items=[
-                {"text": "G1", "on_release": lambda: self.on_menu(action="G1")},
-                {"text": "G7", "on_release": lambda: self.on_menu(action="G7")},
-                {"text": "CDM", "on_release": lambda: self.on_menu(action="CDM")},
+                {"text": "G1", "on_release": lambda: self.on_menu(action=DragModel.G1)},
+                {"text": "G7", "on_release": lambda: self.on_menu(action=DragModel.G7)},
+                {"text": "CDM", "on_release": lambda: self.on_menu(action=DragModel.CDM)},
             ],
         )
 
@@ -48,9 +49,17 @@ class DragModelSelector(FormSelector):
         self.menu.open()
 
     def on_menu(self, action):
-        self.text = action
         self.value = action
         self.menu.dismiss()
+
+    @property
+    def value(self) -> DragModel:
+        return self._value
+
+    @value.setter
+    def value(self, value: DragModel):
+        self._value = value
+        self.text = value.name
 
 
 class AmmoCardScreen(Screen, MapIdsMixine):
@@ -59,6 +68,9 @@ class AmmoCardScreen(Screen, MapIdsMixine):
         self.name = 'ammo_card'
         self.init_ui()
         self.bind_ui()
+
+    def on_pre_enter(self, *args):  # Note: Definition that may translate ui automatically
+        self.translate_ui()
 
     def init_ui(self):
         super(AmmoCardScreen, self).init_ui()
@@ -84,6 +96,7 @@ class AmmoCardScreen(Screen, MapIdsMixine):
 
     def bind_ui(self):
         self.powder_sens_act.bind(on_release=lambda x: sig.ammo_powder_sens_act.emit(caller=self))
+        self.bc_select.bind(on_release=lambda x: sig.drag_model_edit_act.emit(drag_model=self.dm_select.value))
 
         sig.set_settings.connect(self.on_set_settings)
 

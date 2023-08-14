@@ -6,9 +6,12 @@ from kivymd.toast import toast
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.toolbar import MDActionBottomAppBarButton
 
+from datatypes.defines import DragModel
 from kvgui.components import *
 from kvgui.components import abstract
 from kvgui.components.ammo_card import AmmoCardScreen
+from kvgui.components.dm_bc_editor import BCEditor
+from kvgui.components.dm_cdm_editor import CDMEditor
 from kvgui.components.shot_card import ShotCardScreen
 from kvgui.modules import signals as sig
 from kvgui.modules.settings import app_settings
@@ -24,6 +27,7 @@ if platform == 'win':
 
 
 class AppScreenManager(ScreenManager):
+
     def __init__(self, **kwargs):
         super(AppScreenManager, self).__init__(**kwargs)
         self.init_ui()
@@ -36,12 +40,17 @@ class AppScreenManager(ScreenManager):
         self.ammo_card_screen = AmmoCardScreen()
         self.shot_card_screen = ShotCardScreen()
 
+        self.bc_edit = BCEditor()
+        self.cdm_editor = CDMEditor()
+
         self.add_widget(self.rifles_screen)
         self.add_widget(self.ammos_screen)
         self.add_widget(self.rifle_card_screen)
         self.add_widget(self.settings_screen)
         self.add_widget(self.ammo_card_screen)
         self.add_widget(self.shot_card_screen)
+        self.add_widget(self.bc_edit)
+        self.add_widget(self.cdm_editor)
 
 
 class EBallisticaApp(MDApp):
@@ -86,6 +95,8 @@ class EBallisticaApp(MDApp):
 
         sig.bot_bar_back_act.connect(self.back_action)
 
+        sig.drag_model_edit_act.connect(self.switch_drag_model_edit)
+
         self.app_screen_manager.rifles_screen.on_enter = self.app_top_bar.show_cog
         self.app_screen_manager.rifles_screen.on_leave = self.app_top_bar.hide_all
 
@@ -124,6 +135,8 @@ class EBallisticaApp(MDApp):
             self.switch_ammos_list('right')
         elif current == 'shot_card':
             self.switch_ammos_list('right')
+        elif current in ['bc_editor_screen', 'cdm_editor_screen']:
+            self.switch_ammo_card('right')
 
     def bot_fab_action(self, caller=None, **kwargs):
         current = self.app_screen_manager.current
@@ -213,6 +226,14 @@ class EBallisticaApp(MDApp):
         self.app_screen_manager.current = 'settings'
         self.app_bottom_bar.fab_hide()
         self.app_top_bar.breadcrumb = [tr('Settings', 'Breadcrumb')]
+
+    def switch_drag_model_edit(self, drag_model: DragModel, **kwargs):
+        self.app_screen_manager.transition.direction = 'left'
+        self.app_bottom_bar.fab_hide()
+        if drag_model in [DragModel.G7, DragModel.G1]:
+            self.app_screen_manager.current = 'bc_editor_screen'
+        elif drag_model == DragModel.CDM:
+            self.app_screen_manager.current = 'cdm_editor_screen'
 
     def toast(self, text='', duration=2.5):
         try:

@@ -2,7 +2,7 @@ from kivy.uix.screenmanager import Screen
 from kivymd.uix.button import MDRaisedButton
 from kivymd.uix.textfield import MDTextField
 
-from kvgui.components.mapid import MapIdsMixine
+from kvgui.components.mixines import MapIdsMixine
 from kvgui.components.measure_widgets import *
 from kvgui.modules import signals as sig
 from kvgui.modules.translator import translate as tr
@@ -20,6 +20,9 @@ class ShotCardScreen(Screen, MapIdsMixine):
     def init_ui(self):
         super(ShotCardScreen, self).init_ui()
         self.humidity_suffix.text = '%'
+        # self.translate_ui()
+
+    def on_pre_enter(self, *args):  # Note: Definition that may translate ui automatically
         self.translate_ui()
 
     def translate_ui(self):
@@ -33,6 +36,8 @@ class ShotCardScreen(Screen, MapIdsMixine):
         self.humidity_label.text = tr('Humidity', 'ShotCard')
         self.wind_speed_label.text = tr('Wind speed', 'ShotCard')
         self.wind_dir_label.text = tr('Wind angle', 'ShotCard')
+        self.one_shot.text = tr('One shot', 'ShotCard')
+        self.trajectory.text = tr('Trajectory', 'ShotCard')
 
     def bind_ui(self):
         self.one_shot.bind(on_release=lambda x: sig.one_shot_act.emit(caller=self))

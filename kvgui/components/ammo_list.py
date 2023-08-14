@@ -70,6 +70,12 @@ class AmmosScreen(Screen):
         self.name = 'ammos_screen'
         self.init_ui()
 
+    def on_pre_enter(self, *args):  # Note: Definition that may translate ui automatically
+        self.translate_ui()
+
+    def translate_ui(self):
+        ...
+
     def init_ui(self):
         self.scroll = MDScrollView()
         self.list = MDList()

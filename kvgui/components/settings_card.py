@@ -2,7 +2,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
 from kvgui.components.abstract import FormSelector
-from kvgui.components.mapid import MapIdsMixine
+from kvgui.components.mixines import MapIdsMixine
 from kvgui.components.unit_widgets import *
 from kvgui.modules import signals as sig
 from kvgui.modules.translator import translate as tr
@@ -24,6 +24,9 @@ class SettingsScreen(Screen, MapIdsMixine):
 
     def init_ui(self):
         super(SettingsScreen, self).init_ui()
+        # self.translate_ui()
+
+    def on_pre_enter(self, *args):  # Note: Definition that may translate ui automatically
         self.translate_ui()
 
     def translate_ui(self):
