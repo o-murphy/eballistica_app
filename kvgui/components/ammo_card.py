@@ -5,6 +5,7 @@ from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.textfield import MDTextField
 
 from kvgui.components.abstract import FormSelector
+from kvgui.components.measure_widgets import *
 from kvgui.modules import signals as sig
 from kvgui.modules.translator import translate as tr
 from units import *
@@ -69,38 +70,54 @@ class AmmoCardScreen(Screen):
                 child.text = tr(child.text, ctx='AmmoCard')
 
         # convertable values
-        self.diameter = self.ids.diameter
-        self.diameter_s = self.ids.diameter_s
-        self.weight = self.ids.weight
-        self.weight_s = self.ids.weight_s
-        self.length = self.ids.length
-        self.length_s = self.ids.length_s
-        self.muzzleelocity = self.ids.muzzleelocity
-        self.muzzleelocity_s = self.ids.muzzleelocity_s
+        self.diameter: DiameterValue = self.ids.diameter
+        self.diameter_suffix = self.ids.diameter_suffix
+        self.weight: WeightValue = self.ids.weight
+        self.weight_suffix = self.ids.weight_suffix
+        self.length: LengthValue = self.ids.length
+        self.length_suffix = self.ids.length_suffix
+        self.muzzle_velocity: MuzzleValue = self.ids.muzzle_velocity
+        self.muzzle_velocity_suffix = self.ids.muzzle_velocity_suffix
 
         # convertable values
-        self.powder_temp = self.ids.powder_temp
-        self.powder_temp_s = self.ids.powder_temp_s
-        self.zero_dist = self.ids.zero_dist
-        self.zero_dist_s = self.ids.zero_dist_s
-        self.altitude = self.ids.altitude
-        self.altitude_s = self.ids.altitude_s
-        self.pressure = self.ids.pressure
-        self.pressure_s = self.ids.pressure_s
-        self.temperature = self.ids.temperature
-        self.temperature_s = self.ids.temperature_s
+        self.powder_temp: PowderTempValue = self.ids.powder_temp
+        self.powder_temp_suffix = self.ids.powder_temp_suffix
+        self.zero_dist: ZeroDistValue = self.ids.zero_dist
+        self.zero_dist_suffix = self.ids.zero_dist_suffix
+        self.altitude: AltitudeValue = self.ids.altitude
+        self.altitude_suffix = self.ids.altitude_suffix
+        self.pressure: PressureValue = self.ids.pressure
+        self.pressure_suffix = self.ids.pressure_suffix
+        self.temperature: TemperatureValue = self.ids.temperature
+        self.temperature_suffix = self.ids.temperature_suffix
 
         # not need conversion values
         self.powder_sens = self.ids.powder_sens
         self.humidity = self.ids.humidity
 
         # special actions
-        self.diameter_select = self.ids.diameter_select
+        self.dm_select = self.ids.dm_select
         self.bc_select = self.ids.bc_select
         self.powder_sens_act: MDRectangleFlatButton = self.ids.powder_sens_act
 
     def bind_ui(self):
         self.powder_sens_act.bind(on_release=lambda x: sig.ammo_powder_sens_act.emit(caller=self))
+
+        sig.set_settings.connect(self.on_set_settings)
+
+    def on_set_settings(self, **kwargs):
+
+        def set_unit_for_target(target, target_suffix, key):
+            if kwargs.get(key):
+                unit = kwargs.get(key)
+                if unit:
+                    target.unit = unit
+                    target_suffix.text = tr(target.measure.name(target.unit), 'Unit')
+
+        set_unit_for_target(self.diameter, self.diameter_suffix, 'unit_diameter')
+        set_unit_for_target(self.weight, self.weight_suffix, 'unit_weight')
+        set_unit_for_target(self.length, self.length_suffix, 'unit_length')
+        set_unit_for_target(self.muzzle_velocity, self.muzzle_velocity_suffix, 'unit_velocity')
 
     def on_enter(self, *args):
         ...

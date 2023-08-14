@@ -57,5 +57,5 @@ load_unit_angular = Signal(args=['unit'], name='load_set_an_unit')
 load_unit_adjustment = Signal(args=['unit'], name='load_set_unit_adjustment')
 load_unit_energy = Signal(args=['unit'], name='load_set_e_unit')
 
-set_setting = Signal(args=['target', 'value'], name='set_setting')
+set_settings = Signal(args=['target', 'value'], name='set_settings')
 load_setting = Signal(name='load_setting')

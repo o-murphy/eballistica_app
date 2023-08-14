@@ -4,7 +4,7 @@ from kivymd.uix.textfield import MDTextField
 
 from kvgui.components.abstract import FormSelector
 from kvgui.components.measure_widgets import SightHeightValue, TwistValue
-from kvgui.defines import TwistDir
+from datatypes.defines import TwistDir
 from kvgui.modules import signals as sig
 from kvgui.modules.translator import translate as tr
 
@@ -59,7 +59,7 @@ class RifleCardScreen(Screen):
         self.twist_suffix = self.ids.twist_suffix
 
     def bind_ui(self):
-        sig.set_setting.connect(self.on_set_settings)
+        sig.set_settings.connect(self.on_set_settings)
 
     def on_enter(self, *args):
         ...
@@ -68,8 +68,10 @@ class RifleCardScreen(Screen):
 
         def set_unit_for_target(target, target_suffix, key):
             if kwargs.get(key):
-                target.unit = kwargs.get(key)
-                target_suffix.text = tr(target.measure.name(target.unit), 'Unit')
+                unit = kwargs.get(key)
+                if unit:
+                    target.unit = unit
+                    target_suffix.text = tr(target.measure.name(target.unit), 'Unit')
 
         set_unit_for_target(self.twist, self.twist_suffix, 'unit_distance')
         set_unit_for_target(self.sight_height, self.sight_height_suffix, 'unit_distance')

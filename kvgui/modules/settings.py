@@ -66,7 +66,7 @@ class AppSettings:
     def bind_on_set(self):
         sig.set_theme.connect(self.update)
         sig.set_lang.connect(self.update)
-        sig.set_setting.connect(self.update)
+        sig.set_settings.connect(self.update)
 
 
 app_settings = AppSettings()

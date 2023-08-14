@@ -84,7 +84,7 @@ class SettingsScreen(Screen):
     def set_unit(self, selector, unit, **kwargs):
         text = tr(selector.unit_class.name(unit), ctx='Unit')
         self.on_menu_action(selector, text)
-        sig.set_setting.emit(**{selector.id: unit})
+        sig.set_settings.emit(**{selector.id: unit})
 
     def on_menu_action(self, caller=None, text=None):
         caller.text = text

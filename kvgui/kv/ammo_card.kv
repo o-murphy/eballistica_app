@@ -43,12 +43,12 @@
                         id: diameter_l
                         text: 'Diameter'
 
-                    MeasureValue:
+                    DiameterValue:
                         id: diameter
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: diameter_s
+                        id: diameter_suffix
                         text: 'inch'
 
                 MDBoxLayout:
@@ -59,12 +59,12 @@
                         id: weight_l
                         text: 'Weight'
 
-                    MeasureValue:
+                    WeightValue:
                         id: weight
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: weight_s
+                        id: weight_suffix
                         text: 'gr'
 
                 MDBoxLayout:
@@ -75,12 +75,12 @@
                         id: length_l
                         text: 'Length'
 
-                    MeasureValue:
+                    LengthValue:
                         id: length
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: length_s
+                        id: length_suffix
                         text: 'inch'
 
                 MDBoxLayout:
@@ -88,15 +88,15 @@
                     spacing: "15dp"
 
                     FormLabel:
-                        id: muzzleelocity_l
+                        id: muzzle_velocity_label
                         text: 'Muzzle velocity'
 
-                    MeasureValue:
-                        id: muzzleelocity
+                    MuzzleValue:
+                        id: muzzle_velocity
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: muzzleelocity_s
+                        id: muzzle_velocity_suffix
                         text: 'm/s'
 
                 MDBoxLayout:
@@ -104,13 +104,13 @@
                     spacing: "15dp"
 
                     FormLabel:
-                        id: diameter_label
+                        id: dm_label
                         text: 'Drag model'
                         size_hint_x: 0.6
 
                     DragModelSelector:
-                        id: diameter_select
-                        name: 'diameter_select'
+                        id: dm_select
+                        name: 'dm_select'
                         text: 'G7'
                         size_hint_x: 0.3
 
@@ -134,7 +134,7 @@
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: powder_sens_s
+                        id: powder_sens_suffix
                         text: '%'
 
                 MDBoxLayout:
@@ -145,12 +145,12 @@
                         id: powder_temp_l
                         text: 'Powder temperature'
 
-                    MeasureValue:
+                    PowderTempValue:
                         id: powder_temp
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: powder_temp_s
+                        id: powder_temp_suffix
                         text: '°C'
 
                 MDRectangleFlatButton:
@@ -179,12 +179,12 @@
                         id: zero_dist_l
                         text: 'Zeroing distance'
 
-                    MeasureValue:
+                    ZeroDistValue:
                         id: zero_dist
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: zero_dist_s
+                        id: zero_dist_suffix
                         text: 'm'
 
                 MDBoxLayout:
@@ -200,7 +200,7 @@
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: altitude_s
+                        id: altitude_suffix
                         text: 'm'
 
                 MDBoxLayout:
@@ -216,7 +216,7 @@
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: pressure_s
+                        id: pressure_suffix
                         text: 'mmHg'
 
                 MDBoxLayout:
@@ -232,7 +232,7 @@
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: temperature_s
+                        id: temperature_suffix
                         text: '°C'
 
                 MDBoxLayout:
@@ -248,6 +248,6 @@
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: humidity_s
+                        id: humidity_suffix
                         text: '%'
 

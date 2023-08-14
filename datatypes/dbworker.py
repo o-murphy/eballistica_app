@@ -1,22 +1,12 @@
-import enum
 import json
-from functools import wraps
 from sqlalchemy import create_engine, Column, Integer, Float, String, Enum, Boolean, ForeignKey
 from sqlalchemy.orm import relationship, declarative_base, sessionmaker, mapped_column, validates
+
+from datatypes.defines import TwistDir, DragModel
 
 Base = declarative_base()
 engine = create_engine('sqlite:///local.sqlite3', echo=False)
 
-
-class TwistDir(enum.IntEnum):
-    Right = 0
-    Left = 1
-
-
-class DragModel(enum.IntEnum):
-    G1 = 0
-    G7 = 1
-    CDM = -1
 
 
 class RifleData(Base):

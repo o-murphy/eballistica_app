@@ -48,14 +48,16 @@ class ShotCardScreen(Screen):
     def bind_ui(self):
         self.one_shot.bind(on_release=lambda x: sig.one_shot_act.emit(caller=self))
         self.trajectory.bind(on_release=lambda x: sig.trajectory_act.emit(caller=self))
-        sig.set_setting.connect(self.on_set_settings)
+        sig.set_settings.connect(self.on_set_settings)
 
     def on_set_settings(self, **kwargs):
 
         def set_unit_for_target(target, target_suffix, key):
             if kwargs.get(key):
-                target.unit = kwargs.get(key)
-                target_suffix.text = tr(target.measure.name(target.unit), 'Unit')
+                unit = kwargs.get(key)
+                if unit:
+                    target.unit = unit
+                    target_suffix.text = tr(target.measure.name(target.unit), 'Unit')
 
         set_unit_for_target(self.distance, self.distance_suffix, 'unit_distance')
         set_unit_for_target(self.look_angle, self.look_angle_suffix, 'unit_angular')
