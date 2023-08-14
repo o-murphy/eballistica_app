@@ -19,6 +19,7 @@ class ShotCardScreen(Screen, MapIdsMixine):
 
     def init_ui(self):
         super(ShotCardScreen, self).init_ui()
+        self.humidity_suffix.text = '%'
         self.translate_ui()
 
     def translate_ui(self):
@@ -48,6 +49,7 @@ class ShotCardScreen(Screen, MapIdsMixine):
                     target_suffix.text = tr(target.measure.name(target.unit), 'Unit')
 
         set_unit_for_target(self.distance, self.distance_suffix, 'unit_distance')
+        set_unit_for_target(self.altitude, self.altitude_suffix, 'unit_distance')
         set_unit_for_target(self.look_angle, self.look_angle_suffix, 'unit_angular')
         set_unit_for_target(self.pressure, self.pressure_suffix, 'unit_pressure')
         set_unit_for_target(self.temperature, self.temperature_suffix, 'unit_temperature')

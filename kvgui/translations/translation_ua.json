@@ -16,7 +16,9 @@
       "Name": "Назва",
       "Properties": "Властивості",
       "Sight height": "Висота ствола",
-      "Twist direction": "Нарізи"
+      "Twist direction": "Нарізи",
+      "Left": "Лівий",
+      "Right": "Правий"
     },
     "SettingsScreen": {
       "View": "Вигляд",
@@ -121,10 +123,14 @@
     "RifleItem": {
       "New rifle": "Нова гвинтівка",
       "Twist:": "Твіст:",
-      "Sight height:": "Висота прицілу:"
+      "Sight height:": "Висота прицілу:",
+      "Edit": "Редагувати",
+      "Delete": "Видалити"
     },
     "AmmoItem": {
-      "New ammo": "Новий набій"
+      "New ammo": "Новий набій",
+      "Edit": "Редагувати",
+      "Delete": "Видалити"
     }
   }
 }

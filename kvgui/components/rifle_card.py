@@ -17,24 +17,38 @@ class TwistDirSelector(FormSelector, MapIdsMixine):
         super(TwistDirSelector, self).__init__(**kwargs)
         self.init_ui()
         self.bind_ui()
-        self.value = TwistDir.Right  # TODO: must be Enum
+        self.value = TwistDir.Right
 
     def init_ui(self):
-        self.text = tr(self.text, 'RifleCard')
+        # self.text = tr('Right', ctx='RifleCard')
+        self.translate_ui()
+
+    def translate_ui(self):
+        ...
 
     def bind_ui(self):
         self.bind(on_release=self.change_twist)
 
     def change_twist(self, *args, **kwargs):
         if self.value == TwistDir.Right:
-            self.icon = "rotate-left"
-            self.text = tr('Left', ctx='RifleCard')
             self.value = TwistDir.Left
 
         elif self.value == TwistDir.Left:
+            self.value = TwistDir.Right
+
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value: TwistDir):
+        self._value = value
+        if self._value == TwistDir.Right:
             self.icon = "rotate-right"
             self.text = tr('Right', ctx='RifleCard')
-            self.value = TwistDir.Right
+        elif self._value == TwistDir.Left:
+            self.icon = "rotate-left"
+            self.text = tr('Left', ctx='RifleCard')
 
 
 class RifleCardScreen(Screen, MapIdsMixine):
