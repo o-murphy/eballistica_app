@@ -2,8 +2,19 @@ import logging
 import sys
 
 from kivy.clock import Clock
+from kivy.lang import Builder
 from kivy.properties import partial
 from kivymd.uix.textfield import MDTextField
+
+
+Builder.load_string("""
+<MDNumericField>
+    input_filter: 'float'
+    input_type: 'number'
+    # helper_text: 'error'
+    # helper_text_mode: "on_error"
+    
+""")
 
 
 class MDNumericField(MDTextField):
@@ -14,10 +25,6 @@ class MDNumericField(MDTextField):
         self._max_value: [float, callable] = sys.float_info.max
         self._decimals: int = 2
         self._step: [float, callable] = 0.1
-        self.input_filter = 'float'
-        self.input_type = 'number'
-        # self.helper_text = 'error'
-        # self.helper_text_mode = 'on_error'
         self.value = 0
 
     @property
@@ -94,15 +101,35 @@ class MDNumericField(MDTextField):
     def set_cursor(self, instance, dt):
         instance.cursor = (len(instance.text), 0)
 
-    def _set_cursor_right(self, instance):
-        if instance.focus:
-            final_len = len(instance.text)
-            self.cursor = (final_len, 0)
-            Clock.schedule_once(partial(self.set_cursor, instance), 0)
-            return
+    # def _set_cursor_right(self):
+    #     if self.focus:
+    #         final_len = len(self.text)
+    #         self.cursor = (final_len, 0)
+    #         Clock.schedule_once(partial(self.set_cursor, self), 0)
+
+    def validate_value(self):
+        if self.min_value > self.value:
+            self.value = self.min_value
+            self.helper_text_mode = 'on_error'
+            self.error = True
+        elif self.value > self.max_value:
+            self.helper_text_mode = 'on_error'
+            self.value = self.max_value
+            self.error = True
+        else:
+            self.helper_text_mode =
+            self.error = False
+
+    def on_enter(self):
+        self.validate_value()
 
     def on_focus(self, instance, isFocused):
-        # self._set_cursor_right(instance)
+
+        if isFocused:
+            Clock.schedule_once(lambda dt: self.select_all())
+        else:
+            self.validate_value()
+
         super(MDNumericField, self).on_focus(instance, isFocused)
 
     def on_double_tap(self):
@@ -115,34 +142,14 @@ class MDNumericField(MDTextField):
             try:
                 text = text.replace('.', '')
                 new_value = int(text) / 10**self.decimals
-
-                # if self.min_value > new_value:
-                #     self.error = True
-                #     self.hint_text = f"> {self.min_value}"
-                # elif new_value > self.max_value:
-                #     self.error = True
-                #     self.hint_text = f"< {self.max_value}"
-                # else:
-                #     self.error = False
-                #     self.hint_text = ''
                 self._value = new_value
-
-                # if self.min_value > new_value:
-                #     self._value = self.min_value
-                # elif new_value > self.max_value:
-                #     self._value = self.max_value
-                # else:
-                #     self._value = new_value
 
             except ValueError as err:
                 logging.warning(err)
 
         super(MDNumericField, self).set_text(instance, self._formatted(self._value))
-        # self._set_cursor_right(instance)
 
     def insert_text(self, substring, from_undo=False):
-
-        # self._set_cursor_right(self)
         return super().insert_text(substring, from_undo=from_undo)
 
 
