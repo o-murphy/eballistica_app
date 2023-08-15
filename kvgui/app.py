@@ -26,8 +26,7 @@ assert abstract
 
 if platform == 'win':
     Window.size = (500, 700)
-
-Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
+    Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 
 
 class AppScreenManager(ScreenManager):
