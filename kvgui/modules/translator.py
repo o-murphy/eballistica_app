@@ -27,14 +27,13 @@ DEFAULT_TRANSLATION = {
 class Translator:
     def __init__(self):
         self._lang = DEFAULT_TRANSLATION
-        self.translations = list(lang.stem for lang in Path('kvgui', 'translations').iterdir())
-        print(self.translations)
+        try:
+            self.translations = list(lang.stem for lang in Path('kvgui', 'translations').iterdir())
+        except Exception:
+            self.translations = ['English']
         sig.set_lang.connect(self.load_lang)
 
     def load_lang(self, lang='English', **kwargs):
-        # if lang == 'English':
-        #     self._lang = DEFAULT_TRANSLATION
-        #     return
         try:
             path = Path('kvgui', 'translations', f'{lang}.json').absolute().as_posix()
             with open(path, 'r', encoding='utf-8') as fp:

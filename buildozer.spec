@@ -18,11 +18,11 @@ package.domain = o.murphy
 source.dir = .
 
 # (list) Source files to include (leave empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas
+source.include_exts = py,png,jpg,kv,atlas,json
 
 # (list) List of inclusions using pattern matching
 #source.include_patterns = assets/*,images/*.png
-source.include_patterns = kvgui/translations/*
+source.include_patterns = kvgui/translations/*.json
 
 # (list) Source files to exclude (leave empty to not exclude anything)
 #source.exclude_exts = spec

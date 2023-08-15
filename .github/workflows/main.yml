@@ -44,13 +44,11 @@ jobs:
           pip install --user --upgrade Cython==0.29.36
           pip install --user --upgrade buildozer
           pip freeze > requirements-pre.txt
-      
-#      - name: Upload Artifacts
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: build-artifacts
-#          path: requirements-pre.txt
-          
+
+      # Install OS specific dependencies
+      - name: Install Linux dependencies
+        run: sudo apt -y install automake
+
       # - name: Reinit buildozer.spec
       #   run: |
           # rm buildozer.spec
@@ -73,6 +71,13 @@ jobs:
         run: |
           sed -i.bak "s/version =.*/version = ${{ steps.extract_version.outputs.version }}/" buildozer.spec
 
+#  #      For running on native machine:
+#          requirements=$(grep -Eo '[^[:space:]]+' requirements.txt | tr '\n' ',')
+#          sed -i.bak "s|requirements =.*|requirements = python3,$requirements|" buildozer.spec
+#
+#          version=$(grep -o "__version__ = '[0-9.]*'" main.py | sed "s/__version__ = '//" | sed "s/'//")
+#          sed -i.bak "s/version =.*/version = $version/" buildozer.spec
+
       - name: Extract build requirements
         id: update_requirements
         run: |
@@ -89,10 +94,6 @@ jobs:
         with:
           name: build-artifacts-spec
           path: buildozer.spec
-
-      # Install OS specific dependencies
-      - name: Install Linux dependencies
-        run: sudo apt -y install automake
 
       - name: buildozer android debug
         run: |
