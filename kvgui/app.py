@@ -231,7 +231,7 @@ class EBallisticaApp(MDApp):
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'rifles_screen'
         self.app_bottom_bar.fab_add_new()
-        self.app_top_bar.breadcrumb = [tr('Rifles', 'Breadcrumb')]
+        self.app_top_bar.breadcrumb = ['Rifles']
 
     def switch_ammo_card(self, direction='left', caller=None, **kwargs):
         self.app_screen_manager.transition.direction = direction
@@ -252,7 +252,7 @@ class EBallisticaApp(MDApp):
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'ammos_screen'
         self.app_bottom_bar.fab_add_new()
-        self.app_top_bar.breadcrumb = ['Rifles', '<rifle name>', 'Ammos', 'Breadcrumb']
+        self.app_top_bar.breadcrumb = ['Rifles', '<rifle name>', 'Ammos']
 
     def switch_settings(self, direction='left', caller=None, **kwargs):
         self.app_screen_manager.transition.direction = direction

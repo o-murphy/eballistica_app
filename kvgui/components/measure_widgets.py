@@ -119,6 +119,7 @@ class PressureValue(PressureMeasure):
         super(PressureValue, self).__init__(*args, **kwargs)
         self.min_value = lambda: Pressure(500, Pressure.MmHg).get_in(self.unit)
         self.max_value = lambda: Pressure(1100, Pressure.MmHg).get_in(self.unit)
+        self.step = 1
 
 
 class TemperatureValue(TemperatureMeasure):
@@ -282,6 +283,28 @@ class BCValue(MeasureValue):
         super(BCValue, self).__init__(*args, **kwargs)
         self.min_value = 0.001
         self.max_value = 2
+        self.decimals = 3
+        self.step = 0.001
+
+
+class MachValue(MeasureValue):
+    id = 'mach'
+
+    def __init__(self, *args, **kwargs):
+        super(MachValue, self).__init__(*args, **kwargs)
+        self.min_value = 0
+        self.max_value = 5
+        self.decimals = 2
+        self.step = 0.05
+
+
+class CDValue(MeasureValue):
+    id = 'cd'
+
+    def __init__(self, *args, **kwargs):
+        super(CDValue, self).__init__(*args, **kwargs)
+        self.min_value = 0
+        self.max_value = 1
         self.decimals = 3
         self.step = 0.001
 

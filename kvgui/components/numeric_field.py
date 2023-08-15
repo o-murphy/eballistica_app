@@ -16,6 +16,8 @@ class MDNumericField(MDTextField):
         self._step: [float, callable] = 0.1
         self.input_filter = 'float'
         self.input_type = 'number'
+        # self.helper_text = 'error'
+        # self.helper_text_mode = 'on_error'
         self.value = 0
 
     @property
@@ -100,14 +102,13 @@ class MDNumericField(MDTextField):
             return
 
     def on_focus(self, instance, isFocused):
-        self._set_cursor_right(instance)
+        # self._set_cursor_right(instance)
         super(MDNumericField, self).on_focus(instance, isFocused)
 
     def on_double_tap(self):
         Clock.schedule_once(lambda dt: self.select_all())
 
     def set_text(self, instance, text: str) -> None:
-        print(text)
         if text == "":
             self._value = 0
         else:
@@ -115,18 +116,29 @@ class MDNumericField(MDTextField):
                 text = text.replace('.', '')
                 new_value = int(text) / 10**self.decimals
 
-                if self.min_value > new_value:
-                    self._value = self.min_value
-                elif new_value > self.max_value:
-                    self._value = self.max_value
-                else:
-                    self._value = new_value
+                # if self.min_value > new_value:
+                #     self.error = True
+                #     self.hint_text = f"> {self.min_value}"
+                # elif new_value > self.max_value:
+                #     self.error = True
+                #     self.hint_text = f"< {self.max_value}"
+                # else:
+                #     self.error = False
+                #     self.hint_text = ''
+                self._value = new_value
+
+                # if self.min_value > new_value:
+                #     self._value = self.min_value
+                # elif new_value > self.max_value:
+                #     self._value = self.max_value
+                # else:
+                #     self._value = new_value
 
             except ValueError as err:
                 logging.warning(err)
 
         super(MDNumericField, self).set_text(instance, self._formatted(self._value))
-        self._set_cursor_right(instance)
+        # self._set_cursor_right(instance)
 
     def insert_text(self, substring, from_undo=False):
 
