@@ -1,20 +1,17 @@
 from kivy import platform
+from kivy.config import Config
 from kivy.core.window import Window
-from kivy.metrics import dp
-from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivymd.app import MDApp
 from kivymd.toast import toast
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.button import MDRaisedButton, MDRectangleFlatButton
 from kivymd.uix.dialog import MDDialog
-from kivymd.uix.label import MDLabel
 from kivymd.uix.toolbar import MDActionBottomAppBarButton
 
 from datatypes.defines import DragModel
 from kvgui.components import *
 from kvgui.components import abstract
-from kvgui.components.abstract import MD3CardAbs
 from kvgui.components.ammo_card import AmmoCardScreen
 from kvgui.components.dm_bc_editor import BCEditor
 from kvgui.components.dm_cdm_editor import CDMEditor
@@ -29,6 +26,8 @@ assert abstract
 
 if platform == 'win':
     Window.size = (500, 700)
+
+Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 
 
 class AppScreenManager(ScreenManager):
@@ -77,7 +76,13 @@ class EBallisticaApp(MDApp):
         self.switch_rifles_list()
 
     def change_theme(self, theme='Dark', **kwargs):
-        self.theme_cls.theme_style = theme
+        # self.theme_cls.theme_style = theme
+        # self.theme_cls.primary_palette = (
+        #     "Orange" if self.theme_cls.primary_palette == "Red" else "Red"
+        # )
+        self.theme_cls.theme_style = (
+            "Dark" if self.theme_cls.theme_style == "Light" else "Light"
+        )
 
     def bind_ui(self):
         Window.bind(on_keyboard=self.droid_back_act)
@@ -106,9 +111,15 @@ class EBallisticaApp(MDApp):
         self.app_screen_manager.rifles_screen.on_leave = self.app_top_bar.hide_all
 
     def build(self):
+        self.theme_cls.theme_style_switch_animation = True
+        self.theme_cls.theme_style_switch_animation_duration = 0.2
         self.theme_cls.theme_style = 'Dark'
         self.theme_cls.material_style = "M3"
         self.theme_cls.primary_palette = 'Teal'
+        self.theme_cls.primary_hue = "700"
+        # self.theme_cls.accent_palette = 'Orange'
+        self.theme_cls.accent_palette = 'Teal'
+        self.theme_cls.accent_hue = "900"
 
         self.init_ui()
         self.bind_ui()
@@ -169,14 +180,12 @@ class EBallisticaApp(MDApp):
 
     def close_exit_dialog(self, action):
         if action:
-            self.close_app()
+            self.stop()
         else:
             self.dialog.dismiss()
 
     def bot_fab_action(self, caller=None, **kwargs):
         current = self.app_screen_manager.current
-        fab_icon = caller.icon
-        # if fab_icon == 'plus':
         if current == 'rifles_screen':
             self.switch_rifle_card('left')
         elif current == 'ammos_screen':

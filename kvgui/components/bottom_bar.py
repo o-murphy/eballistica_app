@@ -45,9 +45,9 @@ class AppBottomBar(MDBoxLayout, MapIdsMixine):
     def fab_applying(self):
         self.fab_show()
         self.bottom_bar_fab.icon = 'check'
-        self.bottom_bar_fab._md_bg_color = "teal"
+        # self.bottom_bar_fab._md_bg_color = "teal"
 
     def fab_add_new(self):
         self.fab_show()
         self.bottom_bar_fab.icon = 'plus'
-        self.bottom_bar_fab._md_bg_color = "orange"
+        # self.bottom_bar_fab._md_bg_color = "orange"

@@ -38,7 +38,7 @@ class CDMEditor(Screen, MapIdsMixine):
         self.bind_ui()
 
     def init_ui(self):
-        for i in range(50):
+        for i in range(5):
             lab = FormLabel(id=f'lab{i}', text=f'{i+1}', size_hint_x=0.2)
             mach = MachValue(id=f'mach{i}', size_hint_x=0.4, mode='round', pos_hint={'center_y': 0})
             cd = CDValue(id=f'cl{i}', size_hint_x=0.4,  mode='round', pos_hint={'center_y': 0})

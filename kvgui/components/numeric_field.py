@@ -11,7 +11,7 @@ Builder.load_string("""
 <MDNumericField>
     input_filter: 'float'
     input_type: 'number'
-    helper_text: 'error'
+    # helper_text: 'error'
     # helper_text_mode: "on_error"
     
 """)
@@ -110,15 +110,8 @@ class MDNumericField(MDTextField):
     def validate_value(self):
         if self.min_value > self.value:
             self.value = self.min_value
-            self.helper_text_mode = 'on_error'
-            self.error = True
         elif self.value > self.max_value:
-            self.helper_text_mode = 'on_error'
             self.value = self.max_value
-            self.error = True
-        else:
-            # self.helper_text_mode = 'none'
-            self.error = False
 
     def on_enter(self):
         self.validate_value()
