@@ -76,12 +76,11 @@ class EBallisticaApp(MDApp):
         self.switch_rifles_list()
 
     def change_theme(self, theme='Dark', **kwargs):
-        # self.theme_cls.theme_style = theme
-        # self.theme_cls.primary_palette = (
-        #     "Orange" if self.theme_cls.primary_palette == "Red" else "Red"
-        # )
         self.theme_cls.theme_style = (
-            "Dark" if self.theme_cls.theme_style == "Light" else "Light"
+            "Dark" if theme == "Dark" else "Light"
+        )
+        self.layout.md_bg_color = (
+            self.theme_cls.bg_dark if self.theme_cls.theme_style == "Dark" else self.theme_cls.bg_light
         )
 
     def bind_ui(self):
@@ -119,7 +118,7 @@ class EBallisticaApp(MDApp):
         self.theme_cls.primary_hue = "700"
         # self.theme_cls.accent_palette = 'Orange'
         self.theme_cls.accent_palette = 'Teal'
-        self.theme_cls.accent_hue = "900"
+        self.theme_cls.accent_hue = "800"
 
         self.init_ui()
         self.bind_ui()
