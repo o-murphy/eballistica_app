@@ -69,7 +69,7 @@ class RifleCardScreen(Screen, MapIdsMixine):
         self.name_label.text = tr('Name', 'RifleCard')
         self.prop_title_label.text = tr('Properties', 'RifleCard')
         self.sight_height_label.text = tr('Sight height', 'RifleCard')
-        self.twist_label.text = tr('Sight height', 'RifleCard')
+        self.twist_label.text = tr('Twist', 'RifleCard')
         self.twist_dir_label.text = tr('Twist direction', 'RifleCard')
 
     def bind_ui(self):

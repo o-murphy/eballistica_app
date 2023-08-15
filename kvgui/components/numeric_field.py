@@ -1,4 +1,5 @@
 import logging
+import sys
 
 from kivy.clock import Clock
 from kivy.properties import partial
@@ -9,13 +10,59 @@ class MDNumericField(MDTextField):
     def __init__(self, *args, **kwargs):
         super(MDNumericField, self).__init__(*args, **kwargs)
         self._value: float = 0
-        self.max_value: float = 100
-        self.min_value: float = 0
-        self.decimals: int = 2
-        self.step: float = 0.1
+        self._min_value: [float, callable] = sys.float_info.min
+        self._max_value: [float, callable] = sys.float_info.max
+        self._decimals: int = 2
+        self._step: [float, callable] = 0.1
         self.input_filter = 'float'
         self.input_type = 'number'
         self.value = 0
+
+    @property
+    def max_value(self):
+        if callable(self._max_value):
+            return self._max_value()
+        return self._max_value
+
+    @max_value.setter
+    def max_value(self, value: [float, callable]):
+        invalid = self.min_value > value() if callable(value) else self.min_value > value
+        if invalid:
+            raise ValueError("max_value can't be < min_value")
+        self._max_value = value
+
+    @property
+    def min_value(self):
+        if callable(self._min_value):
+            return self._min_value()
+        return self._min_value
+
+    @min_value.setter
+    def min_value(self, value: [float, callable]):
+        invalid = self.max_value < value() if callable(value) else self.max_value < value
+        if invalid:
+            raise ValueError("min_value can't be > max_value")
+        self._min_value = value
+
+    @property
+    def step(self):
+        if callable(self._step):
+            return self._step()
+        return self._step
+
+    @step.setter
+    def step(self, value: [float, callable]):
+        self._step = value
+
+    @property
+    def decimals(self):
+        if callable(self._decimals):
+            return self._decimals()
+        return self._decimals
+
+    @decimals.setter
+    def decimals(self, value: [float, callable]):
+        self._decimals = value
 
     @property
     def value(self) -> float:
