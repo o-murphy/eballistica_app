@@ -11,7 +11,7 @@ Builder.load_string("""
 <MDNumericField>
     input_filter: 'float'
     input_type: 'number'
-    # helper_text: 'error'
+    helper_text: 'error'
     # helper_text_mode: "on_error"
     
 """)
@@ -117,7 +117,7 @@ class MDNumericField(MDTextField):
             self.value = self.max_value
             self.error = True
         else:
-            self.helper_text_mode =
+            # self.helper_text_mode = 'none'
             self.error = False
 
     def on_enter(self):
