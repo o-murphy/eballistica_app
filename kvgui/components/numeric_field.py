@@ -76,7 +76,7 @@ class MDNumericField(MDTextField):
         return '{:.{}f}'.format(value, self.decimals)
 
     def keyboard_on_key_down(self, window, keycode, text, modifiers):
-        self._set_cursor_right(self)
+        # self._set_cursor_right(self)
         if keycode == (273, 'up'):
             self._increment()
         elif keycode == (274, 'down'):
@@ -107,7 +107,7 @@ class MDNumericField(MDTextField):
         Clock.schedule_once(lambda dt: self.select_all())
 
     def set_text(self, instance, text: str) -> None:
-
+        print(text)
         if text == "":
             self._value = 0
         else:
@@ -130,7 +130,7 @@ class MDNumericField(MDTextField):
 
     def insert_text(self, substring, from_undo=False):
 
-        self._set_cursor_right(self)
+        # self._set_cursor_right(self)
         return super().insert_text(substring, from_undo=from_undo)
 
 

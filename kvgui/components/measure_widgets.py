@@ -56,11 +56,6 @@ class MeasureValue(MDNumericField):
             self.value = value
 
 
-class PercentMeasure(MeasureValue):
-    def __init__(self, *args, **kwargs):
-        super(PercentMeasure, self).__init__(*args, **kwargs)
-
-
 class DistanceMeasure(MeasureValue):
 
     def __init__(self, *args, **kwargs):
@@ -169,7 +164,7 @@ class SightHeightValue(DistanceMeasure):
 
     def __init__(self, *args, **kwargs):
         super(SightHeightValue, self).__init__(*args, **kwargs)
-        self.min_value = lambda: Distance(0, Distance.Centimeter).get_in(self.unit)
+        self.min_value = lambda: Distance(0.1, Distance.Centimeter).get_in(self.unit)
         self.max_value = lambda: Distance(20, Distance.Centimeter).get_in(self.unit)
 
 
@@ -227,13 +222,18 @@ class LengthValue(SmallDistMeasure):
         self.max_value = lambda: Distance(1, Distance.Meter).get_in(self.unit)
 
 
-class MuzzleValue(VelocityMeasure):
-    id = 'muzzle_velocity'
+class VelocityValue(VelocityMeasure):
+    id = 'velocity'
 
     def __init__(self, *args, **kwargs):
-        super(MuzzleValue, self).__init__(*args, **kwargs)
-        self.min_value = lambda: Velocity(10, Velocity.FPS).get_in(self.unit)
+        super(VelocityValue, self).__init__(*args, **kwargs)
+        self.min_value = lambda: Velocity(0, Velocity.FPS).get_in(self.unit)
         self.max_value = lambda: Velocity(5000, Velocity.FPS).get_in(self.unit)
+        self.step = 1
+
+
+class MuzzleValue(VelocityValue):
+    id = 'muzzle_velocity'
 
 
 class PowderTempValue(TemperatureValue):
@@ -254,7 +254,7 @@ class ZeroDistValue(BigDistMeasure):
         self.max_value = lambda: Distance(1000, Distance.Meter).get_in(self.unit)
 
 
-class PowderSensValue(PercentMeasure):
+class PowderSensValue(MeasureValue):
     id = 'powder_sens'
 
     def __init__(self, *args, **kwargs):
@@ -264,7 +264,7 @@ class PowderSensValue(PercentMeasure):
         self.step = 0.01
 
 
-class HumidityValue(PercentMeasure):
+class HumidityValue(MeasureValue):
     id = 'humidity'
 
     def __init__(self, *args, **kwargs):
@@ -273,4 +273,16 @@ class HumidityValue(PercentMeasure):
         self.max_value = 100
         self.decimals = 1
         self.step = 1
+
+
+class BCValue(MeasureValue):
+    id = 'bc'
+
+    def __init__(self, *args, **kwargs):
+        super(BCValue, self).__init__(*args, **kwargs)
+        self.min_value = 0.001
+        self.max_value = 2
+        self.decimals = 3
+        self.step = 0.001
+
 
