@@ -120,6 +120,8 @@ class EBallisticaApp(MDApp):
         self.app_screen_manager.rifles_screen.on_enter = self.app_top_bar.show_cog
         self.app_screen_manager.rifles_screen.on_leave = self.app_top_bar.hide_all
 
+        sig.toast.connect(self.toast)
+
     def build(self):
         # self.theme_cls.theme_style_switch_animation = True  # uncomment if animation needed
         # self.theme_cls.theme_style_switch_animation_duration = 0.2  # uncomment if animation needed
@@ -303,7 +305,7 @@ class EBallisticaApp(MDApp):
         elif drag_model == DragModel.CDM:
             self.app_screen_manager.current = 'cdm_editor_screen'
 
-    def toast(self, text='', duration=2.5):
+    def toast(self, text='', duration=2.5, **kwargs):
         try:
             if platform == 'android':
                 toast(text=text, gravity=80, length_long=duration)

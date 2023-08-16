@@ -1,8 +1,10 @@
 from kivy.lang import Builder
 from kivymd.uix.button import MDRectangleFlatIconButton
 from kivymd.uix.card import MDCard
+from kivymd.uix.floatlayout import MDFloatLayout
 from kivymd.uix.label import MDLabel
 from kivymd.uix.menu import MDDropdownMenu
+from kivymd.uix.tab import MDTabsBase
 from kivymd.uix.textfield import MDTextField
 
 
@@ -23,6 +25,10 @@ class FormLabel(MDLabel):
 
 class FormSuffix(MDLabel):
     pass
+
+
+class Tab(MDFloatLayout, MDTabsBase):
+    ...
 
 
 class FormSelector(MDRectangleFlatIconButton):

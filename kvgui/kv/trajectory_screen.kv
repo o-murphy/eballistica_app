@@ -1,6 +1,28 @@
 <TrajectoryScreen>
-    MDLabel:
-        text: "Not implemented yet"
-        pos_hint: {"center_x": 0.5}
-        halign: 'center'
+
+
+    MDTabs:
+        elevation: 2
+
+        Tab:
+            id: table_tab
+            title: "Table"
+            content_text: f"This is an example text for {self.title}"
+
+            MDLabel:
+                id: not_imp
+                text: "Not implemented yet"
+                pos_hint: {"center_x": 0.5, 'top': 1}
+                halign: 'center'
+
+        Tab:
+            id: graph_tab
+            title: "Graph"
+            content_text: f"This is an example text for {self.title}"
+
+            MDLabel:
+                id: not_imp
+                text: "Not implemented yet"
+                pos_hint: {"center_x": 0.5, 'top': 1}
+                halign: 'center'
     
