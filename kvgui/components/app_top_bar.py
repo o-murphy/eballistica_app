@@ -1,8 +1,12 @@
+from kivy.lang import Builder
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.toolbar import MDTopAppBar
 
 from kvgui.modules import signals as sig
 from kvgui.modules.translator import translate as tr
+
+
+Builder.load_file('kvgui/kv/top_bar.kv')
 
 
 class TopBar(MDTopAppBar):
@@ -14,6 +18,11 @@ class TopBar(MDTopAppBar):
 
     def init_ui(self):
         self.show_cog()
+        self.ids.label_headline.font_style = 'Subtitle1'
+
+    def set_headline_font_style(self, interval=None, font_style=None) -> None:
+        # Skip default font_styles
+        pass
 
     def bind_ui(self):
         ...

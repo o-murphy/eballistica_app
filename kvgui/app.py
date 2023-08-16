@@ -15,7 +15,10 @@ from kvgui.components import abstract
 from kvgui.components.ammo_card import AmmoCardScreen
 from kvgui.components.dm_bc_editor import BCEditor
 from kvgui.components.dm_cdm_editor import CDMEditor
+from kvgui.components.one_shot_screen import OneShotScreen
+from kvgui.components.powder_sens_calc import PowderSensScreen
 from kvgui.components.shot_card import ShotCardScreen
+from kvgui.components.trajectory_screen import TrajectoryScreen
 from kvgui.modules import signals as sig
 from kvgui.modules.settings import app_settings
 from kvgui.modules.translator import translate as tr
@@ -44,6 +47,10 @@ class AppScreenManager(ScreenManager):
 
         self.bc_edit = BCEditor()
         self.cdm_editor = CDMEditor()
+        self.powder_sens_calc = PowderSensScreen()
+
+        self.one_shot_screen = OneShotScreen()
+        self.trajectory_screen = TrajectoryScreen()
 
         self.add_widget(self.rifles_screen)
         self.add_widget(self.ammos_screen)
@@ -53,6 +60,9 @@ class AppScreenManager(ScreenManager):
         self.add_widget(self.shot_card_screen)
         self.add_widget(self.bc_edit)
         self.add_widget(self.cdm_editor)
+        self.add_widget(self.powder_sens_calc)
+        self.add_widget(self.one_shot_screen)
+        self.add_widget(self.trajectory_screen)
 
 
 class EBallisticaApp(MDApp):
@@ -104,6 +114,9 @@ class EBallisticaApp(MDApp):
 
         sig.drag_model_edit_act.connect(self.switch_drag_model_edit)
 
+        sig.one_shot_act.connect(self.switch_one_shot)
+        sig.trajectory_act.connect(self.switch_trajectory)
+
         self.app_screen_manager.rifles_screen.on_enter = self.app_top_bar.show_cog
         self.app_screen_manager.rifles_screen.on_leave = self.app_top_bar.hide_all
 
@@ -151,6 +164,8 @@ class EBallisticaApp(MDApp):
             self.switch_ammo_card('right')
         elif current == 'rifles_screen':
             self.show_exit_confirmation(self)
+        elif current in ['one_shot', 'traj_screen']:
+            self.switch_shot_edit('right')
 
     def show_exit_confirmation(self, instance):
         # Todo: refactor
@@ -222,6 +237,22 @@ class EBallisticaApp(MDApp):
     def del_ammo(self, caller, **kwargs):
         # TODO
         ...
+
+    def switch_one_shot(self, direction='left', caller=None, **kwargs):
+        self.app_screen_manager.transition.direction = direction
+        self.app_screen_manager.current = 'one_shot'
+        self.app_bottom_bar.fab_hide()
+        self.app_top_bar.breadcrumb = [
+            'Rifles', '{rifle name}', 'Ammos', '{ammo name}', 'Shot'
+        ]
+
+    def switch_trajectory(self, direction='left', caller=None, **kwargs):
+        self.app_screen_manager.transition.direction = direction
+        self.app_screen_manager.current = 'traj_screen'
+        self.app_bottom_bar.fab_hide()
+        self.app_top_bar.breadcrumb = [
+            'Rifles', '{rifle name}', 'Ammos', '{ammo name}', 'Trajectory'
+        ]
 
     def switch_shot_edit(self, direction='left', caller=None, **kwargs):
         self.app_screen_manager.transition.direction = direction
