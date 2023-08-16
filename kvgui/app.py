@@ -18,6 +18,7 @@ from kvgui.components.dm_cdm_editor import CDMEditor
 from kvgui.components.one_shot_screen import OneShotScreen
 from kvgui.components.powder_sens_calc import PowderSensScreen
 from kvgui.components.shot_card import ShotCardScreen
+from kvgui.components.spinner import WaitMe
 from kvgui.components.trajectory_screen import TrajectoryScreen
 from kvgui.modules import signals as sig
 from kvgui.modules.settings import app_settings
@@ -76,12 +77,22 @@ class EBallisticaApp(MDApp):
         self.app_screen_manager = AppScreenManager()
         self.app_bottom_bar = AppBottomBar()
 
+        self.spinner = WaitMe()
+
         self.layout.add_widget(self.app_top_bar)
         self.layout.add_widget(self.app_screen_manager)
         self.layout.add_widget(self.app_bottom_bar)
 
         self.screen.add_widget(self.layout)
+        self.screen.add_widget(self.spinner)
+
         self.switch_rifles_list()
+
+    def wait_me(self, **kwargs):
+        self.spinner.active = True
+
+    def unwait_me(self, **kwargs):
+        self.spinner.active = False
 
     def change_theme(self, theme='Dark', **kwargs):
         self.theme_cls.theme_style = (
@@ -115,12 +126,16 @@ class EBallisticaApp(MDApp):
         sig.drag_model_edit_act.connect(self.switch_drag_model_edit)
 
         sig.one_shot_act.connect(self.switch_one_shot)
-        sig.trajectory_act.connect(self.switch_trajectory)
+        sig.trajectory_act.connect(self.pre_switch_trajectory)
+        sig.trajectory_preloaded.connect(self.switch_trajectory)
 
         self.app_screen_manager.rifles_screen.on_enter = self.app_top_bar.show_cog
         self.app_screen_manager.rifles_screen.on_leave = self.app_top_bar.hide_all
 
         sig.toast.connect(self.toast)
+
+        sig.wait_me.connect(self.wait_me)
+        sig.unwait_me.connect(self.unwait_me)
 
     def build(self):
         # self.theme_cls.theme_style_switch_animation = True  # uncomment if animation needed
@@ -248,7 +263,12 @@ class EBallisticaApp(MDApp):
             'Rifles', '{rifle name}', 'Ammos', '{ammo name}', 'Shot'
         ]
 
+    def pre_switch_trajectory(self, **kwargs):
+        sig.wait_me.emit()
+        self.app_screen_manager.trajectory_screen.preload()
+
     def switch_trajectory(self, direction='left', caller=None, **kwargs):
+        sig.unwait_me.emit()
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'traj_screen'
         self.app_bottom_bar.fab_hide()

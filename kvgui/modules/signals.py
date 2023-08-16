@@ -51,3 +51,7 @@ drag_model_edit_act = Signal(args=['drag_model'], name='drag_model_edit_act')
 translator_update = Signal()
 
 toast = Signal()
+
+wait_me = Signal()
+unwait_me = Signal()
+trajectory_preloaded = Signal()

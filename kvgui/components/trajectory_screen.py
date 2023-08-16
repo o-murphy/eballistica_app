@@ -1,11 +1,10 @@
-import threading
+from functools import partial
 
 from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.metrics import dp
 from kivy.uix.screenmanager import Screen
 from kivymd.app import MDApp
-from kivymd.uix.spinner import MDSpinner
 
 from kvgui.components.datatables import MDDataTableFit
 from kvgui.components.mixines import MapIdsMixine
@@ -14,13 +13,7 @@ from kvgui.modules.translator import translate as tr
 
 Builder.load_file('kvgui/kv/trajectory_screen.kv')
 
-spinner = """
-MDSpinner:
-    size_hint: None, None
-    size: dp(46), dp(46)
-    pos_hint: {'center_x': .5, 'center_y': .5}
-    # active: True if check.active else False
-"""
+
 
 
 class TrajectoryScreen(Screen, MapIdsMixine):
@@ -33,16 +26,14 @@ class TrajectoryScreen(Screen, MapIdsMixine):
     def init_ui(self):
         super(TrajectoryScreen, self).init_ui()
 
-        self.spinner: MDSpinner = Builder.load_string(spinner)
-
         column_data = [
-            ("Range", dp(15), None),
-            ("Path", dp(15), None),
-            ("Path", dp(15), None),
-            ("Wind.", dp(15), None),
-            ("Wind.", dp(15), None),
-            ("V", dp(15), None),
-            ("E", dp(15), None),
+            ("Range", dp(10), None),
+            ("Path", dp(10), None),
+            ("Path", dp(10), None),
+            ("Wind.", dp(10), None),
+            ("Wind.", dp(10), None),
+            ("V", dp(10), None),
+            ("E", dp(10), None),
         ]
 
         self.table = MDDataTableFit(
@@ -59,37 +50,61 @@ class TrajectoryScreen(Screen, MapIdsMixine):
         self.table.background_color = app.theme_cls.bg_light
         self.table.background_color_header = app.theme_cls.bg_light
 
-        self.table.add_widget(self.spinner)
         self.table_tab.add_widget(self.table)
 
     def on_pre_enter(self, *args):
+        ...
 
-        def spin(dt):
-            self.spinner.active = True
+    def set_table_data(self, data, *args):
 
-        Clock.schedule_once(spin, 0)
+        self.table.row_data.append(data)
 
-    def set_table_data(self, data=None):
+    def preload(self):
+        event = None
+        try:
+            # TODO: trajectory calculation
 
-        subheader = [
-            ['m', 'cm/100m', 'MIL', 'cm/100m', 'MIL', 'm/s', 'J']
-        ]
-        self.table.row_data = subheader + [[str(i)] * 7 for i in range(3000, -1, -50)]
+            subheader = [
+                ['m', 'cm/100m', 'MIL', 'cm/100m', 'MIL', 'm/s', 'J']
+            ]
+            row_data = subheader + [[str(i)] * 7 for i in range(3000, -1, -50)]
+
+            rate = 1 / 20
+
+            for i, data in enumerate(row_data):
+                Clock.schedule_once(partial(self.set_table_data, data), rate * i)
+            event = Clock.schedule_once(lambda *args: sig.trajectory_preloaded.emit(), rate * len(row_data))
+
+            self.set_graph_data()
+        except Exception as exc:
+            Clock.unschedule(event)
+            print(exc)
+            sig.toast.emit(text=tr("Error: Can't calculate trajectory", 'Trajectory'))
+            sig.unwait_me.emit()
 
     def set_graph_data(self, data=None):
         ...
 
-    def on_enter(self):
-
-        try:
-            # TODO: trajectory calculation
-
-            self.set_table_data()
-            self.set_graph_data()
-        except Exception:
-            sig.toast.emit(text=tr("Error: Can't calculate trajectory", 'Trajectory'))
-
-        self.spinner.active = False
+    # def on_enter(self):
+        # sig.wait_me.emit()
+        # try:
+        #     # TODO: trajectory calculation
+        #
+        #     subheader = [
+        #         ['m', 'cm/100m', 'MIL', 'cm/100m', 'MIL', 'm/s', 'J']
+        #     ]
+        #     row_data = subheader + [[str(i)] * 7 for i in range(3000, -1, -50)]
+        #
+        #     for i, data in enumerate(row_data):
+        #         Clock.schedule_once(partial(self.set_table_data, data), 1 / 10 * i)
+        #     Clock.schedule_once(lambda *args: sig.unwait_me.emit(), 1 / 10 * len(row_data))
+        #
+        #     self.set_graph_data()
+        #
+        # except Exception as exc:
+        #     print(exc)
+        #     sig.toast.emit(text=tr("Error: Can't calculate trajectory", 'Trajectory'))
+        #     sig.unwait_me.emit()
 
     def on_leave(self, *args):
         self.table.row_data = []
