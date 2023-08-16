@@ -29,25 +29,20 @@ class AppBottomBar(MDBoxLayout, MapIdsMixine):
 
     def on_action(self, action, **kwargs):
         if action.icon.find('left') >= 0:
-            # self.back_act_clicked.emit()
             sig.bot_bar_back_act.emit()
 
     def fab_hide(self):
         self.bottom_bar_fab.opacity = 0
         self.bottom_bar_fab.disabled = True
-        # self.bottob_bar.allow_hidden = True
 
     def fab_show(self):
         self.bottom_bar_fab.opacity = 1
         self.bottom_bar_fab.disabled = False
-        # self.bottob_bar.allow_hidden = False
 
     def fab_applying(self):
         self.fab_show()
         self.bottom_bar_fab.icon = 'check'
-        # self.bottom_bar_fab._md_bg_color = "teal"
 
     def fab_add_new(self):
         self.fab_show()
         self.bottom_bar_fab.icon = 'plus'
-        # self.bottom_bar_fab._md_bg_color = "orange"

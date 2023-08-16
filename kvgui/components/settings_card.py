@@ -6,7 +6,6 @@ from kvgui.components.mixines import MapIdsMixine
 from kvgui.components.unit_widgets import *
 from kvgui.modules import signals as sig
 from kvgui.modules.translator import translate as tr, app_translator
-from units import *
 
 Builder.load_file('kvgui/kv/settings_card.kv')
 
@@ -128,5 +127,3 @@ class SettingsScreen(Screen, MapIdsMixine):
         self.lang.menu.dismiss()
         self.lang.text = lang
         sig.set_lang.emit(lang=lang)
-
-

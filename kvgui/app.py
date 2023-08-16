@@ -18,7 +18,6 @@ from kvgui.components.dm_cdm_editor import CDMEditor
 from kvgui.components.shot_card import ShotCardScreen
 from kvgui.modules import signals as sig
 from kvgui.modules.settings import app_settings
-# from kvgui.modules.translator import create_translation_template
 from kvgui.modules.translator import translate as tr
 
 assert app_settings

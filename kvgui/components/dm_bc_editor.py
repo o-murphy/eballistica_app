@@ -1,12 +1,10 @@
-from kivy.uix.screenmanager import Screen
-
 from kivy.lang import Builder
+from kivy.uix.screenmanager import Screen
 from kivymd.uix.boxlayout import MDBoxLayout
 
 from kvgui.components.mixines import MapIdsMixine
-from kvgui.modules.translator import translate as tr
 from kvgui.modules import signals as sig
-
+from kvgui.modules.translator import translate as tr
 
 Builder.load_file('kvgui/kv/dm_bc_editor.kv')
 

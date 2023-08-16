@@ -1,8 +1,8 @@
 import json
 import logging
-import os
 from datetime import datetime
 from pathlib import Path
+
 from kvgui.modules import signals as sig
 
 TRANSLATION_VERSION = '0.0.1'
@@ -57,7 +57,6 @@ class Translator:
 app_translator = Translator()
 translate = app_translator.translate
 
-
 # try:
 #     with open(Path('kvgui/translations/Ukrainian.json').absolute().as_posix(), 'r', encoding='utf-8') as fp:
 #         GENERATED_TRANSLATION = json.load(fp)
@@ -92,4 +91,3 @@ translate = app_translator.translate
 #     # Save the file to the target path
 #     with open(TEMPLATE_PATH, "w", encoding='utf-8') as fp:
 #         json.dump(GENERATED_TRANSLATION, fp, ensure_ascii=False)
-

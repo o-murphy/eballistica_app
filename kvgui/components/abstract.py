@@ -5,8 +5,6 @@ from kivymd.uix.label import MDLabel
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.textfield import MDTextField
 
-from kvgui.modules.translator import translate as tr
-
 
 Builder.load_file('kvgui/kv/abstract.kv')
 

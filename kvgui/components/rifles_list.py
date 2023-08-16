@@ -6,7 +6,6 @@ from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.scrollview import MDScrollView
 
 from kvgui.modules import signals as sig
-
 from kvgui.modules.translator import translate as tr
 
 Builder.load_file('kvgui/kv/rifle_list_item.kv')

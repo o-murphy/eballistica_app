@@ -4,8 +4,8 @@ from kivymd.uix.menu import MDDropdownMenu
 
 from datatypes.defines import DragModel
 from kvgui.components.abstract import FormSelector
-from kvgui.components.mixines import MapIdsMixine
 from kvgui.components.measure_widgets import *
+from kvgui.components.mixines import MapIdsMixine
 from kvgui.modules import signals as sig
 from kvgui.modules.translator import translate as tr
 

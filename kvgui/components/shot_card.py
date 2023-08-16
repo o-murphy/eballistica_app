@@ -1,9 +1,7 @@
 from kivy.uix.screenmanager import Screen
-from kivymd.uix.button import MDRaisedButton
-from kivymd.uix.textfield import MDTextField
 
-from kvgui.components.mixines import MapIdsMixine
 from kvgui.components.measure_widgets import *
+from kvgui.components.mixines import MapIdsMixine
 from kvgui.modules import signals as sig
 from kvgui.modules.translator import translate as tr
 

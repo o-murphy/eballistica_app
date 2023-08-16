@@ -1,6 +1,5 @@
 from signalslot import Signal
 
-
 top_bar_cog_act = Signal(name='settings_cicked')
 top_bar_apply_act = Signal(name='settings_cicked')
 

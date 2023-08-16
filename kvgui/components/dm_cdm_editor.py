@@ -4,15 +4,9 @@ from kivymd.uix.boxlayout import MDBoxLayout
 
 from kvgui.components.abstract import FormLabel
 from kvgui.components.measure_widgets import MachValue, CDValue
-
 from kvgui.components.mixines import MapIdsMixine
-from kvgui.modules.translator import translate as tr
 from kvgui.modules import signals as sig
-
-helper = """
-<CDMEditor>
-
-"""
+from kvgui.modules.translator import translate as tr
 
 Builder.load_file('kvgui/kv/dm_cdm_editor.kv')
 
@@ -39,9 +33,9 @@ class CDMEditor(Screen, MapIdsMixine):
 
     def init_ui(self):
         for i in range(5):
-            lab = FormLabel(id=f'lab{i}', text=f'{i+1}', size_hint_x=0.2)
+            lab = FormLabel(id=f'lab{i}', text=f'{i + 1}', size_hint_x=0.2)
             mach = MachValue(id=f'mach{i}', size_hint_x=0.4, mode='round', pos_hint={'center_y': 0})
-            cd = CDValue(id=f'cl{i}', size_hint_x=0.4,  mode='round', pos_hint={'center_y': 0})
+            cd = CDValue(id=f'cl{i}', size_hint_x=0.4, mode='round', pos_hint={'center_y': 0})
             self.ids.cdm_layout.add_widget(lab)
             self.ids.cdm_layout.add_widget(mach)
             self.ids.cdm_layout.add_widget(cd)

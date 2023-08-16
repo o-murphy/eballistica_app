@@ -1,10 +1,8 @@
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.toolbar import MDTopAppBar
 
-
 from kvgui.modules import signals as sig
 from kvgui.modules.translator import translate as tr
-
 
 
 class TopBar(MDTopAppBar):
@@ -86,5 +84,3 @@ class AppTopBar(MDBoxLayout):
 
     def hide_all(self):
         self.top_bar.hide_all()
-
-

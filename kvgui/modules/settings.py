@@ -4,21 +4,21 @@ import logging
 from kvgui.modules import signals as sig
 
 DEFAULT_SETTINGS = {
-  "lang": "English",
-  "theme": "Dark",
-  "unit_sight_height": 16,
-  "unit_twist": 10,
-  "unit_velocity": 60,
-  "unit_distance": 17,
-  "unit_temperature": 51,
-  "unit_weight": 70,
-  "unit_length": 10,
-  "unit_diameter": 10,
-  "unit_pressure": 40,
-  "unit_drop": 16,
-  "unit_angular": 1,
-  "unit_adjustment": 7,
-  "unit_energy": 30
+    "lang": "English",
+    "theme": "Dark",
+    "unit_sight_height": 16,
+    "unit_twist": 10,
+    "unit_velocity": 60,
+    "unit_distance": 17,
+    "unit_temperature": 51,
+    "unit_weight": 70,
+    "unit_length": 10,
+    "unit_diameter": 10,
+    "unit_pressure": 40,
+    "unit_drop": 16,
+    "unit_angular": 1,
+    "unit_adjustment": 7,
+    "unit_energy": 30
 }
 
 

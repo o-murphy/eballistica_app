@@ -6,7 +6,6 @@ from kivy.lang import Builder
 from kivy.properties import partial
 from kivymd.uix.textfield import MDTextField
 
-
 Builder.load_string("""
 <MDNumericField>
     input_filter: 'float'

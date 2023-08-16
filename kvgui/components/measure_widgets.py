@@ -138,7 +138,7 @@ class DistanceValue(BigDistMeasure):
         super(DistanceValue, self).__init__(*args, **kwargs)
         self.min_value = lambda: Distance(0, Distance.Meter).get_in(self.unit)
         self.max_value = lambda: Distance(3000, Distance.Meter).get_in(self.unit)
-        
+
 
 class WeightValue(WeightMeasure):
     id = 'weight'
@@ -248,7 +248,7 @@ class PowderTempValue(TemperatureValue):
 
 class ZeroDistValue(BigDistMeasure):
     id = 'zero_dist'
-    
+
     def __init__(self, *args, **kwargs):
         super(ZeroDistValue, self).__init__(*args, **kwargs)
         self.min_value = lambda: Distance(0, Distance.Meter).get_in(self.unit)
@@ -307,5 +307,3 @@ class CDValue(MeasureValue):
         self.max_value = 1
         self.decimals = 3
         self.step = 0.001
-
-

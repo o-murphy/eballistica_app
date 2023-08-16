@@ -1,10 +1,8 @@
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
-from kivymd.uix.textfield import MDTextField
 
 from kvgui.components.abstract import FormSelector
 from kvgui.components.mixines import MapIdsMixine
-from kvgui.components.measure_widgets import SightHeightValue, TwistValue
 from datatypes.defines import TwistDir
 from kvgui.modules import signals as sig
 from kvgui.modules.translator import translate as tr
