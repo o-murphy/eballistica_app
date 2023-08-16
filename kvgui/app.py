@@ -109,13 +109,12 @@ class EBallisticaApp(MDApp):
         self.app_screen_manager.rifles_screen.on_leave = self.app_top_bar.hide_all
 
     def build(self):
-        self.theme_cls.theme_style_switch_animation = True
-        self.theme_cls.theme_style_switch_animation_duration = 0.2
+        # self.theme_cls.theme_style_switch_animation = True  # uncomment if animation needed
+        # self.theme_cls.theme_style_switch_animation_duration = 0.2  # uncomment if animation needed
         self.theme_cls.theme_style = 'Dark'
         self.theme_cls.material_style = "M3"
         self.theme_cls.primary_palette = 'Teal'
         self.theme_cls.primary_hue = "700"
-        # self.theme_cls.accent_palette = 'Orange'
         self.theme_cls.accent_palette = 'Teal'
         self.theme_cls.accent_hue = "800"
 
@@ -152,7 +151,6 @@ class EBallisticaApp(MDApp):
         elif current in ['bc_editor_screen', 'cdm_editor_screen']:
             self.switch_ammo_card('right')
         elif current == 'rifles_screen':
-            # self.stop()
             self.show_exit_confirmation(self)
 
     def show_exit_confirmation(self, instance):

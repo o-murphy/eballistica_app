@@ -23,11 +23,12 @@ class TwistDirSelector(FormSelector, MapIdsMixine):
         # self.text = tr('Right', ctx='RifleCard')
         self.translate_ui()
 
-    def translate_ui(self):
+    def translate_ui(self, **kwargs):
         ...
 
     def bind_ui(self):
         self.bind(on_release=self.change_twist)
+        sig.translator_update.connect(self.translate_ui)
 
     def change_twist(self, *args, **kwargs):
         if self.value == TwistDir.Right:
@@ -63,9 +64,10 @@ class RifleCardScreen(Screen, MapIdsMixine):
         # self.translate_ui()
 
     def on_pre_enter(self, *args):  # Note: Definition that may translate ui automatically
-        self.translate_ui()
+        # self.translate_ui()
+        ...
 
-    def translate_ui(self):
+    def translate_ui(self, **kwargs):
         self.name_label.text = tr('Name', 'RifleCard')
         self.prop_title_label.text = tr('Properties', 'RifleCard')
         self.sight_height_label.text = tr('Sight height', 'RifleCard')
@@ -74,6 +76,7 @@ class RifleCardScreen(Screen, MapIdsMixine):
 
     def bind_ui(self):
         sig.set_settings.connect(self.on_set_settings)
+        sig.translator_update.connect(self.translate_ui)
 
     def on_enter(self, *args):
         ...

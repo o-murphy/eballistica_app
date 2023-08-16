@@ -74,7 +74,8 @@ class RiflesScreen(Screen):
         self.init_ui()
 
     def on_pre_enter(self, *args):  # Note: Definition that may translate ui automatically
-        self.translate_ui()
+        # self.translate_ui()
+        ...
 
     def translate_ui(self):
         ...

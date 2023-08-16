@@ -92,6 +92,10 @@ class MDNumericField(MDTextField):
             self._decrement()
         super(MDNumericField, self).keyboard_on_key_down(window, keycode, text, modifiers)
 
+    def do_backspace(self, from_undo=False, mode='bkspc'):
+        self._set_cursor_right()
+        super(MDNumericField, self).do_backspace()
+
     def _increment(self):
         self.value += self.step
 
@@ -101,11 +105,11 @@ class MDNumericField(MDTextField):
     def set_cursor(self, instance, dt):
         instance.cursor = (len(instance.text), 0)
 
-    # def _set_cursor_right(self):
-    #     if self.focus:
-    #         final_len = len(self.text)
-    #         self.cursor = (final_len, 0)
-    #         Clock.schedule_once(partial(self.set_cursor, self), 0)
+    def _set_cursor_right(self):
+        if self.focus:
+            final_len = len(self.text)
+            self.cursor = (final_len, 0)
+            Clock.schedule_once(partial(self.set_cursor, self), 0)
 
     def validate_value(self):
         if self.min_value > self.value:
@@ -143,6 +147,8 @@ class MDNumericField(MDTextField):
         super(MDNumericField, self).set_text(instance, self._formatted(self._value))
 
     def insert_text(self, substring, from_undo=False):
+        if self.value == 0:
+            self._set_cursor_right()
         return super().insert_text(substring, from_undo=from_undo)
 
 

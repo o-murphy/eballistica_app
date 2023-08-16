@@ -1,5 +1,4 @@
 from kivy.lang import Builder
-from kivy.metrics import dp
 from kivy.uix.screenmanager import Screen
 from kivymd.uix.boxlayout import MDBoxLayout
 
@@ -8,6 +7,7 @@ from kvgui.components.measure_widgets import MachValue, CDValue
 
 from kvgui.components.mixines import MapIdsMixine
 from kvgui.modules.translator import translate as tr
+from kvgui.modules import signals as sig
 
 helper = """
 <CDMEditor>
@@ -51,12 +51,13 @@ class CDMEditor(Screen, MapIdsMixine):
         self.translate_ui()
 
     def bind_ui(self):
-        ...
+        sig.translator_update.connect(self.translate_ui)
 
     def on_pre_enter(self, *args):  # Note: Definition that may translate ui automatically
-        self.translate_ui()
+        # self.translate_ui()
+        ...
 
-    def translate_ui(self):
+    def translate_ui(self, **kwargs):
         self.title.text = tr('Edit CDM: ', 'CDMEditor') + ''  # Todo: display Drag Model
         # self.mach_label.text = tr('Mach', 'CDMEditor')
         # self.cd_label.text = tr('CD', 'CDMEditor')

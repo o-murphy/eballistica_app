@@ -32,7 +32,8 @@ class BCEditor(Screen, MapIdsMixine):
         self.bind_ui()
 
     def on_pre_enter(self, *args):  # Note: Definition that may translate ui automatically
-        self.translate_ui()
+        # self.translate_ui()
+        ...
 
     def init_ui(self):
         super(BCEditor, self).init_ui()
@@ -42,8 +43,9 @@ class BCEditor(Screen, MapIdsMixine):
 
     def bind_ui(self):
         sig.set_settings.connect(self.on_set_settings)
+        sig.translator_update.connect(self.translate_ui)
 
-    def translate_ui(self):
+    def translate_ui(self, **kwargs):
         self.title.text = tr('Edit BC: ', 'BCEditor') + ''  # Todo: display Drag Model
         self.velocity_label.text = tr('Velocity, ', 'BCEditor') + '{DragModel}'  # Todo: display Drag Model
         self.bc_label.text = tr('BC, ', 'BCEditor') + '{DragModel}'  # Todo: display Drag Model

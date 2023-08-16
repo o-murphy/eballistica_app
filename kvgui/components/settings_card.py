@@ -24,10 +24,11 @@ class SettingsScreen(Screen, MapIdsMixine):
 
     def init_ui(self):
         super(SettingsScreen, self).init_ui()
-        # self.translate_ui()
+        self.translate_ui()
 
     def on_pre_enter(self, *args):  # Note: Definition that may translate ui automatically
-        self.translate_ui()
+        # self.translate_ui()
+        ...
 
     def translate_ui(self, **kwargs):
         self.ids.view_title.text = tr('View', ctx='SettingsScreen')

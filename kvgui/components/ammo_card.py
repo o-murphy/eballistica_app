@@ -70,13 +70,14 @@ class AmmoCardScreen(Screen, MapIdsMixine):
         self.bind_ui()
 
     def on_pre_enter(self, *args):  # Note: Definition that may translate ui automatically
-        self.translate_ui()
+        # self.translate_ui()
+        ...
 
     def init_ui(self):
         super(AmmoCardScreen, self).init_ui()
         self.translate_ui()
 
-    def translate_ui(self):
+    def translate_ui(self, **kwargs):
         self.name_label.text = tr('Name', 'AmmoCard')
         self.prop_title.text = tr('Properties', 'AmmoCard')
         self.diameter_label.text = tr('Diameter', 'AmmoCard')
@@ -99,6 +100,7 @@ class AmmoCardScreen(Screen, MapIdsMixine):
         self.bc_select.bind(on_release=lambda x: sig.drag_model_edit_act.emit(drag_model=self.dm_select.value))
 
         sig.set_settings.connect(self.on_set_settings)
+        sig.translator_update.connect(self.translate_ui)
 
     def on_set_settings(self, **kwargs):
 
