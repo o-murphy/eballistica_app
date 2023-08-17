@@ -30,6 +30,9 @@ assert abstract
 if platform == 'win':
     Window.size = (500, 700)
     Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
+    # Config.set('graphics', 'multisamples', '0')  # Disable anti-aliasing (optional)
+    # Config.set('graphics', 'gl_backend', 'angle_sdl2')  # Use OpenGL backend
+    # Config.set('graphics', 'verify_gl_main_thread', 0)  # Use OpenGL backend
 
 
 class AppScreenManager(ScreenManager):

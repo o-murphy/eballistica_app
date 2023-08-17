@@ -1,3 +1,4 @@
+import threading
 from functools import partial
 
 from kivy.clock import Clock
@@ -12,7 +13,6 @@ from kvgui.components.datatables import MDDataTableFit
 from kvgui.components.mixines import MapIdsMixine
 from kvgui.modules import signals as sig
 from kvgui.modules.translator import translate as tr
-
 
 Builder.load_file('kvgui/kv/trajectory_screen.kv')
 
@@ -78,11 +78,13 @@ class TrajectoryScreen(Screen, MapIdsMixine):
             self.row_data = subheader + [[str(i)] * 7 for i in range(3000, -1, -50)]
             rate = 1 / 30
 
-            self.event = Clock.schedule_interval(partial(self.update_progress), rate)
+            # self.event = Clock.schedule_interval(partial(self.update_progress), rate)
 
-            for i, data in enumerate(self.row_data):
-                Clock.schedule_once(partial(self.set_table_data, data), rate * 2 * i)
-
+            # for i, data in enumerate(self.row_data):
+            #     Clock.schedule_once(partial(self.set_table_data, data), rate * 2 * i)
+            # tr = threading.Thread(target=self.table.update_row_data, args=[self, self.row_data])
+            # tr.start()
+            self.table.update_row_data(self, self.row_data)
 
             self.set_graph_data()
 
@@ -92,31 +94,29 @@ class TrajectoryScreen(Screen, MapIdsMixine):
             self.progress.stop()
             print(exc)
 
-
-
     def set_graph_data(self, data=None):
         ...
 
     # def on_enter(self):
-        # sig.wait_me.emit()
-        # try:
-        #     # TODO: trajectory calculation
-        #
-        #     subheader = [
-        #         ['m', 'cm/100m', 'MIL', 'cm/100m', 'MIL', 'm/s', 'J']
-        #     ]
-        #     row_data = subheader + [[str(i)] * 7 for i in range(3000, -1, -50)]
-        #
-        #     for i, data in enumerate(row_data):
-        #         Clock.schedule_once(partial(self.set_table_data, data), 1 / 10 * i)
-        #     Clock.schedule_once(lambda *args: sig.unwait_me.emit(), 1 / 10 * len(row_data))
-        #
-        #     self.set_graph_data()
-        #
-        # except Exception as exc:
-        #     print(exc)
-        #     sig.toast.emit(text=tr("Error: Can't calculate trajectory", 'Trajectory'))
-        #     sig.unwait_me.emit()
+    # sig.wait_me.emit()
+    # try:
+    #     # TODO: trajectory calculation
+    #
+    #     subheader = [
+    #         ['m', 'cm/100m', 'MIL', 'cm/100m', 'MIL', 'm/s', 'J']
+    #     ]
+    #     row_data = subheader + [[str(i)] * 7 for i in range(3000, -1, -50)]
+    #
+    #     for i, data in enumerate(row_data):
+    #         Clock.schedule_once(partial(self.set_table_data, data), 1 / 10 * i)
+    #     Clock.schedule_once(lambda *args: sig.unwait_me.emit(), 1 / 10 * len(row_data))
+    #
+    #     self.set_graph_data()
+    #
+    # except Exception as exc:
+    #     print(exc)
+    #     sig.toast.emit(text=tr("Error: Can't calculate trajectory", 'Trajectory'))
+    #     sig.unwait_me.emit()
 
     def on_leave(self, *args):
         self.table.row_data = []
