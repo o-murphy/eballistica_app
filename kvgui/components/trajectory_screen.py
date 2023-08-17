@@ -5,6 +5,7 @@ from kivy.lang import Builder
 from kivy.metrics import dp
 from kivy.uix.screenmanager import Screen
 from kivymd.app import MDApp
+from kivymd.uix.progressbar import MDProgressBar
 
 from kvgui.components.datatables import MDDataTableFit
 from kvgui.components.mixines import MapIdsMixine
@@ -40,7 +41,8 @@ class TrajectoryScreen(Screen, MapIdsMixine):
             size_hint=(0.9, 0.9),
             pos_hint={'center_x': 0.5, 'center_y': 0.5},
             column_data=column_data,
-            rows_num=100,
+            rows_num=20,
+            use_pagination=True,
             elevation=0,
 
             # use_pagination = True
@@ -55,32 +57,40 @@ class TrajectoryScreen(Screen, MapIdsMixine):
     def on_pre_enter(self, *args):
         ...
 
-    def set_table_data(self, data, *args):
+    def set_table_data(self, *args):
+        if self.row_data_idx == len(self.row_data) - 1:
+            self.progress.value = 0
+            return False
 
-        self.table.row_data.append(data)
+        self.table.row_data.append(self.row_data[self.row_data_idx])
+        self.progress.value += 100 / (len(self.row_data)-1)
+        self.row_data_idx += 1
 
-    def preload(self):
-        event = None
+    def update_progress(self):
+        self.progress.value += self.progress_step
+
+    def on_enter(self, *args):
+        self.load_data_event = None
+        self.progress.value = 0
+
         try:
             # TODO: trajectory calculation
 
             subheader = [
                 ['m', 'cm/100m', 'MIL', 'cm/100m', 'MIL', 'm/s', 'J']
             ]
-            row_data = subheader + [[str(i)] * 7 for i in range(3000, -1, -50)]
-
-            rate = 1 / 20
-
-            for i, data in enumerate(row_data):
-                Clock.schedule_once(partial(self.set_table_data, data), rate * i)
-            event = Clock.schedule_once(lambda *args: sig.trajectory_preloaded.emit(), rate * len(row_data))
-
+            self.row_data = subheader + [[str(i)] * 7 for i in range(3000, -1, -50)]
+            self.row_data_idx = 0
+            rate = 1 / 30
+            self.load_data_event = Clock.schedule_interval(lambda x: self.set_table_data(), rate)
             self.set_graph_data()
         except Exception as exc:
-            Clock.unschedule(event)
-            print(exc)
+            Clock.unschedule(self.load_data_event)
             sig.toast.emit(text=tr("Error: Can't calculate trajectory", 'Trajectory'))
-            sig.unwait_me.emit()
+            self.progress.stop()
+            print(exc)
+
+
 
     def set_graph_data(self, data=None):
         ...

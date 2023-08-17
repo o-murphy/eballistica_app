@@ -126,8 +126,8 @@ class EBallisticaApp(MDApp):
         sig.drag_model_edit_act.connect(self.switch_drag_model_edit)
 
         sig.one_shot_act.connect(self.switch_one_shot)
-        sig.trajectory_act.connect(self.pre_switch_trajectory)
-        sig.trajectory_preloaded.connect(self.switch_trajectory)
+        sig.trajectory_act.connect(self.switch_trajectory)
+        # sig.trajectory_preloaded.connect(self.switch_trajectory)
 
         self.app_screen_manager.rifles_screen.on_enter = self.app_top_bar.show_cog
         self.app_screen_manager.rifles_screen.on_leave = self.app_top_bar.hide_all
@@ -263,9 +263,9 @@ class EBallisticaApp(MDApp):
             'Rifles', '{rifle name}', 'Ammos', '{ammo name}', 'Shot'
         ]
 
-    def pre_switch_trajectory(self, **kwargs):
-        sig.wait_me.emit()
-        self.app_screen_manager.trajectory_screen.preload()
+    # def pre_switch_trajectory(self, **kwargs):
+    #     # sig.wait_me.emit()
+    #     self.app_screen_manager.trajectory_screen.preload()
 
     def switch_trajectory(self, direction='left', caller=None, **kwargs):
         sig.unwait_me.emit()

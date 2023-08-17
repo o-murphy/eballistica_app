@@ -26,7 +26,7 @@ Components/DataTables
 # Special thanks for the info -
 # https://stackoverflow.com/questions/50219281/python-how-to-add-vertical-scroll-in-recycleview
 
-__all__ = ("MDDataTable",)
+__all__ = ("MDDataTableFit",)
 
 import os
 from collections import defaultdict
