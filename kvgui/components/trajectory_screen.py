@@ -61,32 +61,40 @@ class TrajectoryScreen(Screen, MapIdsMixine):
         self.table.add_row(data)
 
     def on_enter(self, *args):
-        try:
-            # TODO: trajectory calculation
+        # try:
+        #     # TODO: trajectory calculation
+        #
+        #     header = [["Range", "Path", "Path", "Wind.", "Wind.", "V", "E"]]
+        #     subheader = [
+        #         ['m', 'cm/100m', 'MIL', 'cm/100m', 'MIL', 'm/s', 'J']
+        #     ]
+        #
+        #     self.row_data = header + subheader + [[str(i)] * 7 for i in range(3000, -1, -50)]
+        #     rate = 1 / 120
+        #
+        #     for i, data in enumerate(self.row_data):
+        #         Clock.schedule_once(partial(self.append_table_data, data), rate * i)
+        #
+        # except Exception as exc:
+        #     sig.toast.emit(text=tr("Error: Can't calculate trajectory", 'Trajectory'))
+        #     print(exc)
 
-            header = [["Range", "Path", "Path", "Wind.", "Wind.", "V", "E"]]
-            subheader = [
-                ['m', 'cm/100m', 'MIL', 'cm/100m', 'MIL', 'm/s', 'J']
-            ]
-
-            self.row_data = header + subheader + [[str(i)] * 7 for i in range(3000, -1, -50)]
-            rate = 1 / 120
-
-            for i, data in enumerate(self.row_data):
-                Clock.schedule_once(partial(self.append_table_data, data), rate * i)
-
-        except Exception as exc:
-            sig.toast.emit(text=tr("Error: Can't calculate trajectory", 'Trajectory'))
-            print(exc)
+        self.markup_table.header_data = [
+            ["Range", "Path", "Path", "Wind.", "Wind.", "V", "E"],
+            ['m', 'cm/100m', 'MIL', 'cm/100m', 'MIL', 'm/s', 'J']
+        ]
+        self.markup_table.rows_data = [[str(i)] * 7 for i in range(3000, -1, -50)]
 
     def append_table_data(self, data, *args):
-        self.markup_table.append_row(data)
+        # self.markup_table.append_row(data)
+        ...
 
     def set_graph_data(self, data=None):
         ...
 
     def on_leave(self, *args):
-        self.markup_table.data = []
+        # self.markup_table.data = []
+        ...
 
     def bind_ui(self):
         ...
