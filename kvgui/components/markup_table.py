@@ -2,6 +2,7 @@ from kivy.lang import Builder
 from kivy.utils import get_hex_from_color
 from kivymd.app import MDApp
 from kivymd.uix.label import MDLabel
+from kivy.metrics import dp
 
 
 Builder.load_file('kvgui/kv/markup_table.kv')
