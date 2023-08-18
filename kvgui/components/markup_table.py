@@ -55,3 +55,15 @@ class MarkupTable(MDLabel):
 
         print(text)
         self.text = text
+        self.autosize_font()
+        
+    def autosize_font(self):
+        original_font_size = dp(20)
+        
+        # Reduce the font size until the text fits within the label's width and height
+        while self.texture_size[0] > self.width:
+            self.font_size -= 1
+            self.texture_update()
+            
+            if self.font_size <= 1:  # Ensure we don't get stuck in an infinite loop
+                break
