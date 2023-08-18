@@ -4,30 +4,26 @@
         elevation: 2
 
         Tab:
-            id: table_tab
+            id: fast_tab
             title: "Table"
             content_text: f"This is an example text for {self.title}"
 
-            MDLabel:
-                id: not_imp
-                text: "Not implemented yet"
-                pos_hint: {"center_x": 0.5, 'top': 1}
-                halign: 'center'
+            MDScrollView:
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: "20dp"
+                    spacing: "15dp"
 
-            MDProgressBar:
-                id: progress
-                value: 0
-                pos_hint: {"center_x": 0.5, 'top': 1}
-                color: 'orange'
-                size_hint_y: None
+                    MarkupTable:
+                        id: markup_table
+                        size_hint: 1, None
+                        height: self.texture_size[1]
+                        theme_text_color: 'Secondary'
 
         Tab:
             id: graph_tab
             title: "Graph"
             content_text: f"This is an example text for {self.title}"
 
-            MDLabel:
-                id: not_imp
-                text: "Not implemented yet"
-                pos_hint: {"center_x": 0.5, 'top': 1}
-                halign: 'center'
