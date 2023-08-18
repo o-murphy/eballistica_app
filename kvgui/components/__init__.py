@@ -5,3 +5,4 @@ from .rifles_list import RifleListItem, RiflesScreen
 from .settings_card import SettingsScreen
 from .rifle_card import RifleCardScreen
 from .gesture_box import GestureBox
+from .markup_table import MarkupTable
