@@ -1,7 +1,39 @@
-<MarkupTable>:
-    text: ""
-    pos_hint: {"center_x": 0.5, 'top': 1}
+<MarkupTableSheet>:
     halign: 'center'
     markup: True
     font_name: "kvgui/fonts/VeraMono.ttf"
-    font_size: dp(15)
+#    font_size: self.width/32  # left align, fit
+    font_size: self.width/40  # right align, adjusted
+    theme_text_color: 'Secondary'
+    size_hint: 1, None
+    height: self.texture_size[1]
+
+<MarkupTableHeader>:
+    halign: 'center'
+    markup: True
+    font_name: "kvgui/fonts/VeraMono.ttf"
+#    font_size: self.width/32  # left align, fit
+    font_size: self.width/40  # right align, adjusted
+    theme_text_color: 'Primary'
+    size_hint: 1, None
+    height: self.texture_size[1]
+
+<MarkupTable>:
+    orientation: 'vertical'
+    pos_hint: {"center_x": 0.5, 'top': 1}
+    size_hint_y: None
+    padding: "20dp"
+
+    MarkupTableHeader:
+        id: header
+
+    MDScrollView:
+        MDBoxLayout:
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+
+            MarkupTableSheet:
+                id: sheet
+                pos_hint: {"center_x": 0.5, 'top': 1}
+                size_hint: 1, None
