@@ -174,6 +174,12 @@ class Worker:
         return rifles
 
     @staticmethod
+    def get_rifle(uid, **kwargs):
+        with Session() as session:
+            rifle = session.query(RifleData).get(uid, **kwargs)
+        return rifle
+
+    @staticmethod
     def rifle_add_or_update(*args, **kwargs):
         with Session() as session:
             rifle = RifleData(*args, **kwargs)
