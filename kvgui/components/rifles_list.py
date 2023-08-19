@@ -34,10 +34,11 @@ class RifleListItem(ThreeLineListItem, TouchBehavior):
         self.show_menu()
 
     def on_touch_up(self, touch):
-        if not self.is_long_touch:
-            sig.rifle_item_touch.emit(caller=self)
-        else:
-            sig.rifle_item_long_touch.emit(caller=self)
+        if self.collide_point(*touch.pos):
+            if not self.is_long_touch:
+                sig.rifle_item_touch.emit(caller=self)
+            else:
+                sig.rifle_item_long_touch.emit(caller=self)
         self.is_long_touch = False
 
     def show_menu(self):
@@ -70,30 +71,33 @@ class RiflesScreen(Screen):
     def __init__(self, **kwargs):
         super(RiflesScreen, self).__init__(**kwargs)
         self.name = 'rifles_screen'
+
         self.init_ui()
 
-    def on_pre_enter(self, *args):  # Note: Definition that may translate ui automatically
-        # self.translate_ui()
+    def init_ui(self):
+        self.scroll = MDScrollView()
+        self.list = MDList()
+        self.list.size_hint_y = None
+        self.list.height = self.list.minimum_height
+
+        self.scroll.add_widget(self.list)
+        self.add_widget(self.scroll)
+
+    def on_enter(self, *args):
         ...
 
     def translate_ui(self):
         ...
 
-    def init_ui(self):
-        self.scroll = MDScrollView()
-        self.list = MDList()
+    def display(self, data):
 
-        # TODO: temporary
-        item = RifleListItem()
-        item.secondary_text = item.secondary_text.format('9', 'inch')
-        item.tertiary_text = item.tertiary_text.format('9', 'cm')
+        self.list.clear_widgets()
 
-        item2 = RifleListItem()
-        item2.secondary_text = item2.secondary_text.format('9', 'inch')
-        item2.tertiary_text = item2.tertiary_text.format('9', 'cm')
-
-        self.list.add_widget(item)
-        self.list.add_widget(item2)
-
-        self.scroll.add_widget(self.list)
-        self.add_widget(self.scroll)
+        if data:
+            for rifle in data:
+                item = RifleListItem()
+                item.dbid = rifle.id
+                item.text = rifle.name + f' dbid: {rifle.id}'
+                item.secondary_text = f"{tr('Twist:', 'RiflesList')} {rifle.barrel_twist} inch"
+                item.tertiary_text = f"{tr('Sight height:', 'RiflesList')} {rifle.sight_height} cm"
+                self.list.add_widget(item)

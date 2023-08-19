@@ -24,6 +24,8 @@ from kvgui.modules import signals as sig
 from kvgui.modules.settings import app_settings
 from kvgui.modules.translator import translate as tr
 
+from datatypes.dbworker import Worker, RifleData
+
 assert app_settings
 assert abstract
 
@@ -33,6 +35,12 @@ if platform == 'win':
     # Config.set('graphics', 'multisamples', '0')  # Disable anti-aliasing (optional)
     # Config.set('graphics', 'gl_backend', 'angle_sdl2')  # Use OpenGL backend
     # Config.set('graphics', 'verify_gl_main_thread', 0)  # Use OpenGL backend
+
+
+class AppState:
+    rifle: None
+    ammo: None
+    shot: None
 
 
 class AppScreenManager(ScreenManager):
@@ -150,6 +158,8 @@ class EBallisticaApp(MDApp):
         self.theme_cls.accent_palette = 'Teal'
         self.theme_cls.accent_hue = "800"
 
+        self.app_state = AppState()
+
         self.init_ui()
         self.bind_ui()
 
@@ -217,7 +227,7 @@ class EBallisticaApp(MDApp):
     def bot_fab_action(self, caller=None, **kwargs):
         current = self.app_screen_manager.current
         if current == 'rifles_screen':
-            self.switch_rifle_card('left')
+            self.edit_rifle(caller=caller, **kwargs)
         elif current == 'ammos_screen':
             self.switch_shot_edit('left')
         elif current == 'rifle_card':
@@ -228,7 +238,13 @@ class EBallisticaApp(MDApp):
             self.save_shot_card()
 
     def save_rifle_card(self):
-        # Todo:
+        rifle = self.app_state.rifle
+        new_data = self.app_screen_manager.rifle_card_screen.get()
+        if rifle:
+            Worker.rifle_add_or_update(id=rifle.id, **new_data)
+        else:
+            Worker.rifle_add_or_update(**new_data)
+        self.app_state.rifle = None
         self.switch_rifles_list('right')
         self.toast(tr("Rifle data saved"), duration=1)
 
@@ -242,13 +258,25 @@ class EBallisticaApp(MDApp):
         self.switch_ammos_list('right')
         self.toast(tr("Shot data saved"), duration=1)
 
+    # def new_rifle(self, caller, **kwargs):
+    #     self.switch_rifle_card('left', caller=caller)
+
     def edit_rifle(self, caller=None, **kwargs):
-        # TODO
-        self.switch_rifle_card('left')
+
+        if caller == self.app_bottom_bar.bottom_bar_fab:
+            self.app_state.rifle = RifleData()
+        elif isinstance(caller, RifleListItem):
+            self.app_state.rifle = Worker.get_rifle(caller.dbid)
+
+        self.app_screen_manager.rifle_card_screen.display(self.app_state.rifle)
+
+        self.switch_rifle_card('left', caller=caller)
 
     def del_rifle(self, caller, **kwargs):
-        # TODO
-        ...
+        if isinstance(caller, RifleListItem):
+            Worker.delete_rifle(caller.dbid)
+            rifles = Worker.list_rifles().all()
+            self.app_screen_manager.rifles_screen.display(rifles)
 
     def edit_ammo(self, caller=None, **kwargs):
         # TODO
@@ -288,6 +316,11 @@ class EBallisticaApp(MDApp):
         ]
 
     def switch_rifles_list(self, direction='left', caller=None, **kwargs):
+
+        rifles = Worker.list_rifles().all()
+
+        self.app_screen_manager.rifles_screen.display(rifles)
+
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'rifles_screen'
         self.app_bottom_bar.fab_add_new()

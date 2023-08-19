@@ -16,12 +16,12 @@ Builder.load_file('kvgui/kv/trajectory_screen.kv')
 class TrajectoryGraph(MDBoxLayout):
     def __init__(self):
         super(TrajectoryGraph, self).__init__()
+        self.padding = '20dp'
         self.graph = Graph(xlabel='Range, m', ylabel='Drop, cm', x_ticks_minor=10, x_ticks_major=100, y_ticks_major=1,
                            y_ticks_minor=0.1,
                            y_grid_label=True, x_grid_label=True, padding=5, x_grid=True, y_grid=True,
                            xmin=-0, xmax=100, ymin=-2, ymax=2)
         self.add_widget(self.graph)
-        # self.plot = MeshLinePlot(color=get_color_from_hex('#008080'))
         self.plot = LinePlot(color=get_color_from_hex('#008080'), line_width=2)
         self.graph.add_plot(self.plot)
 

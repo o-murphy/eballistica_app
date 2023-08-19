@@ -32,10 +32,11 @@ class AmmoListItem(ThreeLineListItem, TouchBehavior):
         self.show_menu()
 
     def on_touch_up(self, touch):
-        if not self.is_long_touch:
-            sig.ammo_item_touch.emit(caller=self)
-        else:
-            sig.ammo_item_long_touch.emit(caller=self)
+        if self.collide_point(*touch.pos):
+            if not self.is_long_touch:
+                sig.ammo_item_touch.emit(caller=self)
+            else:
+                sig.ammo_item_long_touch.emit(caller=self)
         self.is_long_touch = False
 
     def show_menu(self):

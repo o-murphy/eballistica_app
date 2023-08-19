@@ -160,20 +160,22 @@ class LookAngleValue(AngularMeasure):
         self.max_value = lambda: Angular(359, Angular.Degree).get_in(self.unit)
 
 
-class SightHeightValue(DistanceMeasure):
+class SightHeightValue(MeasureValue):
     id = 'sight_height'
 
     def __init__(self, *args, **kwargs):
         super(SightHeightValue, self).__init__(*args, **kwargs)
+        self.convertor = Convertor(Distance, Distance.Centimeter, Distance.Centimeter)
         self.min_value = lambda: Distance(0.1, Distance.Centimeter).get_in(self.unit)
         self.max_value = lambda: Distance(20, Distance.Centimeter).get_in(self.unit)
 
 
-class TwistValue(DistanceMeasure):
+class TwistValue(MeasureValue):
     id = 'twist'
 
     def __init__(self, *args, **kwargs):
         super(TwistValue, self).__init__(*args, **kwargs)
+        self.convertor = Convertor(Distance, Distance.Inch, Distance.Inch)
         self.min_value = lambda: Distance(0, Distance.Inch).get_in(self.unit)
         self.max_value = lambda: Distance(20, Distance.Inch).get_in(self.unit)
 

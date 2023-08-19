@@ -1,6 +1,7 @@
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
+from datatypes.dbworker import RifleData
 from kvgui.components.abstract import FormSelector
 from kvgui.components.mixines import MapIdsMixine
 from datatypes.defines import TwistDir
@@ -90,3 +91,18 @@ class RifleCardScreen(Screen, MapIdsMixine):
 
         set_unit_for_target(self.twist, self.twist_suffix, 'unit_twist')
         set_unit_for_target(self.sight_height, self.sight_height_suffix, 'unit_sight_height')
+
+    def display(self, data: RifleData):
+        self.name_input.text = data.name if data.name else tr('New weapon', 'RifleCard')
+        self.twist.raw_value = data.barrel_twist
+        self.twist_dir.value = data.barrel_twist_dir
+        self.sight_height.raw_value = data.sight_height
+
+    def get(self):
+        return dict(
+            name=self.name_input.text,
+            barrel_twist=self.twist.raw_value,
+            barrel_twist_dir=self.twist_dir.value,
+            sight_height=self.sight_height.raw_value
+        )
+
