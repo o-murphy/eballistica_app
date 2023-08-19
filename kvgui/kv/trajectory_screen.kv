@@ -8,23 +8,10 @@
             title: "Table"
             content_text: f"This is an example text for {self.title}"
 
-#            MDScrollView:
-#                MDBoxLayout:
-#                    orientation: 'vertical'
-#                    size_hint_y: None
-#                    height: self.minimum_height
-#                    padding: "20dp"
-#                    spacing: "15dp"
-#
-#                    MarkupTable:
-#                        id: markup_table
-#                        size_hint: 1, None
-#                        height: self.texture_size[1]
-#                        theme_text_color: 'Secondary'
             MarkupTable:
                 id: markup_table
                 height: fast_tab.height
-
+                padding: dp(20)
 
         Tab:
             id: graph_tab

@@ -3,26 +3,28 @@
     markup: True
     font_name: "kvgui/fonts/VeraMono.ttf"
 #    font_size: self.width/32  # left align, fit
-    font_size: self.width/40  # right align, adjusted
+#    font_size: self.width/40  # right align, adjusted
     theme_text_color: 'Secondary'
     size_hint: 1, None
     height: self.texture_size[1]
+    halign: 'center'
 
 <MarkupTableHeader>:
     halign: 'center'
     markup: True
     font_name: "kvgui/fonts/VeraMono.ttf"
 #    font_size: self.width/32  # left align, fit
-    font_size: self.width/40  # right align, adjusted
+#    font_size: self.width/40  # right align, adjusted
     theme_text_color: 'Primary'
     size_hint: 1, None
     height: self.texture_size[1]
+    halign: 'center'
 
 <MarkupTable>:
     orientation: 'vertical'
     pos_hint: {"center_x": 0.5, 'top': 1}
     size_hint_y: None
-    padding: "20dp"
+#    padding: "20dp"
 
     MarkupTableHeader:
         id: header

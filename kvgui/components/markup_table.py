@@ -1,4 +1,6 @@
+from kivy.core.window import Window
 from kivy.lang import Builder
+from kivy.uix.label import Label
 from kivy.utils import get_hex_from_color
 from kivymd.app import MDApp
 from kivymd.uix.boxlayout import MDBoxLayout
@@ -24,17 +26,15 @@ class MarkupTableSheet(MDLabel):
         self.id = 'sheet'
 
 
-
 class MarkupTable(MDBoxLayout, MapIdsMixine):
     def __init__(self, *args, **kwargs):
         super(MarkupTable, self).__init__(*args, **kwargs)
         self._header_data = []
         self._rows_data = []
-        # self.init_ui()
-        # print(self.ids)
 
-    # def init_ui(self):
-    #     super(MarkupTable, self).init_ui()
+        self._font_resolution = 1
+
+        Window.bind(on_resize=self.on_window_resize)
 
     @property
     def header_data(self):
@@ -43,7 +43,7 @@ class MarkupTable(MDBoxLayout, MapIdsMixine):
     @header_data.setter
     def header_data(self, data: list):
         self._header_data = data
-        self.update()
+        self.update_texture()
         
     @property
     def rows_data(self):
@@ -52,23 +52,23 @@ class MarkupTable(MDBoxLayout, MapIdsMixine):
     @rows_data.setter
     def rows_data(self, data: list):
         self._rows_data = data
-        self.update()
+        self.update_texture()
 
     def append_row(self, data: list):
         self._rows_data.append(data)
-        self.update()
+        self.update_texture()
 
     def pop_row(self, index: int):
         self._rows_data.pop(index)
-        self.update()
+        self.update_texture()
 
     def insert_row(self, index, data):
         self._rows_data.insert(index, data)
-        self.update()
+        self.update_texture()
 
     def remove_row(self, data):
         self._rows_data.remove(data)
-        self.update()
+        self.update_texture()
 
     def update1(self):
         # left align, fit
@@ -90,8 +90,11 @@ class MarkupTable(MDBoxLayout, MapIdsMixine):
         row_width = sum(column_widths) + len(column_widths) * 2
         self.ids.header.text = make_markup(self._header_data)
         self.ids.sheet.text = make_markup(self._rows_data)
+        
+    def on_window_resize(self, *args):
+        self.update_texture()
 
-    def update(self):
+    def update_texture(self):
         # right align, adjusted
         def make_markup(data_part):
             pair = False
@@ -109,12 +112,36 @@ class MarkupTable(MDBoxLayout, MapIdsMixine):
                 pair = not pair
             return text
 
+        def calc_letter_width(font_size):
+            header = self.ids.header
+            label = Label(text='W', font_name=header.font_name, font_size=font_size)
+            label.texture_update()
+            return label.texture_size[0]
+
+        def autosize_font():
+            self.ids.header.font_size = 20
+            self.ids.sheet.font_size = 20
+
+            row_width_px = max_row_w * calc_letter_width(self.ids.header.font_size)
+            width = self.width - self.padding[0] - self.padding[2]
+
+            while row_width_px >= width:
+                self.ids.header.font_size -= 0.5
+                self.ids.sheet.font_size -= 0.5
+
+                row_width_px = max_row_w * calc_letter_width(self.ids.header.font_size)
+
+                if self.ids.header.font_size <= 1:
+                    break
+
         full_data = self._header_data + self._rows_data
         bg = get_hex_from_color(self.md_bg_color)
 
         column_widths = [max(len(item) for item in col) for col in zip(*full_data)]
         max_col_w = max(column_widths)
         max_row_w = len(column_widths) * (max_col_w + 2)
-        row_width = sum(column_widths) + len(column_widths) * 2
+
+        autosize_font()
+
         self.ids.header.text = make_markup(self._header_data)
         self.ids.sheet.text = make_markup(self._rows_data)
