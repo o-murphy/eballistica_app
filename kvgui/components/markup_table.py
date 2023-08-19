@@ -118,7 +118,7 @@ class MarkupTable(MDBoxLayout, MapIdsMixine):
             return label.texture_size[0]
 
         def autosize_font():
-            initial_font_size = 20
+            initial_font_size = 30
 
             row_width_px = max_row_w * calc_letter_width(initial_font_size)
             width = self.width - self.padding[0] - self.padding[2]
