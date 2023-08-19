@@ -2,10 +2,8 @@ from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.uix.label import Label
 from kivy.utils import get_hex_from_color
-from kivymd.app import MDApp
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.label import MDLabel
-from kivy.metrics import dp
 
 from kvgui.components.mixines import MapIdsMixine
 
@@ -27,6 +25,7 @@ class MarkupTableSheet(MDLabel):
 
 
 class MarkupTable(MDBoxLayout, MapIdsMixine):
+
     def __init__(self, *args, **kwargs):
         super(MarkupTable, self).__init__(*args, **kwargs)
         self._header_data = []
@@ -44,7 +43,7 @@ class MarkupTable(MDBoxLayout, MapIdsMixine):
     def header_data(self, data: list):
         self._header_data = data
         self.update_texture()
-        
+
     @property
     def rows_data(self):
         return self._rows_data
@@ -70,27 +69,27 @@ class MarkupTable(MDBoxLayout, MapIdsMixine):
         self._rows_data.remove(data)
         self.update_texture()
 
-    def update1(self):
-        # left align, fit
-        def make_markup(data_part):
-            text = ''
-            for row in data_part:
-                for item, width in zip(row, column_widths):
-                    padding = f'[color={bg}]{"_" * (width - len(item))}[/color]'
-                    item = padding + item
-                    text += f"[b]{item}[/b]  "
-                text += '\n'
-                text += '–' * row_width + '\n'
-            return text
+    # def update1(self):
+    #     # left align, fit
+    #     def make_markup(data_part):
+    #         text = ''
+    #         for row in data_part:
+    #             for item, width in zip(row, column_widths):
+    #                 padding = f'{" " * (width - len(item))}[/color]'
+    #                 item = padding + item
+    #                 text += f"[b]{item}[/b]  "
+    #             text += '\n'
+    #             text += '–' * row_width + '\n'
+    #         return text
+    #
+    #     full_data = self._header_data + self._rows_data
+    #     bg = get_hex_from_color(self.md_bg_color)
+    #
+    #     column_widths = [max(len(item) for item in col) for col in zip(*full_data)]
+    #     row_width = sum(column_widths) + len(column_widths) * 2
+    #     self.ids.header.text = make_markup(self._header_data)
+    #     self.ids.sheet.text = make_markup(self._rows_data)
 
-        full_data = self._header_data + self._rows_data
-        bg = get_hex_from_color(self.md_bg_color)
-
-        column_widths = [max(len(item) for item in col) for col in zip(*full_data)]
-        row_width = sum(column_widths) + len(column_widths) * 2
-        self.ids.header.text = make_markup(self._header_data)
-        self.ids.sheet.text = make_markup(self._rows_data)
-        
     def on_window_resize(self, *args):
         self.update_texture()
 
@@ -104,9 +103,9 @@ class MarkupTable(MDBoxLayout, MapIdsMixine):
                     padding = f'[color={bg}]{"_" * (max_col_w - len(item))}[/color]'
                     item = item + padding
                     if pair:
-                        text += f"  [b]{item}[/b]"
+                        text += f"[color={bg}]__[/color][b]{item}[/b]"
                     else:
-                        text += f"  [color=#008080][b]{item}[/b][/color]"
+                        text += f"[color={bg}]__[/color][color=#008080][b]{item}[/b][/color]"
                 text += '\n'
                 text += '–' * max_row_w + '\n'
                 pair = not pair
@@ -119,20 +118,22 @@ class MarkupTable(MDBoxLayout, MapIdsMixine):
             return label.texture_size[0]
 
         def autosize_font():
-            self.ids.header.font_size = 20
-            self.ids.sheet.font_size = 20
+            initial_font_size = 20
 
-            row_width_px = max_row_w * calc_letter_width(self.ids.header.font_size)
+            row_width_px = max_row_w * calc_letter_width(initial_font_size)
             width = self.width - self.padding[0] - self.padding[2]
 
             while row_width_px >= width:
-                self.ids.header.font_size -= 0.5
-                self.ids.sheet.font_size -= 0.5
+                # self.ids.header.font_size -= 0.5
+                # self.ids.sheet.font_size -= 0.5
+                initial_font_size -= 0.5
+                row_width_px = max_row_w * calc_letter_width(initial_font_size)
 
-                row_width_px = max_row_w * calc_letter_width(self.ids.header.font_size)
-
-                if self.ids.header.font_size <= 1:
+                if initial_font_size <= 1:
                     break
+
+            self.ids.header.font_size = initial_font_size
+            self.ids.sheet.font_size = initial_font_size
 
         full_data = self._header_data + self._rows_data
         bg = get_hex_from_color(self.md_bg_color)
