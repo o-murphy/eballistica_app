@@ -2,6 +2,7 @@ from kivy import platform
 from kivy.config import Config
 from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.utils import get_hex_from_color
 from kivymd.app import MDApp
 from kivymd.toast import toast
 from kivymd.uix.boxlayout import MDBoxLayout
@@ -154,7 +155,7 @@ class EBallisticaApp(MDApp):
         self.theme_cls.theme_style = 'Dark'
         self.theme_cls.material_style = "M3"
         self.theme_cls.primary_palette = 'Teal'
-        self.theme_cls.primary_hue = "700"
+        self.theme_cls.primary_hue = "600"
         self.theme_cls.accent_palette = 'Teal'
         self.theme_cls.accent_hue = "800"
 
