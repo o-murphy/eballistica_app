@@ -43,7 +43,7 @@ jobs:
         if: ${{ always() }}
         run: |
           sudo apt-get install libtool
-          pip install --user --upgrade Cython==0.29.36
+          pip install --user --upgrade Cython==0.29.24
           pip install --user --upgrade buildozer
           pip freeze > requirements-pre.txt
 
