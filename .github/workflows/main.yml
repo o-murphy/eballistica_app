@@ -13,16 +13,25 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: buildozer-artifacts   # The name of the uploaded artifacts
+          workflow: 5917303319 # Replace with the actual workflow_run ID
+          path: .buildozer
+
       # - name: Setup Android SDK
       #  uses: android-actions/setup-android@v2
 
       - name: Set up Python 3.10.10
+        if: ${{ always() }}
         uses: actions/setup-python@v2
         with:
           python-version: 3.10.10
           
       # Add caching step for Python dependencies
       - name: Cache Python dependencies
+        if: ${{ always() }}
         uses: actions/cache@v2
         with:
           path: ~/.cache/pip
@@ -31,6 +40,7 @@ jobs:
             ${{ runner.os }}-pip-
           
       - name: Setup environment
+        if: ${{ always() }}
         run: |
           sudo apt-get install libtool
           pip install --user --upgrade Cython==0.29.36
@@ -39,6 +49,7 @@ jobs:
 
       # Install OS specific dependencies
       - name: Install Linux dependencies
+        if: ${{ always() }}
         run: sudo apt -y install automake
 
       # - name: Reinit buildozer.spec
@@ -47,12 +58,14 @@ jobs:
           # buildozer init
       
       - name: SDK, NDK and p4a download
+        if: ${{ always() }}
         run: |
           sed -i.bak "s/# android.accept_sdk_license = False/android.accept_sdk_license = True/" buildozer.spec
           sed -i.bak "s/#p4a.branch = master/p4a.branch = develop/" buildozer.spec
           buildozer android p4a -- --help
 
       - name: Extract version from main.py
+        if: ${{ always() }}
         id: extract_version
         run: |
           version=$(grep -o "__version__ = '[0-9.]*'" main.py | sed "s/__version__ = '//" | sed "s/'//")
@@ -60,6 +73,7 @@ jobs:
           echo "::set-output name=version::$version"
 
       - name: Update buildozer.spec
+        if: ${{ always() }}
         run: |
           sed -i.bak "s/version =.*/version = ${{ steps.extract_version.outputs.version }}/" buildozer.spec
 
@@ -71,6 +85,7 @@ jobs:
 #          sed -i.bak "s/version =.*/version = $version/" buildozer.spec
 
       - name: Extract build requirements
+        if: ${{ always() }}
         id: update_requirements
         run: |
           requirements=$(grep -Eo '[^[:space:]]+' requirements.txt | tr '\n' ',')
@@ -78,27 +93,30 @@ jobs:
           echo "::set-output name=requirements::$requirements"
 
       - name: Update buildozer.spec with extracted requirements
+        if: ${{ always() }}
         run: |
           sed -i.bak "s|requirements =.*|requirements = python3,${{ steps.update_requirements.outputs.requirements }}|" buildozer.spec
 
       - name: Upload Artifacts (buildozer.spec)
+        if: ${{ always() }}
         uses: actions/upload-artifact@v2
         with:
           name: build-artifacts-spec
           path: buildozer.spec
 
       - name: buildozer android debug
+        if: ${{ always() }}
         run: |
           touch main.py
           buildozer android debug
 
-      - name: Save buildozer artifacts
-        if: ${{ always() }}  # This condition runs the step even if previous steps fail
-        uses: actions/upload-artifact@v2
-        with:
-          name: buildozer-artifacts
-          path: |
-            .buildozer
+#      - name: Save buildozer artifacts
+#        if: ${{ always() }}  # This condition runs the step even if previous steps fail
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: buildozer-artifacts
+#          path: |
+#            .buildozer
 
 # # Temporary removed
 #      - name: buildozer android release (aab)
