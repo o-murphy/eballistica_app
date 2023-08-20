@@ -79,4 +79,4 @@ else:
     ext_modules = []
     cmdclass = {}
 
-setup(cmdclass=cmdclass, ext_modules=ext_modules)
+setup(cmdclass=cmdclass, ext_modules=ext_modules, zip_safe=False)
