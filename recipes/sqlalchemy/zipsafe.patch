@@ -1,8 +1,5 @@
 --- a/setup.py
 +++ b/setup.py
-@@ -79,4 +79,4 @@
-    ext_modules = []
-    cmdclass = {}
-
+@@ -82 +82 @@
 -setup(cmdclass=cmdclass, ext_modules=ext_modules)
 +setup(cmdclass=cmdclass, ext_modules=ext_modules, zip_safe=False)
