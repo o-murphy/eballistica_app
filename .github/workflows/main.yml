@@ -1,17 +1,9 @@
 name: CI android build
 on:
-  pull_request:
-    branches:
-      - kivymd-nightly
-      - kivymd-dev
-      - kivymd-main
+
   push:
     branches:
-      - kivymd-nightly
-      - kivymd-dev
-      - kivymd-main
-  schedule:
-    - cron: '0 0 1,15 * *'
+      - test-sqlalchemy-support
 
 jobs:
   build:
