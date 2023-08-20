@@ -2,3 +2,4 @@ kivy
 https://github.com/kivymd/KivyMD/archive/master.zip
 signalslot
 kivy_garden.graph
+sqlalchemy
