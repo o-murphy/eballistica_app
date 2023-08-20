@@ -1,6 +1,8 @@
 import json
 from sqlalchemy import create_engine, Column, Integer, Float, String, Enum, Boolean, ForeignKey
-from sqlalchemy.orm import relationship, declarative_base, sessionmaker, mapped_column, validates
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship, sessionmaker, validates
+
 
 from datatypes.defines import TwistDir, DragModel
 
@@ -47,7 +49,7 @@ class AmmoData(Base):
     bc7 = Column(String, nullable=True, default='[[0, 0]]')
     cdm = Column(String, nullable=True, default='[[0, 0]]')
 
-    rifle_id = mapped_column(ForeignKey("rifle.id", ondelete="CASCADE"), nullable=False)
+    rifle_id = Column(ForeignKey("rifle.id", ondelete="CASCADE"), nullable=False)
     rifle = relationship("RifleData", back_populates="ammo")
 
     zerodata = relationship("ZeroData", back_populates="ammo", uselist=False, cascade="all, delete-orphan")
@@ -113,7 +115,7 @@ class ZeroData(Base):
     temperature = Column(Float, nullable=False, default=15)
     humidity = Column(Float, nullable=False, default=50)
 
-    ammo_id = mapped_column(ForeignKey("ammo.id", ondelete="CASCADE"), nullable=False, unique=True)
+    ammo_id = Column(ForeignKey("ammo.id", ondelete="CASCADE"), nullable=False, unique=True)
     ammo = relationship("AmmoData", back_populates="zerodata")
 
     def __init__(self, zero_range=100, zero_height=9, is_zero_atmo=True,
@@ -135,7 +137,7 @@ class Target(Base):
     move_speed = Column(Float, nullable=False, default=0)
     move_angle = Column(Float, nullable=False, default=0)
 
-    ammo_id = mapped_column(ForeignKey("ammo.id", ondelete="CASCADE"), nullable=False, unique=True)
+    ammo_id = Column(ForeignKey("ammo.id", ondelete="CASCADE"), nullable=False, unique=True)
     ammo = relationship("AmmoData", back_populates="target")
 
     def __repr__(self):
@@ -153,7 +155,7 @@ class AtmoData(Base):
     wind_speed = Column(Float, nullable=False, default=0)
     wind_angle = Column(Float, nullable=False, default=0)
 
-    ammo_id = mapped_column(ForeignKey("ammo.id", ondelete="CASCADE"), nullable=False, unique=True)
+    ammo_id = Column(ForeignKey("ammo.id", ondelete="CASCADE"), nullable=False, unique=True)
     ammo = relationship("AmmoData", back_populates="atmo")
 
     def __repr__(self):
@@ -169,41 +171,62 @@ class Worker:
 
     @staticmethod
     def list_rifles(**kwargs):
-        with Session() as session:
-            rifles = session.query(RifleData).filter_by(**kwargs)
+        # with Session() as session:
+        #     rifles = session.query(RifleData).filter_by(**kwargs)
+        # return rifles
+        session = Session()
+        rifles = session.query(RifleData).filter_by(**kwargs)
         return rifles
 
     @staticmethod
     def get_rifle(uid, **kwargs):
-        with Session() as session:
-            rifle = session.query(RifleData).get(uid, **kwargs)
+        # with Session() as session:
+        #     rifle = session.query(RifleData).get(uid, **kwargs)
+        # return rifle
+        session = Session()
+        rifle = session.query(RifleData).get(uid, **kwargs)
         return rifle
 
     @staticmethod
     def rifle_add_or_update(*args, **kwargs):
-        with Session() as session:
-            rifle = RifleData(*args, **kwargs)
-            rifle = session.merge(rifle)
-            session.commit()
+        # with Session() as session:
+        #     rifle = RifleData(*args, **kwargs)
+        #     rifle = session.merge(rifle)
+        #     session.commit()
+        session = Session()
+        rifle = RifleData(*args, **kwargs)
+        rifle = session.merge(rifle)
+        session.commit()
+        return rifle
 
     @staticmethod
     def delete_rifle(uid, **kwargs):
-        with Session() as session:
-            rifle = session.get(RifleData, uid)
-            session.delete(rifle)
-            session.commit()
+        # with Session() as session:
+        #     rifle = session.get(RifleData, uid)
+        #     session.delete(rifle)
+        #     session.commit()
+        session = Session()
+        rifle = session.query(RifleData).get(uid)
+        session.delete(rifle)
+        session.commit()
 
     @staticmethod
     def list_ammos(**kwargs):
-        with Session() as session:
-            ammos = session.query(AmmoData).filter_by(**kwargs)
+        # with Session() as session:
+        #     ammos = session.query(AmmoData).filter_by(**kwargs)
+        # return ammos
+        session = Session()
+        ammos = session.query(AmmoData).filter_by(**kwargs)
         return ammos
 
     @staticmethod
     def ammo_add_or_update(ammo):
-        with Session() as session:
-            ammo = session.merge(ammo)
-            session.commit()
+        # with Session() as session:
+        #     ammo = session.merge(ammo)
+        #     session.commit()
+        session = Session()
+        ammo = session.merge(ammo)
+        session.commit()
 
     # @staticmethod
     # def zero_add_or_update(*args, **kwargs):
@@ -214,18 +237,29 @@ class Worker:
 
     @staticmethod
     def ammo_merge_transaction(ammo, zero):
-        with Session() as session:
-            ammo = AmmoData(**ammo)
-            ammo = session.merge(ammo)
-            session.commit()
-            zero = ZeroData(**zero, ammo=ammo)
-            zero = session.merge(zero)
-            session.commit()
+        # with Session() as session:
+        #     ammo = AmmoData(**ammo)
+        #     ammo = session.merge(ammo)
+        #     session.commit()
+        #     zero = ZeroData(**zero, ammo=ammo)
+        #     zero = session.merge(zero)
+        #     session.commit()
+        session = Session()
+        ammo = AmmoData(**ammo)
+        ammo = session.merge(ammo)
+        session.commit()
+        zero = ZeroData(**zero, ammo=ammo)
+        zero = session.merge(zero)
+        session.commit()
 
     @staticmethod
     def delete_ammo(uid, **kwargs):
-        with Session() as session:
-            ammo = session.get(AmmoData, uid)
-            session.delete(ammo)
-            session.commit()
+        # with Session() as session:
+        #     ammo = session.get(AmmoData, uid)
+        #     session.delete(ammo)
+        #     session.commit()
+        session = Session()
+        ammo = session.query(AmmoData).get(uid)
+        session.delete(ammo)
+        session.commit()
 
