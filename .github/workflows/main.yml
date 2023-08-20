@@ -13,12 +13,12 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Download Artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: buildozer-artifacts   # The name of the uploaded artifacts
-          workflow: 5917303319 # Replace with the actual workflow_run ID
-          path: .buildozer
+#      - name: Download Artifacts
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: buildozer-artifacts   # The name of the uploaded artifacts
+#          workflow: 5917303319 # Replace with the actual workflow_run ID
+#          path: .buildozer
 
       # - name: Setup Android SDK
       #  uses: android-actions/setup-android@v2
