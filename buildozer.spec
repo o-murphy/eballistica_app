@@ -342,7 +342,7 @@ android.allow_backup = True
 
 # (str) The directory in which python-for-android should look for your own build recipes (if any)
 #p4a.local_recipes =
-#p4a.local_recipes = recipes
+p4a.local_recipes = recipes
 
 # (str) Filename to the hook for p4a
 #p4a.hook =
@@ -363,7 +363,7 @@ android.allow_backup = True
 
 # (str) extra command line arguments to pass when invoking pythonforandroid.toolchain
 #p4a.extra_args =
-p4a.extra_args = --recipe-blacklist=sqlalchemy
+#p4a.extra_args = --recipe-blacklist=sqlalchemy
 
 
 
