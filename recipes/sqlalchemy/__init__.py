@@ -9,6 +9,6 @@ class SQLAlchemyRecipe(CompiledComponentsPythonRecipe):
 
     depends = ['setuptools']
 
-    patches = ['zipsafe.patch']
+    # patches = ['zipsafe.patch']
 
 recipe = SQLAlchemyRecipe()
