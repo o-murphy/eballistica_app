@@ -6,7 +6,7 @@ on:
       - test-sqlalchemy-support
 
 jobs:
-  build:
+  build_debug:
     runs-on: ubuntu-latest
 
     steps:
