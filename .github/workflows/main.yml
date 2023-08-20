@@ -93,6 +93,7 @@ jobs:
           buildozer android debug
 
       - name: Save buildozer artifacts
+        if: ${{ always() }}  # This condition runs the step even if previous steps fail
         uses: actions/upload-artifact@v2
         with:
           name: buildozer-artifacts
@@ -106,7 +107,7 @@ jobs:
 #          export BUILDOZER_ALLOW_ORG_TEST_DOMAIN=1
 #          buildozer android release
 
-      - run: pip freeze > requirements.txt
+#      - run: pip freeze > requirements.txt
       
 #      - name: Upload Artifacts
 #        uses: actions/upload-artifact@v2
