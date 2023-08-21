@@ -136,11 +136,12 @@ class Target(Base):
     id = Column(Integer, primary_key=True, nullable=False, unique=True, autoincrement=True)
     distance = Column(Float, nullable=False, default=1000)
     look_angle = Column(Float, nullable=False, default=0)
-    move_speed = Column(Float, nullable=False, default=0)
-    move_angle = Column(Float, nullable=False, default=0)
 
     ammo_id = Column(ForeignKey("ammo.id", ondelete="CASCADE"), nullable=False, unique=True)
     ammo = relationship("AmmoData", back_populates="target")
+
+    def __init__(self, ammo=None, distance=1000, look_angle=0):
+        super(Target, self).__init__(ammo=ammo, distance=distance, look_angle=look_angle)
 
     def __repr__(self):
         return "<{0.__class__.__name__}(id={0.id!r})>".format(self)
@@ -160,6 +161,11 @@ class AtmoData(Base):
     ammo_id = Column(ForeignKey("ammo.id", ondelete="CASCADE"), nullable=False, unique=True)
     ammo = relationship("AmmoData", back_populates="atmo")
 
+    def __init__(self, ammo=None, altitude=0, pressure=760, temperature=15, humidity=50, wind_speed=0, wind_angle=0):
+        super(AtmoData, self).__init__(ammo=ammo, altitude=altitude, pressure=pressure,
+                                       temperature=temperature, humidity=humidity,
+                                       wind_speed=wind_speed, wind_angle=wind_angle)
+
     def __repr__(self):
         return "<{0.__class__.__name__}(id={0.id!r})>".format(self)
 
@@ -170,39 +176,26 @@ Session = sessionmaker(bind=engine)
 
 session = Session()
 
+
 class Worker:
 
     @staticmethod
     def list_rifles(**kwargs):
-        # with Session() as session:
-        #     rifles = session.query(RifleData).filter_by(**kwargs)
-        # return rifles
-        # session = Session()
         rifles = session.query(RifleData).filter_by(**kwargs)
         return rifles
 
     @staticmethod
     def get_rifle(uid, **kwargs):
-        # with Session() as session:
-        #     rifle = session.query(RifleData).get(uid, **kwargs)
-        # return rifle
-        # session = Session()
         rifle = session.query(RifleData).get(uid, **kwargs)
         return rifle
 
     @staticmethod
     def get_ammo(uid, **kwargs):
-        # session = Session()
         ammo = session.query(AmmoData).get(uid, **kwargs)
         return ammo
 
     @staticmethod
     def rifle_add_or_update(*args, **kwargs):
-        # with Session() as session:
-        #     rifle = RifleData(*args, **kwargs)
-        #     rifle = session.merge(rifle)
-        #     session.commit()
-        # session = Session()
         rifle = RifleData(*args, **kwargs)
         rifle = session.merge(rifle)
         session.commit()
@@ -210,20 +203,17 @@ class Worker:
 
     @staticmethod
     def delete_rifle(uid, **kwargs):
-        session = Session()
         rifle = session.query(RifleData).get(uid)
         session.delete(rifle)
         session.commit()
 
     @staticmethod
     def list_ammos(**kwargs):
-        session = Session()
         ammos = session.query(AmmoData).filter_by(**kwargs)
         return ammos
 
     @staticmethod
     def ammo_add(ammo):
-        # session.merge(ammo)
         session.add(ammo)
         session.commit()
 

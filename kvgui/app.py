@@ -128,7 +128,7 @@ class EBallisticaApp(MDApp):
 
         sig.ammo_edit_act.connect(self.edit_ammo)
         sig.ammo_del_act.connect(self.del_ammo)
-        sig.ammo_item_touch.connect(self.switch_shot_edit)
+        sig.ammo_item_touch.connect(self.edit_shot)
 
         sig.bot_bar_back_act.connect(self.back_action)
 
@@ -253,22 +253,37 @@ class EBallisticaApp(MDApp):
             self.app_state.ammo.__setattr__(k, v)
         for k, v in zero.items():
             self.app_state.ammo.zerodata.__setattr__(k, v)
+
         if self.app_state.ammo.id:
             Worker.commit()
-        else:
+            self.toast(tr("Shot data saved"), duration=1)
+        elif self.app_state.ammo:
             Worker.ammo_add(self.app_state.ammo)
+            self.toast(tr("Shot data saved"), duration=1)
+        else:
+            self.toast(tr('Undefined error expected', 'root'), duration=1)
 
         self.app_state.ammo = None
         self.switch_ammos_list('right')
-        self.toast(tr("Ammo data saved"), duration=1)
 
     def save_shot_card(self):
-        # Todo:
-        self.switch_ammos_list('right')
-        self.toast(tr("Shot data saved"), duration=1)
+        target = self.app_screen_manager.shot_card_screen.get_target()
+        atmo = self.app_screen_manager.shot_card_screen.get_atmo()
 
-    # def new_rifle(self, caller, **kwargs):
-    #     self.switch_rifle_card('left', caller=caller)
+        for k, v in target.items():
+            self.app_state.ammo.target.__setattr__(k, v)
+
+        for k, v in atmo.items():
+            self.app_state.ammo.atmo.__setattr__(k, v)
+
+        if self.app_state.ammo:
+            Worker.commit()
+            self.toast(tr("Shot data saved"), duration=1)
+        else:
+            self.toast(tr('Undefined error expected', 'root'), duration=1)
+
+        self.app_state.ammo = None
+        self.switch_ammos_list('right')
 
     def edit_rifle(self, caller=None, **kwargs):
 
@@ -276,6 +291,9 @@ class EBallisticaApp(MDApp):
             self.app_state.rifle = RifleData()
         elif isinstance(caller, RifleListItem):
             self.app_state.rifle = Worker.get_rifle(caller.dbid)
+        else:
+            self.toast(tr('Undefined error expected', 'root'))
+            return
 
         self.app_screen_manager.rifle_card_screen.display(self.app_state.rifle)
 
@@ -286,21 +304,40 @@ class EBallisticaApp(MDApp):
             Worker.delete_rifle(caller.dbid)
             rifles = Worker.list_rifles().all()
             self.app_screen_manager.rifles_screen.display(rifles)
+        else:
+            self.toast(tr('Undefined error expected', 'root'))
+            return
 
     def edit_ammo(self, caller=None, **kwargs):
         if caller == self.app_bottom_bar.bottom_bar_fab:
             self.app_state.ammo = AmmoData(rifle=self.app_state.rifle)
         elif isinstance(caller, AmmoListItem):
             self.app_state.ammo = Worker.get_ammo(caller.dbid)
+        else:
+            self.toast(tr('Undefined error expected', 'root'))
+            return
 
         self.app_screen_manager.ammo_card_screen.display(self.app_state.ammo)
         self.switch_ammo_card('left')
+
+    def edit_shot(self, caller=None, **kwargs):
+
+        if isinstance(caller, AmmoListItem):
+            self.app_state.ammo = Worker.get_ammo(caller.dbid)
+            self.app_screen_manager.shot_card_screen.display(self.app_state.ammo)
+            self.switch_shot_edit('left')
+        else:
+            self.toast(tr('Undefined error expected', 'root'))
+            return
 
     def del_ammo(self, caller, **kwargs):
         if isinstance(caller, AmmoListItem):
             Worker.delete_ammo(caller.dbid)
             ammos = Worker.list_ammos().all()
             self.app_screen_manager.ammos_screen.display(ammos)
+        else:
+            self.toast(tr('Undefined error expected', 'root'))
+            return
 
     def switch_one_shot(self, direction='left', caller=None, **kwargs):
         self.app_screen_manager.transition.direction = direction

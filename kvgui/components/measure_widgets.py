@@ -56,106 +56,55 @@ class MeasureValue(MDNumericField):
             self.value = value
 
 
-class DistanceMeasure(MeasureValue):
-
-    def __init__(self, *args, **kwargs):
-        super(DistanceMeasure, self).__init__(*args, **kwargs)
-        self.convertor = Convertor(Distance, Distance.Meter, Distance.Meter)
-
-
-class AngularMeasure(MeasureValue):
-
-    def __init__(self, *args, **kwargs):
-        super(AngularMeasure, self).__init__(*args, **kwargs)
-        self.convertor = Convertor(Angular, Angular.Degree, Angular.Degree)
-
-
-class PressureMeasure(MeasureValue):
-
-    def __init__(self, *args, **kwargs):
-        super(PressureMeasure, self).__init__(*args, **kwargs)
-        self.convertor = Convertor(Pressure, Pressure.MmHg, Pressure.MmHg)
-
-
-class TemperatureMeasure(MeasureValue):
-
-    def __init__(self, *args, **kwargs):
-        super(TemperatureMeasure, self).__init__(*args, **kwargs)
-        self.convertor = Convertor(Temperature, Temperature.Celsius, Temperature.Celsius)
-
-
-class VelocityMeasure(MeasureValue):
-
-    def __init__(self, *args, **kwargs):
-        super(VelocityMeasure, self).__init__(*args, **kwargs)
-        self.convertor = Convertor(Velocity, Velocity.MPS, Velocity.MPS)
-
-
-class WeightMeasure(MeasureValue):
-
-    def __init__(self, *args, **kwargs):
-        super(WeightMeasure, self).__init__(*args, **kwargs)
-        self.convertor = Convertor(Weight, Weight.Grain, Weight.Grain)
-
-
-class SmallDistMeasure(MeasureValue):
-
-    def __init__(self, *args, **kwargs):
-        super(SmallDistMeasure, self).__init__(*args, **kwargs)
-        self.convertor = Convertor(SmallDistance, Distance.Inch, Distance.Inch)
-
-
-class BigDistMeasure(MeasureValue):
-
-    def __init__(self, *args, **kwargs):
-        super(BigDistMeasure, self).__init__(*args, **kwargs)
-        self.convertor = Convertor(BigDistance, Distance.Inch, Distance.Inch)
-
-
-class PressureValue(PressureMeasure):
+class PressureValue(MeasureValue):
     id = 'pressure'
 
     def __init__(self, *args, **kwargs):
         super(PressureValue, self).__init__(*args, **kwargs)
+        self.convertor = Convertor(Pressure, Pressure.MmHg, Pressure.MmHg)
         self.min_value = lambda: Pressure(500, Pressure.MmHg).get_in(self.unit)
         self.max_value = lambda: Pressure(1100, Pressure.MmHg).get_in(self.unit)
         self.step = 1
 
 
-class TemperatureValue(TemperatureMeasure):
+class TemperatureValue(MeasureValue):
     id = 'temperature'
 
     def __init__(self, *args, **kwargs):
         super(TemperatureValue, self).__init__(*args, **kwargs)
+        self.convertor = Convertor(Temperature, Temperature.Celsius, Temperature.Celsius)
         self.min_value = lambda: Temperature(-50, Temperature.Celsius).get_in(self.unit)
         self.max_value = lambda: Temperature(50, Temperature.Celsius).get_in(self.unit)
 
 
-class DistanceValue(BigDistMeasure):
+class DistanceValue(MeasureValue):
     id = 'distance'
 
     def __init__(self, *args, **kwargs):
         super(DistanceValue, self).__init__(*args, **kwargs)
+        self.convertor = Convertor(BigDistance, Distance.Meter, Distance.Meter)
         self.min_value = lambda: Distance(0, Distance.Meter).get_in(self.unit)
         self.max_value = lambda: Distance(3000, Distance.Meter).get_in(self.unit)
 
 
-class WeightValue(WeightMeasure):
+class WeightValue(MeasureValue):
     id = 'weight'
 
     def __init__(self, *args, **kwargs):
         super(WeightValue, self).__init__(*args, **kwargs)
+        self.convertor = Convertor(Weight, Weight.Grain, Weight.Grain)
         self.min_value = lambda: Weight(0, Weight.Kilogram).get_in(self.unit)
         self.max_value = lambda: Weight(50, Weight.Kilogram).get_in(self.unit)
         self.decimals = 2
         self.step = lambda: Weight(0.5, Weight.Grain).get_in(self.unit)
 
 
-class LookAngleValue(AngularMeasure):
+class LookAngleValue(MeasureValue):
     id = 'look_angle'
 
     def __init__(self, *args, **kwargs):
         super(LookAngleValue, self).__init__(*args, **kwargs)
+        self.convertor = Convertor(Angular, Angular.Degree, Angular.Degree)
         self.min_value = lambda: Angular(0, Angular.Degree).get_in(self.unit)
         self.max_value = lambda: Angular(359, Angular.Degree).get_in(self.unit)
 
@@ -180,79 +129,93 @@ class TwistValue(MeasureValue):
         self.max_value = lambda: Distance(20, Distance.Inch).get_in(self.unit)
 
 
-class AltitudeValue(DistanceMeasure):
+class AltitudeValue(MeasureValue):
     id = 'altitude'
 
     def __init__(self, *args, **kwargs):
         super(AltitudeValue, self).__init__(*args, **kwargs)
+        self.convertor = Convertor(Distance, Distance.Meter, Distance.Meter)
         self.min_value = lambda: Distance(0, Distance.Meter).get_in(self.unit)
         self.max_value = lambda: Distance(9000, Distance.Meter).get_in(self.unit)
 
 
-class WindSpeedValue(VelocityMeasure):
+class WindSpeedValue(MeasureValue):
     id = 'wind_speed'
 
     def __init__(self, *args, **kwargs):
         super(WindSpeedValue, self).__init__(*args, **kwargs)
+        self.convertor = Convertor(Velocity, Velocity.MPS, Velocity.MPS)
         self.min_value = lambda: Velocity(0, Velocity.KMH).get_in(self.unit)
-        self.max_value = lambda: Velocity(15, Velocity.KMH).get_in(self.unit)
+        self.max_value = lambda: Velocity(30, Velocity.KMH).get_in(self.unit)
 
 
-class WindAngleValue(AngularMeasure):
+class WindAngleValue(MeasureValue):
     id = 'wind_angle'
 
     def __init__(self, *args, **kwargs):
         super(WindAngleValue, self).__init__(*args, **kwargs)
+        self.convertor = Convertor(Angular, Angular.Degree, Angular.Degree)
         self.min_value = lambda: Angular(0, Angular.Degree).get_in(self.unit)
         self.max_value = lambda: Angular(359, Angular.Degree).get_in(self.unit)
 
 
-class DiameterValue(SmallDistMeasure):
+class DiameterValue(MeasureValue):
     id = 'diameter'
 
     def __init__(self, *args, **kwargs):
         super(DiameterValue, self).__init__(*args, **kwargs)
+        self.convertor = Convertor(SmallDistance, Distance.Inch, Distance.Inch)
         self.min_value = lambda: Distance(0, Distance.Millimeter).get_in(self.unit)
         self.max_value = lambda: Distance(155, Distance.Millimeter).get_in(self.unit)
 
 
-class LengthValue(SmallDistMeasure):
+class LengthValue(MeasureValue):
     id = 'weight'
 
     def __init__(self, *args, **kwargs):
         super(LengthValue, self).__init__(*args, **kwargs)
+        self.convertor = Convertor(SmallDistance, Distance.Inch, Distance.Inch)
         self.min_value = lambda: Distance(0, Distance.Meter).get_in(self.unit)
         self.max_value = lambda: Distance(1, Distance.Meter).get_in(self.unit)
 
 
-class VelocityValue(VelocityMeasure):
-    id = 'velocity'
+class VelocityValue(MeasureValue):
 
     def __init__(self, *args, **kwargs):
         super(VelocityValue, self).__init__(*args, **kwargs)
+        self.convertor = Convertor(Velocity, Velocity.MPS, Velocity.MPS)
         self.min_value = lambda: Velocity(0, Velocity.FPS).get_in(self.unit)
         self.max_value = lambda: Velocity(5000, Velocity.FPS).get_in(self.unit)
         self.step = 1
 
 
-class MuzzleValue(VelocityValue):
+class MuzzleValue(MeasureValue):
     id = 'muzzle_velocity'
 
+    def __init__(self, *args, **kwargs):
+        super(MuzzleValue, self).__init__(*args, **kwargs)
+        self.convertor = Convertor(Velocity, Velocity.MPS, Velocity.MPS)
+        self.min_value = lambda: Velocity(0, Velocity.FPS).get_in(self.unit)
+        self.max_value = lambda: Velocity(5000, Velocity.FPS).get_in(self.unit)
+        self.step = 1
 
-class PowderTempValue(TemperatureValue):
+
+class PowderTempValue(MeasureValue):
     id = 'powder_temp'
 
     def __init__(self, *args, **kwargs):
         super(PowderTempValue, self).__init__(*args, **kwargs)
+        self.convertor = Convertor(Temperature, Temperature.Celsius, Temperature.Celsius)
         self.min_value = lambda: Temperature(-50, Temperature.Celsius).get_in(self.unit)
         self.max_value = lambda: Temperature(50, Temperature.Celsius).get_in(self.unit)
 
 
-class ZeroDistValue(BigDistMeasure):
+class ZeroDistValue(MeasureValue):
     id = 'zero_dist'
 
     def __init__(self, *args, **kwargs):
         super(ZeroDistValue, self).__init__(*args, **kwargs)
+        self.convertor = Convertor(BigDistance, Distance.Meter, Distance.Meter)
         self.min_value = lambda: Distance(0, Distance.Meter).get_in(self.unit)
         self.max_value = lambda: Distance(1000, Distance.Meter).get_in(self.unit)
 
