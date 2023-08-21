@@ -56,7 +56,7 @@ class AmmoData(Base):
     target = relationship("Target", back_populates="ammo", uselist=False, cascade="all, delete-orphan")
     atmo = relationship("AtmoData", back_populates="ammo", uselist=False, cascade="all, delete-orphan")
 
-    def __init__(self, name, diameter=0.338, weight=300, length=1.5, muzzle_velocity=800, temp_sens=1, powder_temp=15,
+    def __init__(self, name='', diameter=0.338, weight=300, length=1.5, muzzle_velocity=800, temp_sens=1, powder_temp=15,
                  drag_model=DragModel.G7, bc=None, bc7=None, cdm=None, rifle=None, **kwargs):
         super(AmmoData, self).__init__(name=name, diameter=diameter, weight=weight, length=length,
                                        muzzle_velocity=muzzle_velocity, temp_sens=temp_sens, powder_temp=powder_temp,
@@ -186,6 +186,12 @@ class Worker:
         session = Session()
         rifle = session.query(RifleData).get(uid, **kwargs)
         return rifle
+
+    @staticmethod
+    def get_ammo(uid, **kwargs):
+        session = Session()
+        ammo = session.query(AmmoData).get(uid, **kwargs)
+        return ammo
 
     @staticmethod
     def rifle_add_or_update(*args, **kwargs):

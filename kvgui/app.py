@@ -25,7 +25,7 @@ from kvgui.modules import signals as sig
 from kvgui.modules.settings import app_settings
 from kvgui.modules.translator import translate as tr
 
-from datatypes.dbworker import Worker, RifleData
+from datatypes.dbworker import Worker, RifleData, AmmoData
 
 assert app_settings
 assert abstract
@@ -41,7 +41,6 @@ if platform == 'win':
 class AppState:
     rifle: None
     ammo: None
-    shot: None
 
 
 class AppScreenManager(ScreenManager):
@@ -120,7 +119,6 @@ class EBallisticaApp(MDApp):
         sig.set_theme.connect(self.change_theme)
 
         sig.top_bar_cog_act.connect(self.switch_settings)
-        # sig.top_bar_apply_act.connect(self.apply_settings)
 
         sig.bot_bar_back_act.connect(self.back_action)
         sig.bot_bar_fab_act.connect(self.bot_fab_action)
@@ -139,7 +137,6 @@ class EBallisticaApp(MDApp):
 
         sig.one_shot_act.connect(self.switch_one_shot)
         sig.trajectory_act.connect(self.switch_trajectory)
-        # sig.trajectory_preloaded.connect(self.switch_trajectory)
 
         self.app_screen_manager.rifles_screen.on_enter = self.app_top_bar.show_cog
         self.app_screen_manager.rifles_screen.on_leave = self.app_top_bar.hide_all
@@ -230,7 +227,7 @@ class EBallisticaApp(MDApp):
         if current == 'rifles_screen':
             self.edit_rifle(caller=caller, **kwargs)
         elif current == 'ammos_screen':
-            self.switch_shot_edit('left')
+            self.edit_ammo(caller=caller, **kwargs)
         elif current == 'rifle_card':
             self.save_rifle_card()
         elif current == 'ammo_card':
@@ -280,7 +277,12 @@ class EBallisticaApp(MDApp):
             self.app_screen_manager.rifles_screen.display(rifles)
 
     def edit_ammo(self, caller=None, **kwargs):
-        # TODO
+        if caller == self.app_bottom_bar.bottom_bar_fab:
+            self.app_state.ammo = AmmoData(rifle=self.app_state.rifle)
+        elif isinstance(caller, RifleListItem):
+            self.app_state.ammo = Worker.get_ammo(caller.dbid)
+
+        self.app_screen_manager.ammo_card_screen.display(self.app_state.ammo)
         self.switch_ammo_card('left')
 
     def del_ammo(self, caller, **kwargs):
@@ -343,6 +345,14 @@ class EBallisticaApp(MDApp):
 
     def switch_ammos_list(self, direction='left', caller=None, **kwargs):
         # Todo:
+        if isinstance(caller, RifleListItem):
+            self.app_state.rifle = Worker.get_rifle(caller.dbid)
+        if self.app_state.rifle is None:
+            self.toast(tr('Data not found', 'root'))
+            return
+        ammos = Worker.list_ammos(rifle=self.app_state.rifle).all()
+        self.app_screen_manager.ammos_screen.display(ammos)
+
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'ammos_screen'
         self.app_bottom_bar.fab_add_new()

@@ -82,19 +82,17 @@ class AmmosScreen(Screen):
         self.scroll = MDScrollView()
         self.list = MDList()
 
-        # TODO: temporary
-        item = AmmoListItem()
-        item.text = 'Hornady'
-        item.secondary_text = item.secondary_text.format('9', 'inch')
-        item.tertiary_text = item.tertiary_text.format('9', 'cm')
-
-        item2 = AmmoListItem()
-        item2.text = 'RWS'
-        item2.secondary_text = item2.secondary_text.format('9', 'inch')
-        item2.tertiary_text = item2.tertiary_text.format('9', 'cm')
-
-        self.list.add_widget(item)
-        self.list.add_widget(item2)
-
         self.scroll.add_widget(self.list)
         self.add_widget(self.scroll)
+
+    def display(self, data):
+        self.list.clear_widgets()
+
+        if data:
+            for ammo in data:
+                item = AmmoListItem()
+                item.dbid = ammo.id
+                item.text = ammo.name + f' dbid: {ammo.id}'
+                # item.secondary_text = f"{tr('Twist:', 'RiflesList')} {rifle.barrel_twist} inch"
+                # item.tertiary_text = f"{tr('Sight height:', 'RiflesList')} {rifle.sight_height} cm"
+                self.list.add_widget(item)
