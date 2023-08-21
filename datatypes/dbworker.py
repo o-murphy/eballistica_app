@@ -94,9 +94,11 @@ class AmmoData(Base):
 
     @validates('rifle_id')
     def validate_rifle_id(self, key, rifle_id):
-        with Session() as session:
-            if not session.query(RifleData).filter_by(id=rifle_id).scalar():
-                raise ValueError(f"RifleData with ID {rifle_id} does not exist in the database.")
+        # with Session() as session:
+        #     if not session.query(RifleData).filter_by(id=rifle_id).scalar():
+        #         raise ValueError(f"RifleData with ID {rifle_id} does not exist in the database.")
+        if not session.query(RifleData).filter_by(id=rifle_id).scalar():
+            raise ValueError(f"RifleData with ID {rifle_id} does not exist in the database.")
         return rifle_id
 
     def __repr__(self):
