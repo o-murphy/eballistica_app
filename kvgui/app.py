@@ -2,7 +2,6 @@ from kivy import platform
 from kivy.config import Config
 from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.utils import get_hex_from_color
 from kivymd.app import MDApp
 from kivymd.toast import toast
 from kivymd.uix.boxlayout import MDBoxLayout
@@ -247,7 +246,19 @@ class EBallisticaApp(MDApp):
         self.toast(tr("Rifle data saved"), duration=1)
 
     def save_ammo_card(self):
-        # Todo:
+
+        ammo = self.app_screen_manager.ammo_card_screen.get_ammo()
+        zero = self.app_screen_manager.ammo_card_screen.get_zero()
+        for k, v in ammo.items():
+            self.app_state.ammo.__setattr__(k, v)
+        for k, v in zero.items():
+            self.app_state.ammo.zerodata.__setattr__(k, v)
+        if self.app_state.ammo.id:
+            Worker.commit()
+        else:
+            Worker.ammo_add(self.app_state.ammo)
+
+        self.app_state.ammo = None
         self.switch_ammos_list('right')
         self.toast(tr("Ammo data saved"), duration=1)
 
@@ -279,15 +290,17 @@ class EBallisticaApp(MDApp):
     def edit_ammo(self, caller=None, **kwargs):
         if caller == self.app_bottom_bar.bottom_bar_fab:
             self.app_state.ammo = AmmoData(rifle=self.app_state.rifle)
-        elif isinstance(caller, RifleListItem):
+        elif isinstance(caller, AmmoListItem):
             self.app_state.ammo = Worker.get_ammo(caller.dbid)
 
         self.app_screen_manager.ammo_card_screen.display(self.app_state.ammo)
         self.switch_ammo_card('left')
 
     def del_ammo(self, caller, **kwargs):
-        # TODO
-        ...
+        if isinstance(caller, AmmoListItem):
+            Worker.delete_ammo(caller.dbid)
+            ammos = Worker.list_ammos().all()
+            self.app_screen_manager.ammos_screen.display(ammos)
 
     def switch_one_shot(self, direction='left', caller=None, **kwargs):
         self.app_screen_manager.transition.direction = direction
