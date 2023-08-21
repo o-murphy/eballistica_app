@@ -1,5 +1,6 @@
 from kivy.uix.screenmanager import Screen
 
+from datatypes.dbworker import AmmoData
 from kvgui.components.measure_widgets import *
 from kvgui.components.mixines import MapIdsMixine
 from kvgui.modules import signals as sig
@@ -63,3 +64,33 @@ class ShotCardScreen(Screen, MapIdsMixine):
 
     def on_enter(self, *args):
         ...
+
+    def display(self, data: AmmoData):
+        print(data.target.__dict__)
+        print(data.atmo.__dict__)
+
+        self.distance.raw_value = data.target.distance
+        self.look_angle.raw_value = data.target.look_angle
+
+        self.altitude.raw_value = data.atmo.altitude
+        self.pressure.raw_value = data.atmo.pressure
+        self.temperature.raw_value = data.atmo.temperature
+        self.humidity.value = data.atmo.humidity
+        self.wind_speed.raw_value = data.atmo.wind_speed
+        self.wind_angle.raw_value = data.atmo.wind_angle
+
+    def get_target(self):
+        return dict(
+            distance=self.distance.raw_value,
+            look_angle=self.look_angle.raw_value,
+        )
+
+    def get_atmo(self):
+        return dict(
+            altitude=self.altitude.raw_value,
+            pressure=self.pressure.raw_value,
+            temperature=self.temperature.raw_value,
+            humidity=self.humidity.value,
+            wind_speed=self.wind_speed.raw_value,
+            wind_angle=self.wind_angle.raw_value,
+        )
