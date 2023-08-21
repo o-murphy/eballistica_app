@@ -2,6 +2,7 @@ from kivy.uix.screenmanager import Screen
 from kivymd.uix.button import MDRectangleFlatButton
 from kivymd.uix.menu import MDDropdownMenu
 
+from datatypes.dbworker import AmmoData
 from datatypes.defines import DragModel
 from kvgui.components.abstract import FormSelector
 from kvgui.components.measure_widgets import *
@@ -115,3 +116,14 @@ class AmmoCardScreen(Screen, MapIdsMixine):
         set_unit_for_target(self.weight, self.weight_suffix, 'unit_weight')
         set_unit_for_target(self.length, self.length_suffix, 'unit_length')
         set_unit_for_target(self.muzzle_velocity, self.muzzle_velocity_suffix, 'unit_velocity')
+
+    def display(self, data: AmmoData):
+        self.name_input.text = data.name if data.name else tr('New ammo', 'AmmoCard')
+        self.diameter.raw_value = data.diameter
+        self.weight.raw_value = data.weight
+        self.length.raw_value = data.length
+        self.muzzle_velocity.raw_value = data.muzzle_velocity
+
+        self.powder_sens.raw_value = data.temp_sens
+        self.powder_temp.raw_value = data.powder_temp
+        # TODO:
