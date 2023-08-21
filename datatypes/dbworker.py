@@ -166,6 +166,7 @@ Base.metadata.create_all(engine)
 
 Session = sessionmaker(bind=engine)
 
+session = Session()
 
 class Worker:
 
@@ -174,7 +175,7 @@ class Worker:
         # with Session() as session:
         #     rifles = session.query(RifleData).filter_by(**kwargs)
         # return rifles
-        session = Session()
+        # session = Session()
         rifles = session.query(RifleData).filter_by(**kwargs)
         return rifles
 
@@ -183,13 +184,13 @@ class Worker:
         # with Session() as session:
         #     rifle = session.query(RifleData).get(uid, **kwargs)
         # return rifle
-        session = Session()
+        # session = Session()
         rifle = session.query(RifleData).get(uid, **kwargs)
         return rifle
 
     @staticmethod
     def get_ammo(uid, **kwargs):
-        session = Session()
+        # session = Session()
         ammo = session.query(AmmoData).get(uid, **kwargs)
         return ammo
 
@@ -199,7 +200,7 @@ class Worker:
         #     rifle = RifleData(*args, **kwargs)
         #     rifle = session.merge(rifle)
         #     session.commit()
-        session = Session()
+        # session = Session()
         rifle = RifleData(*args, **kwargs)
         rifle = session.merge(rifle)
         session.commit()
@@ -207,10 +208,6 @@ class Worker:
 
     @staticmethod
     def delete_rifle(uid, **kwargs):
-        # with Session() as session:
-        #     rifle = session.get(RifleData, uid)
-        #     session.delete(rifle)
-        #     session.commit()
         session = Session()
         rifle = session.query(RifleData).get(uid)
         session.delete(rifle)
@@ -218,53 +215,22 @@ class Worker:
 
     @staticmethod
     def list_ammos(**kwargs):
-        # with Session() as session:
-        #     ammos = session.query(AmmoData).filter_by(**kwargs)
-        # return ammos
         session = Session()
         ammos = session.query(AmmoData).filter_by(**kwargs)
         return ammos
 
     @staticmethod
-    def ammo_add_or_update(ammo):
-        # with Session() as session:
-        #     ammo = session.merge(ammo)
-        #     session.commit()
-        session = Session()
-        ammo = session.merge(ammo)
+    def ammo_add(ammo):
+        # session.merge(ammo)
+        session.add(ammo)
         session.commit()
-
-    # @staticmethod
-    # def zero_add_or_update(*args, **kwargs):
-    #     with Session() as session:
-    #         zero = ZeroData(*args, **kwargs)
-    #         zero = session.merge(zero)
-    #         session.commit()
 
     @staticmethod
-    def ammo_merge_transaction(ammo, zero):
-        # with Session() as session:
-        #     ammo = AmmoData(**ammo)
-        #     ammo = session.merge(ammo)
-        #     session.commit()
-        #     zero = ZeroData(**zero, ammo=ammo)
-        #     zero = session.merge(zero)
-        #     session.commit()
-        session = Session()
-        ammo = AmmoData(**ammo)
-        ammo = session.merge(ammo)
-        session.commit()
-        zero = ZeroData(**zero, ammo=ammo)
-        zero = session.merge(zero)
+    def commit():
         session.commit()
 
     @staticmethod
     def delete_ammo(uid, **kwargs):
-        # with Session() as session:
-        #     ammo = session.get(AmmoData, uid)
-        #     session.delete(ammo)
-        #     session.commit()
-        session = Session()
         ammo = session.query(AmmoData).get(uid)
         session.delete(ammo)
         session.commit()

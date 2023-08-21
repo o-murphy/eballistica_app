@@ -123,7 +123,35 @@ class AmmoCardScreen(Screen, MapIdsMixine):
         self.weight.raw_value = data.weight
         self.length.raw_value = data.length
         self.muzzle_velocity.raw_value = data.muzzle_velocity
-
         self.powder_sens.raw_value = data.temp_sens
         self.powder_temp.raw_value = data.powder_temp
+
+        self.zero_dist.raw_value = data.zerodata.zero_range
+        self.altitude.raw_value = data.zerodata.altitude
+        self.pressure.raw_value = data.zerodata.pressure
+        self.temperature.raw_value = data.zerodata.temperature
+        self.humidity.raw_value = data.zerodata.humidity
         # TODO:
+        # drag_model, drag_data
+
+    def get_ammo(self):
+        return dict(
+            name=self.name_input.text,
+            diameter=self.diameter.raw_value,
+            weight=self.weight.raw_value,
+            length=self.length.raw_value,
+            muzzle_velocity=self.muzzle_velocity.raw_value,
+            temp_sens=self.powder_sens.raw_value,
+            powder_temp=self.powder_temp.raw_value,
+        )
+        # TODO:
+        # drag_model, drag_data
+
+    def get_zero(self):
+        return dict(
+            zero_range=self.zero_dist.raw_value,
+            altitude=self.altitude.raw_value,
+            pressure=self.pressure.raw_value,
+            temperature=self.temperature.raw_value,
+            humidity=self.humidity.raw_value,
+        )
