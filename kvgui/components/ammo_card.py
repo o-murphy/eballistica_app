@@ -1,3 +1,5 @@
+import logging
+
 from kivy.uix.screenmanager import Screen
 from kivymd.uix.button import MDRectangleFlatButton
 from kivymd.uix.menu import MDDropdownMenu
@@ -71,9 +73,9 @@ class AmmoCardScreen(Screen, MapIdsMixine):
         self.init_ui()
         self.bind_ui()
 
-        self.bc = []
-        self.bc7 = []
-        self.cdm = []
+        self.bc = [[0, 0]]
+        self.bc7 = [[0, 0]]
+        self.cdm = [[0, 0]]
 
     def on_pre_enter(self, *args):  # Note: Definition that may translate ui automatically
         # self.translate_ui()
@@ -85,6 +87,7 @@ class AmmoCardScreen(Screen, MapIdsMixine):
 
     def translate_ui(self, **kwargs):
         self.name_label.text = tr('Name', 'AmmoCard')
+        self.zero_title.text = tr('Zeroing', 'AmmoCard')
         self.prop_title.text = tr('Properties', 'AmmoCard')
         self.diameter_label.text = tr('Diameter', 'AmmoCard')
         self.weight_label.text = tr('Weight', 'AmmoCard')
@@ -111,6 +114,32 @@ class AmmoCardScreen(Screen, MapIdsMixine):
         sig.translator_update.connect(self.translate_ui)
         sig.bc_data_edited.connect(self.update_drag_data)
         sig.cdm_data_edited.connect(self.update_drag_data)
+        sig.drag_model_changed.connect(self.drag_model_changed)
+
+    def drag_model_changed(self, **kwargs):
+
+        if self.drag_model.value == DragModel.CDM:
+            table = self.cdm
+            count = len([i for i in table if i[1] > 0])
+
+        else:
+
+            if self.drag_model.value == DragModel.G1:
+                table = self.bc
+            elif self.drag_model.value == DragModel.G7:
+                table = self.bc7
+            else:
+                logging.warning('Wrong DragModel')
+                return
+            count = len([i for i in table if i[0] > 0])
+        if count == 0:
+            value = f"{tr('None', 'AmmoCard')}"
+
+        elif count > 1:
+            value = f"({count})"
+        else:
+            value = f"{table[0][1]}"
+        self.drag_edit.text = f"{tr('BC', 'AmmoCard')} {self.drag_model.value.name}: {value}"
 
     def update_drag_data(self, drag_data, **kwargs):
         if self.drag_model.value == DragModel.G1:
@@ -119,6 +148,7 @@ class AmmoCardScreen(Screen, MapIdsMixine):
             self.bc7 = drag_data
         elif self.drag_model.value == DragModel.CDM:
             self.cmd = drag_data
+        self.drag_model_changed()
 
     def on_set_settings(self, **kwargs):
 
@@ -133,6 +163,12 @@ class AmmoCardScreen(Screen, MapIdsMixine):
         set_unit_for_target(self.weight, self.weight_suffix, 'unit_weight')
         set_unit_for_target(self.length, self.length_suffix, 'unit_length')
         set_unit_for_target(self.muzzle_velocity, self.muzzle_velocity_suffix, 'unit_velocity')
+
+        set_unit_for_target(self.powder_temp, self.powder_temp_suffix, 'unit_temperature')
+        set_unit_for_target(self.zero_dist, self.zero_dist_suffix, 'unit_distance')
+        set_unit_for_target(self.altitude, self.altitude_suffix, 'unit_distance')
+        set_unit_for_target(self.pressure, self.pressure_suffix, 'unit_pressure')
+        set_unit_for_target(self.temperature, self.temperature_suffix, 'unit_temperature')
 
     def display(self, data: AmmoData):
         self.name_input.text = data.name if data.name else tr('New ammo', 'AmmoCard')
@@ -149,11 +185,12 @@ class AmmoCardScreen(Screen, MapIdsMixine):
         self.temperature.raw_value = data.zerodata.temperature
         self.humidity.raw_value = data.zerodata.humidity
 
-        self.drag_model.value = data.drag_model
-
         self.bc = data.bc_list
         self.bc7 = data.bc7_list
         self.cdm = data.cdm_list
+
+        # set after all other data
+        self.drag_model.value = data.drag_model
 
     def get_current_drag_data(self):
         if self.drag_model.value == DragModel.G1:
