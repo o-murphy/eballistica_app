@@ -22,7 +22,7 @@ class RifleListItem(ThreeLineListItem, TouchBehavior):
         self.bind_ui()
 
     def init_ui(self):
-        self.text = tr('New rifle', "RifleItem")
+        self.text = tr('New weapon', "RifleItem")
         self.secondary_text = tr('Twist:', "RifleItem")
         self.tertiary_text = tr('Sight height:', "RifleItem")
 
@@ -98,6 +98,6 @@ class RiflesScreen(Screen):
                 item = RifleListItem()
                 item.dbid = rifle.id
                 item.text = rifle.name
-                item.secondary_text = f"{tr('Twist', 'RiflesList')}: {rifle.barrel_twist} {tr('inch', 'Unit')}"
-                item.tertiary_text = f"{tr('Sight height', 'RiflesList')}: {rifle.sight_height} {tr('cm', 'Unit')}"
+                item.secondary_text = f"{tr('Twist', 'RifleItem')}: {rifle.barrel_twist} {tr('inch', 'Unit')}"
+                item.tertiary_text = f"{tr('Sight height', 'RifleItem')}: {rifle.sight_height} {tr('cm', 'Unit')}"
                 self.list.add_widget(item)

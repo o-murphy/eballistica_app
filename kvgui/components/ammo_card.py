@@ -73,9 +73,9 @@ class AmmoCardScreen(Screen, MapIdsMixine):
         self.init_ui()
         self.bind_ui()
 
-        self.bc = []
-        self.bc7 = []
-        self.cdm = []
+        self.bc = [[0, 0]]
+        self.bc7 = [[0, 0]]
+        self.cdm = [[0, 0]]
 
     def on_pre_enter(self, *args):  # Note: Definition that may translate ui automatically
         # self.translate_ui()
@@ -87,6 +87,7 @@ class AmmoCardScreen(Screen, MapIdsMixine):
 
     def translate_ui(self, **kwargs):
         self.name_label.text = tr('Name', 'AmmoCard')
+        self.zero_title.text = tr('Zeroing', 'AmmoCard')
         self.prop_title.text = tr('Properties', 'AmmoCard')
         self.diameter_label.text = tr('Diameter', 'AmmoCard')
         self.weight_label.text = tr('Weight', 'AmmoCard')
@@ -116,6 +117,7 @@ class AmmoCardScreen(Screen, MapIdsMixine):
         sig.drag_model_changed.connect(self.drag_model_changed)
 
     def drag_model_changed(self, **kwargs):
+
         if self.drag_model.value == DragModel.CDM:
             table = self.cdm
             count = len([i for i in table if i[1] > 0])
@@ -161,6 +163,12 @@ class AmmoCardScreen(Screen, MapIdsMixine):
         set_unit_for_target(self.weight, self.weight_suffix, 'unit_weight')
         set_unit_for_target(self.length, self.length_suffix, 'unit_length')
         set_unit_for_target(self.muzzle_velocity, self.muzzle_velocity_suffix, 'unit_velocity')
+
+        set_unit_for_target(self.powder_temp, self.powder_temp_suffix, 'unit_temperature')
+        set_unit_for_target(self.zero_dist, self.zero_dist_suffix, 'unit_distance')
+        set_unit_for_target(self.altitude, self.altitude_suffix, 'unit_distance')
+        set_unit_for_target(self.pressure, self.pressure_suffix, 'unit_pressure')
+        set_unit_for_target(self.temperature, self.temperature_suffix, 'unit_temperature')
 
     def display(self, data: AmmoData):
         self.name_input.text = data.name if data.name else tr('New ammo', 'AmmoCard')

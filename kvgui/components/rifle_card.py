@@ -93,7 +93,7 @@ class RifleCardScreen(Screen, MapIdsMixine):
         set_unit_for_target(self.sight_height, self.sight_height_suffix, 'unit_sight_height')
 
     def display(self, data: RifleData):
-        self.name_input.text = data.name if data.name else tr('New weapon', 'RifleCard')
+        self.name_input.text = data.name if data.name else tr('New weapon', 'RifleItem')
         self.twist.raw_value = data.barrel_twist
         self.twist_dir.value = data.barrel_twist_dir
         self.sight_height.raw_value = data.sight_height

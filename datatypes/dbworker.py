@@ -57,7 +57,7 @@ class AmmoData(Base):
     atmo = relationship("AtmoData", back_populates="ammo", uselist=False, cascade="all, delete-orphan")
 
     def __init__(self, name='', diameter=0.338, weight=300, length=1.5, muzzle_velocity=800, temp_sens=1, powder_temp=15,
-                 drag_model=DragModel.G7, bc=None, bc7=None, cdm=None, rifle=None, **kwargs):
+                 drag_model=DragModel.G7, bc='[[0, 0]]', bc7='[[0, 0]]', cdm='[[0, 0]]', rifle=None, **kwargs):
         super(AmmoData, self).__init__(name=name, diameter=diameter, weight=weight, length=length,
                                        muzzle_velocity=muzzle_velocity, temp_sens=temp_sens, powder_temp=powder_temp,
                                        drag_model=drag_model, bc=bc, bc7=bc7, cdm=cdm, **kwargs)
