@@ -97,7 +97,7 @@ class RiflesScreen(Screen):
             for rifle in data:
                 item = RifleListItem()
                 item.dbid = rifle.id
-                item.text = rifle.name + f' dbid: {rifle.id}'
-                item.secondary_text = f"{tr('Twist:', 'RiflesList')} {rifle.barrel_twist} inch"
-                item.tertiary_text = f"{tr('Sight height:', 'RiflesList')} {rifle.sight_height} cm"
+                item.text = rifle.name
+                item.secondary_text = f"{tr('Twist', 'RiflesList')}: {rifle.barrel_twist} {tr('inch', 'Unit')}"
+                item.tertiary_text = f"{tr('Sight height', 'RiflesList')}: {rifle.sight_height} {tr('cm', 'Unit')}"
                 self.list.add_widget(item)

@@ -5,6 +5,7 @@ from kivymd.uix.list import ThreeLineListItem, MDList
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.scrollview import MDScrollView
 
+from datatypes.dbworker import AmmoData
 from kvgui.modules import signals as sig
 from kvgui.modules.translator import translate as tr
 
@@ -90,9 +91,11 @@ class AmmosScreen(Screen):
 
         if data:
             for ammo in data:
+                ammo: AmmoData
                 item = AmmoListItem()
                 item.dbid = ammo.id
-                item.text = ammo.name + f' dbid: {ammo.id}'
-                # item.secondary_text = f"{tr('Twist:', 'RiflesList')} {rifle.barrel_twist} inch"
-                # item.tertiary_text = f"{tr('Sight height:', 'RiflesList')} {rifle.sight_height} cm"
+                item.text = ammo.name
+                item.secondary_text = f"{tr('Caliber', 'AmmoList')}: {ammo.diameter} {tr('inch', 'Unit')} " \
+                                      f"{tr('Bullet', 'AmmoList')}: {ammo.weight} {tr('grain', 'Unit')}"
+                item.tertiary_text = f"{tr('MV', 'AmmoList')}: {ammo.muzzle_velocity} {tr('m/s', 'Unit')}"
                 self.list.add_widget(item)

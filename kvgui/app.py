@@ -96,8 +96,6 @@ class EBallisticaApp(MDApp):
         self.screen.add_widget(self.layout)
         self.screen.add_widget(self.spinner)
 
-        self.switch_rifles_list()
-
     def wait_me(self, **kwargs):
         self.spinner.active = True
 
@@ -162,6 +160,8 @@ class EBallisticaApp(MDApp):
 
         app_settings.bind_on_load()
         app_settings.bind_on_set()
+        self.switch_rifles_list()
+
         return self.screen
 
     def on_start(self):
@@ -223,6 +223,7 @@ class EBallisticaApp(MDApp):
 
     def bot_fab_action(self, caller=None, **kwargs):
         current = self.app_screen_manager.current
+        print(current)
         if current == 'rifles_screen':
             self.edit_rifle(caller=caller, **kwargs)
         elif current == 'ammos_screen':
@@ -233,6 +234,23 @@ class EBallisticaApp(MDApp):
             self.save_ammo_card()
         elif current == 'shot_card':
             self.save_shot_card()
+        elif current == 'bc_editor_screen':
+            self.update_card_bc()
+        elif current == 'cdm_editor_screen':
+            self.update_card_cdm()
+
+    def update_card_bc(self):
+        drag_data = self.app_screen_manager.bc_edit.get()
+        sig.bc_data_edited.emit(drag_data=drag_data)
+        self.switch_ammo_card('right')
+        self.toast(tr('BC changed', 'root'))
+
+    def update_card_cdm(self):
+        # drag_data = self.app_screen_manager.cdm_editor.get()
+        # sig.cdm_data_edited.emit(drag_data=drag_data)
+        # TODO:
+        self.switch_ammo_card('right')
+        self.toast(tr('CDM changed', 'root'))
 
     def save_rifle_card(self):
         rifle = self.app_state.rifle
@@ -246,6 +264,10 @@ class EBallisticaApp(MDApp):
         self.toast(tr("Rifle data saved"), duration=1)
 
     def save_ammo_card(self):
+
+        if not self.app_screen_manager.ammo_card_screen.validate():
+            self.toast(tr('Wrong drag model data', 'root'), duration=1)
+            return
 
         ammo = self.app_screen_manager.ammo_card_screen.get_ammo()
         zero = self.app_screen_manager.ammo_card_screen.get_zero()
@@ -344,12 +366,8 @@ class EBallisticaApp(MDApp):
         self.app_screen_manager.current = 'one_shot'
         self.app_bottom_bar.fab_hide()
         self.app_top_bar.breadcrumb = [
-            'Rifles', '{rifle name}', 'Ammos', '{ammo name}', 'Shot'
+            self.app_state.rifle.name, self.app_state.ammo.name, 'Shot'
         ]
-
-    # def pre_switch_trajectory(self, **kwargs):
-    #     # sig.wait_me.emit()
-    #     self.app_screen_manager.trajectory_screen.preload()
 
     def switch_trajectory(self, direction='left', caller=None, **kwargs):
         sig.unwait_me.emit()
@@ -357,7 +375,7 @@ class EBallisticaApp(MDApp):
         self.app_screen_manager.current = 'traj_screen'
         self.app_bottom_bar.fab_hide()
         self.app_top_bar.breadcrumb = [
-            'Rifles', '{rifle name}', 'Ammos', '{ammo name}', 'Trajectory'
+            self.app_state.rifle.name, self.app_state.ammo.name, 'Trajectory'
         ]
 
     def switch_shot_edit(self, direction='left', caller=None, **kwargs):
@@ -365,7 +383,7 @@ class EBallisticaApp(MDApp):
         self.app_screen_manager.current = 'shot_card'
         self.app_bottom_bar.fab_applying()
         self.app_top_bar.breadcrumb = [
-            'Rifles', '{rifle name}', 'Ammos', '{ammo name}', 'Shot data'
+            self.app_state.rifle.name, self.app_state.ammo.name, 'Shot data'
         ]
 
     def switch_rifles_list(self, direction='left', caller=None, **kwargs):
@@ -384,14 +402,14 @@ class EBallisticaApp(MDApp):
         self.app_screen_manager.current = 'ammo_card'
         self.app_bottom_bar.fab_applying()
         self.app_top_bar.breadcrumb = [
-            'Rifles', '{rifle name}', 'Ammos', '{ammo name}', 'Properties'
+            self.app_state.rifle.name, self.app_state.ammo.name, 'Properties'
         ]
 
     def switch_rifle_card(self, direction='left', caller=None, **kwargs):
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'rifle_card'
         self.app_bottom_bar.fab_applying()
-        self.app_top_bar.breadcrumb = ['Rifles', '<rifle name>']
+        self.app_top_bar.breadcrumb = [self.app_state.rifle.name, 'Properties']
 
     def switch_ammos_list(self, direction='left', caller=None, **kwargs):
         # Todo:
@@ -406,7 +424,7 @@ class EBallisticaApp(MDApp):
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'ammos_screen'
         self.app_bottom_bar.fab_add_new()
-        self.app_top_bar.breadcrumb = ['Rifles', '<rifle name>', 'Ammos']
+        self.app_top_bar.breadcrumb = [self.app_state.rifle.name]
 
     def switch_settings(self, direction='left', caller=None, **kwargs):
         self.app_screen_manager.transition.direction = direction
@@ -416,7 +434,7 @@ class EBallisticaApp(MDApp):
 
     def switch_drag_model_edit(self, drag_model: DragModel, **kwargs):
         self.app_screen_manager.transition.direction = 'left'
-        self.app_bottom_bar.fab_hide()
+        self.app_bottom_bar.fab_show()
         if drag_model in [DragModel.G7, DragModel.G1]:
             self.app_screen_manager.current = 'bc_editor_screen'
         elif drag_model == DragModel.CDM:

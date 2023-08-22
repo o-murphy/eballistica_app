@@ -46,7 +46,7 @@ load_unit_energy = Signal(args=['unit'], name='load_set_e_unit')
 set_settings = Signal(args=['target', 'value'], name='set_settings')
 load_setting = Signal(name='load_setting')
 
-drag_model_edit_act = Signal(args=['drag_model'], name='drag_model_edit_act')
+drag_model_edit_act = Signal(args=['drag_model', 'drag_data'], name='drag_model_edit_act')
 
 translator_update = Signal()
 
@@ -55,3 +55,7 @@ toast = Signal()
 wait_me = Signal()
 unwait_me = Signal()
 trajectory_preloaded = Signal()
+
+drag_model_changed = Signal(args=['drag_model'])
+bc_data_edited = Signal(args=['drag_data'])
+cdm_data_edited = Signal(args=['drag_data'])

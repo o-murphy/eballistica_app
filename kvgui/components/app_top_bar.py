@@ -79,9 +79,10 @@ class AppTopBar(MDBoxLayout):
 
     @breadcrumb.setter
     def breadcrumb(self, texts: list[str]):
-        self._breadcrumb_value = texts
-        texts = [tr(string, 'Breadcrumb') for string in texts]
-        self.top_bar.headline_text = ' / '.join(texts)
+        if texts is not None:
+            self._breadcrumb_value = texts
+            texts = [tr(string, 'Breadcrumb') for string in texts]
+            self.top_bar.headline_text = ' / '.join(texts)
 
     def show_check(self):
         self.top_bar.hide_all()
