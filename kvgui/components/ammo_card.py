@@ -13,9 +13,9 @@ from kvgui.modules.translator import translate as tr
 Builder.load_file('kvgui/kv/ammo_card.kv')
 
 
-class BCSelector(MDRectangleFlatButton):
+class DragEdit(MDRectangleFlatButton):
     def __init__(self, **kwargs):
-        super(BCSelector, self).__init__(**kwargs)
+        super(DragEdit, self).__init__(**kwargs)
         self.init_ui()
         self.bind_ui()
 
@@ -61,6 +61,7 @@ class DragModelSelector(FormSelector):
     def value(self, value: DragModel):
         self._value = value
         self.text = value.name
+        sig.drag_model_changed.emit(drag_model=self._value)
 
 
 class AmmoCardScreen(Screen, MapIdsMixine):
@@ -69,6 +70,10 @@ class AmmoCardScreen(Screen, MapIdsMixine):
         self.name = 'ammo_card'
         self.init_ui()
         self.bind_ui()
+
+        self.bc = []
+        self.bc7 = []
+        self.cdm = []
 
     def on_pre_enter(self, *args):  # Note: Definition that may translate ui automatically
         # self.translate_ui()
@@ -98,10 +103,22 @@ class AmmoCardScreen(Screen, MapIdsMixine):
 
     def bind_ui(self):
         self.powder_sens_act.bind(on_release=lambda x: sig.ammo_powder_sens_act.emit(caller=self))
-        self.bc_select.bind(on_release=lambda x: sig.drag_model_edit_act.emit(drag_model=self.dm_select.value))
+        self.drag_edit.bind(on_release=lambda x: sig.drag_model_edit_act.emit(
+            drag_model=self.drag_model.value, drag_data=self.get_current_drag_data()
+        ))
 
         sig.set_settings.connect(self.on_set_settings)
         sig.translator_update.connect(self.translate_ui)
+        sig.bc_data_edited.connect(self.update_drag_data)
+        sig.cdm_data_edited.connect(self.update_drag_data)
+
+    def update_drag_data(self, drag_data, **kwargs):
+        if self.drag_model.value == DragModel.G1:
+            self.bc = drag_data
+        elif self.drag_model.value == DragModel.G7:
+            self.bc7 = drag_data
+        elif self.drag_model.value == DragModel.CDM:
+            self.cmd = drag_data
 
     def on_set_settings(self, **kwargs):
 
@@ -131,8 +148,31 @@ class AmmoCardScreen(Screen, MapIdsMixine):
         self.pressure.raw_value = data.zerodata.pressure
         self.temperature.raw_value = data.zerodata.temperature
         self.humidity.raw_value = data.zerodata.humidity
-        # TODO:
-        # drag_model, drag_data
+
+        self.drag_model.value = data.drag_model
+
+        self.bc = data.bc_list
+        self.bc7 = data.bc7_list
+        self.cdm = data.cdm_list
+
+    def get_current_drag_data(self):
+        if self.drag_model.value == DragModel.G1:
+            return self.bc
+        elif self.drag_model.value == DragModel.G7:
+            return self.bc7
+        elif self.drag_model.value == DragModel.CDM:
+            return self.cdm
+
+    def validate(self):
+        print(sum([i[0] for i in self.bc]))
+        if sum([i[0] for i in self.bc]) != 0 and self.drag_model.value == DragModel.G1:
+            return True
+        elif sum([i[0] for i in self.bc7]) != 0 and self.drag_model.value == DragModel.G7:
+            return True
+        elif sum([i[0] for i in self.cdm]) != 0 and self.drag_model.value == DragModel.CDM:
+            return True
+        else:
+            return False
 
     def get_ammo(self):
         return dict(
@@ -143,6 +183,10 @@ class AmmoCardScreen(Screen, MapIdsMixine):
             muzzle_velocity=self.muzzle_velocity.raw_value,
             temp_sens=self.powder_sens.raw_value,
             powder_temp=self.powder_temp.raw_value,
+            drag_model=self.drag_model.value,
+            bc_list=self.bc,
+            bc7_list=self.bc7,
+            cdm_list=self.cdm
         )
         # TODO:
         # drag_model, drag_data

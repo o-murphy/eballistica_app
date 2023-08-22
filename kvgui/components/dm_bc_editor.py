@@ -2,6 +2,7 @@ from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivymd.uix.boxlayout import MDBoxLayout
 
+from datatypes.defines import DragModel
 from kvgui.components.mixines import MapIdsMixine
 from kvgui.modules import signals as sig
 from kvgui.modules.translator import translate as tr
@@ -35,13 +36,12 @@ class BCEditor(Screen, MapIdsMixine):
 
     def init_ui(self):
         super(BCEditor, self).init_ui()
-
-
         self.translate_ui()
 
     def bind_ui(self):
         sig.set_settings.connect(self.on_set_settings)
         sig.translator_update.connect(self.translate_ui)
+        sig.drag_model_edit_act.connect(self.display)
 
     def translate_ui(self, **kwargs):
         self.title.text = tr('Edit BC: ', 'BCEditor') + ''  # Todo: display Drag Model
@@ -59,3 +59,29 @@ class BCEditor(Screen, MapIdsMixine):
         for i in range(5):
             vbc = self.ids[f'vbc{i}']
             set_unit_for_target(vbc.ids.velocity, 'unit_velocity')
+
+    def display(self, drag_model: DragModel, drag_data, **kwargs):
+        vmeasure = self.ids['vbc0'].ids.velocity.measure
+        vunit = vmeasure.name(self.ids['vbc0'].ids.velocity.unit)
+        vunit = tr(vunit, 'Unit')
+        self.velocity_label.text = tr('Velocity, ', 'BCEditor') + vunit
+        self.bc_label.text = tr('BC, ', 'BCEditor') + f'{drag_model.name}'
+
+        for i in range(5):
+            vbc = self.ids[f'vbc{i}']
+            vbc.ids.velocity.raw_value = 0
+            vbc.ids.bc.value = 0
+
+        if drag_data:
+            for i, item in enumerate(drag_data):
+                vbc = self.ids[f'vbc{i}']
+                vbc.ids.velocity.raw_value = item[0]
+                vbc.ids.bc.value = item[1]
+
+    def get(self):
+        mbc = []
+        for i in range(5):
+            vbc = self.ids[f'vbc{i}']
+            mbc.append([vbc.ids.velocity.raw_value, vbc.ids.bc.value])
+        mbc.sort(reverse=True)
+        return mbc

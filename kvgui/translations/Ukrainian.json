@@ -109,12 +109,14 @@
       "Pressure": "Тиск",
       "Temperature": "Температура",
       "Humidity": "Вологість",
-      "Calculate powder sensitivity": "Розрахувати чутливість пороху"
+      "Calculate powder sensitivity": "Розрахувати чутливість пороху",
+      "New ammo": "Новий набій"
     },
     "root": {
       "Rifle data saved": "Зброя збережена",
       "Ammo data saved": "Набій збережено",
-      "Shot data saved": "Параметри стрільби збережено"
+      "Shot data saved": "Параметри стрільби збережено",
+      "Wrong drag model data": "Помилкова драг-модель"
     },
     "Breadcrumb": {
       "Rifles": "Зброя",
