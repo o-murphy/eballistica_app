@@ -110,7 +110,9 @@
       "Temperature": "Температура",
       "Humidity": "Вологість",
       "Calculate powder sensitivity": "Розрахувати чутливість пороху",
-      "New ammo": "Новий набій"
+      "New ammo": "Новий набій",
+      "BC": "БК",
+      "None": "Нема"
     },
     "root": {
       "Rifle data saved": "Зброя збережена",

@@ -96,6 +96,6 @@ class AmmosScreen(Screen):
                 item.dbid = ammo.id
                 item.text = ammo.name
                 item.secondary_text = f"{tr('Caliber', 'AmmoList')}: {ammo.diameter} {tr('inch', 'Unit')} " \
-                                      f"{tr('Bullet', 'AmmoList')}: {ammo.weight} {tr('grain', 'Unit')}"
+                                      f"{tr('Bullet', 'AmmoList')}: {ammo.weight} {tr('gr', 'Unit')}"
                 item.tertiary_text = f"{tr('MV', 'AmmoList')}: {ammo.muzzle_velocity} {tr('m/s', 'Unit')}"
                 self.list.add_widget(item)

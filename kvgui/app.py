@@ -278,10 +278,10 @@ class EBallisticaApp(MDApp):
 
         if self.app_state.ammo.id:
             Worker.commit()
-            self.toast(tr("Shot data saved"), duration=1)
+            self.toast(tr("Ammo data saved"), duration=1)
         elif self.app_state.ammo:
             Worker.ammo_add(self.app_state.ammo)
-            self.toast(tr("Shot data saved"), duration=1)
+            self.toast(tr("Ammo data saved"), duration=1)
         else:
             self.toast(tr('Undefined error expected', 'root'), duration=1)
 
