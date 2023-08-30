@@ -116,7 +116,7 @@ def calculate_traj(rifle: RifleData, ammo: AmmoData, target: Target, atmo: AtmoD
     shot_info = ShotParametersUnlevel(
         sight_angle,
         maximum_distance=Distance(target.distance + 1, Distance.Meter),
-        step=Distance(zerodata.zero_range // 2, Distance.Meter),
+        step=Distance(zerodata.zero_range // 10, Distance.Meter),
         shot_angle=Angular(target.look_angle, Angular.Degree),
         cant_angle=Angular(0, Angular.Degree)
     )

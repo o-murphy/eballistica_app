@@ -71,6 +71,9 @@ jobs:
       - name: Update buildozer.spec
         run: |
           sed -i.bak "s/version =.*/version = ${{ steps.extract_version.outputs.version }}/" buildozer.spec
+          
+          # Replace 'workflow_number' with the actual workflow number
+          sed -i 's/output\.filename\s*=\s*.*/output.filename = eballistica-${{ steps.extract_version.outputs.version }}-build-${{ github.run_number }}.apk/' buildozer.spec
 
 #  #      For running on native machine:
 #          requirements=$(grep -Eo '[^[:space:]]+' requirements.txt | tr '\n' ',')

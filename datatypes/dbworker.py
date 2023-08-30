@@ -222,6 +222,10 @@ class Worker:
         session.commit()
 
     @staticmethod
+    def rollback():
+        session.rollback()
+
+    @staticmethod
     def delete_ammo(uid, **kwargs):
         ammo = session.query(AmmoData).get(uid)
         session.delete(ammo)
