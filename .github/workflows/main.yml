@@ -10,6 +10,7 @@ on:
       - kivymd-nightly
       - kivymd-dev
       - kivymd-main
+      - py_ballisticcalc_test
   schedule:
     - cron: '0 0 1,15 * *'
 
