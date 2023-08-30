@@ -36,7 +36,7 @@ class TrajectoryGraph(MDBoxLayout):
     def display_data(self, data: list[TrajectoryData]):
         if data:
             points = tuple(
-                (item.travelled_distance().get_in(Distance.Meter), item.drop().get_in(Distance.Meter))
+                (item.travelled_distance().get_in(int(Distance.Meter)), item.drop().get_in(int(Distance.Meter)))
                 for item in data
             )
 
@@ -123,13 +123,13 @@ class TrajectoryScreen(Screen, MapIdsMixine):
             energy = item.energy()
 
             rows_data.append([
-                fmt(t_range.get_in(Distance.Meter), d_accuracy),
-                fmt(drop_adj.get_in(Angular.CmPer100M), cm_accuracy) if drop_adj else '---',
-                fmt(drop_adj.get_in(Angular.Mil), mil_accuracy) if drop_adj else '---',
-                fmt(wind_adj.get_in(Angular.CmPer100M), cm_accuracy) if drop_adj else '---',
-                fmt(wind_adj.get_in(Angular.Mil), mil_accuracy) if drop_adj else '---',
-                fmt(velocity.get_in(Velocity.MPS), v_accuracy),
-                fmt(energy.get_in(Energy.Joule), e_accuracy)
+                fmt(t_range.get_in(int(Distance.Meter)), d_accuracy),
+                fmt(drop_adj.get_in(int(Angular.CmPer100M)), cm_accuracy) if drop_adj else '---',
+                fmt(drop_adj.get_in(int(Angular.Mil)), mil_accuracy) if drop_adj else '---',
+                fmt(wind_adj.get_in(int(Angular.CmPer100M)), cm_accuracy) if drop_adj else '---',
+                fmt(wind_adj.get_in(int(Angular.Mil)), mil_accuracy) if drop_adj else '---',
+                fmt(velocity.get_in(int(Velocity.MPS)), v_accuracy),
+                fmt(energy.get_in(int(Energy.Joule)), e_accuracy)
             ])
 
         # self.markup_table.rows_data = [[str(i)] * 7 for i in range(3000, -1, -50)]

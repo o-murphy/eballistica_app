@@ -228,7 +228,7 @@ class EBallisticaApp(MDApp):
 
     def bot_fab_action(self, caller=None, **kwargs):
         current = self.app_screen_manager.current
-        print(current)
+
         if current == 'rifles_screen':
             self.edit_rifle(caller=caller, **kwargs)
         elif current == 'ammos_screen':
