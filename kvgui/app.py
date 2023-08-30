@@ -378,6 +378,7 @@ class EBallisticaApp(MDApp):
 
         try:
             state = self.app_state
+            cdm = calculated_drag(state.ammo)
             traj = calculate_traj(state.rifle, state.ammo, state.ammo.target, state.ammo.atmo, state.ammo.zerodata)
         except Exception as exc:
             self.toast(tr('Error occurred on calculation', 'root'), duration=1)
@@ -387,7 +388,7 @@ class EBallisticaApp(MDApp):
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'traj_screen'
 
-        self.app_screen_manager.trajectory_screen.display_data(traj)
+        self.app_screen_manager.trajectory_screen.display_data(traj, cdm)
 
         self.app_bottom_bar.fab_hide()
         self.app_top_bar.breadcrumb = [

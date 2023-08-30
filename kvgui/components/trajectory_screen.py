@@ -19,8 +19,9 @@ class TrajectoryGraph(MDBoxLayout):
         super(TrajectoryGraph, self).__init__()
         self.padding = '20dp'
         self.graph = Graph(
-            xlabel='Range, m', ylabel='Drop, cm', x_ticks_minor=100, x_ticks_major=500, y_ticks_major=2000,
-            y_ticks_minor=500,
+            xlabel='Range, m', ylabel='Drop, m',
+            x_ticks_major=500, x_ticks_minor=5,
+            y_ticks_major=25, y_ticks_minor=5,
             y_grid_label=True, x_grid_label=True, padding=10, x_grid=True, y_grid=True,
             xmin=-0, xmax=100, ymin=-2, ymax=2, border_color=get_color_from_hex('#008080'),
             label_options={
@@ -32,25 +33,48 @@ class TrajectoryGraph(MDBoxLayout):
         self.plot = LinePlot(color=get_color_from_hex('#008080'), line_width=1.1)
         self.graph.add_plot(self.plot)
 
-    #     self.add_plot()
-    #
-    # def add_plot(self):
-    #     points = [(x, math.sin(x * 0.1)) for x in range(0, 101)]
-    #     self.plot.points = points
-
     def display_data(self, data: list[TrajectoryData]):
         if data:
-            points = [
-                (item.travelled_distance().get_in(Distance.Meter), item.drop().get_in(Distance.Centimeter))
+            points = tuple(
+                (item.travelled_distance().get_in(Distance.Meter), item.drop().get_in(Distance.Meter))
                 for item in data
-            ]
+            )
+
             max_tuple = max(points, key=lambda x: x[0])
 
             self.graph.xmin = -0
             self.graph.xmax = max_tuple[0] + 100
-            self.graph.ymin = max_tuple[1] // 1000 * 1000
-            self.graph.ymax = -0
+            self.graph.ymin = max_tuple[1] // 25 * 25
+            self.graph.ymax = 25
 
+            self.plot.points = points
+
+
+class DragMachGraph(MDBoxLayout):
+    def __init__(self):
+        super(DragMachGraph, self).__init__()
+        self.padding = '20dp'
+        self.graph = Graph(
+            xlabel='Mach', ylabel='CD',
+            x_ticks_minor=5,
+            x_ticks_major=1,
+            y_ticks_major=0.1,
+            y_ticks_minor=5,
+            y_grid_label=True, x_grid_label=True, padding=10, x_grid=True, y_grid=True,
+            xmin=0, xmax=5, ymin=0, ymax=1,
+            border_color=get_color_from_hex('#008080'),
+            label_options={
+                'color': get_color_from_hex('#008080'), 'bold': False
+            }
+        )
+
+        self.add_widget(self.graph)
+        self.plot = LinePlot(color=get_color_from_hex('#008080'), line_width=1.1)
+        self.graph.add_plot(self.plot)
+
+    def display_data(self, data):
+        if data:
+            points = tuple((round(item['A'], 4), round(item['B'], 4)) for item in data)
             self.plot.points = points
 
 
@@ -65,7 +89,9 @@ class TrajectoryScreen(Screen, MapIdsMixine):
         super(TrajectoryScreen, self).init_ui()
 
         self.graph = TrajectoryGraph()
+        self.drag_mach = DragMachGraph()
         self.graph_tab.add_widget(self.graph)
+        self.drag_mach_tab.add_widget(self.drag_mach)
 
     def on_pre_enter(self, *args):
         ...
@@ -73,9 +99,9 @@ class TrajectoryScreen(Screen, MapIdsMixine):
     def on_enter(self, *args):
         ...
 
-    def display_data(self, data):
+    def display_data(self, data, drag_mach):
         self.markup_table.header_data = [
-            ["Range", "Path", "Path", "Wind.", "Wind.", "V", "E"],
+            ["Range", "Hold", "Hold", "Wind.", "Wind.", "V", "E"],
             ['m', 'cm/100m', 'MIL', 'cm/100m', 'MIL', 'm/s', 'J']
         ]
 
@@ -112,16 +138,22 @@ class TrajectoryScreen(Screen, MapIdsMixine):
 
         rows_data.reverse()
         Clock.schedule_once(partial(self.set_table_data, rows_data), 0.5)
+        # Clock.schedule_once(partial(self.set_graph_data, data), 0.6)
+        # Clock.schedule_once(partial(self.set_drag_mach, drag_mach), 0.7)
 
         self.set_graph_data(data)
+        self.set_drag_mach(drag_mach)
 
-    def set_table_data(self, data, *args):
+    def set_drag_mach(self, data=None, *args):
+        self.drag_mach.display_data(data)
+
+    def set_table_data(self, data=None, *args):
         self.markup_table.rows_data = data
 
-    def append_table_data(self, data, *args):
+    def append_table_data(self, data=None, *args):
         self.markup_table.insert_row(0, data)
 
-    def set_graph_data(self, data=None):
+    def set_graph_data(self, data=None, *args):
         self.graph.display_data(data)
 
     def on_leave(self, *args):
