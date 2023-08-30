@@ -4,11 +4,11 @@ from functools import partial
 from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
-from kivy_garden.graph import Graph, MeshLinePlot, LinePlot
+from kivy.utils import get_color_from_hex
+from kivy_garden.graph import Graph, LinePlot
 from kivymd.uix.boxlayout import MDBoxLayout
 
 from kvgui.components.mixines import MapIdsMixine
-from kivy.utils import get_color_from_hex
 
 Builder.load_file('kvgui/kv/trajectory_screen.kv')
 
@@ -17,12 +17,18 @@ class TrajectoryGraph(MDBoxLayout):
     def __init__(self):
         super(TrajectoryGraph, self).__init__()
         self.padding = '20dp'
-        self.graph = Graph(xlabel='Range, m', ylabel='Drop, cm', x_ticks_minor=10, x_ticks_major=100, y_ticks_major=1,
-                           y_ticks_minor=0.1,
-                           y_grid_label=True, x_grid_label=True, padding=5, x_grid=True, y_grid=True,
-                           xmin=-0, xmax=100, ymin=-2, ymax=2)
+        self.graph = Graph(
+            xlabel='Range, m', ylabel='Drop, cm', x_ticks_minor=10, x_ticks_major=100, y_ticks_major=1,
+            y_ticks_minor=0.1,
+            y_grid_label=True, x_grid_label=True, padding=5, x_grid=True, y_grid=True,
+            xmin=-0, xmax=100, ymin=-2, ymax=2, border_color=get_color_from_hex('#008080'),
+            label_options={
+                'color': get_color_from_hex('#008080'), 'bold': False
+            }
+        )
+
         self.add_widget(self.graph)
-        self.plot = LinePlot(color=get_color_from_hex('#008080'), line_width=2)
+        self.plot = LinePlot(color=get_color_from_hex('#008080'), line_width=1.1)
         self.graph.add_plot(self.plot)
 
         self.add_plot()
