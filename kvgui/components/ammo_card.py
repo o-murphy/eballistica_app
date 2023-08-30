@@ -139,7 +139,9 @@ class AmmoCardScreen(Screen, MapIdsMixine):
             value = f"({count})"
         else:
             value = f"{table[0][1]}"
-        self.drag_edit.text = f"{tr('BC', 'AmmoCard')} {self.drag_model.value.name}: {value}"
+
+        pref = self.drag_model.value.name if self.drag_model.value == DragModel.CDM else f"{tr('BC', 'AmmoCard')} {self.drag_model.value.name}"
+        self.drag_edit.text = f"{pref}: {value}"
 
     def update_drag_data(self, drag_data, **kwargs):
         if self.drag_model.value == DragModel.G1:
