@@ -376,14 +376,14 @@ class EBallisticaApp(MDApp):
 
     def switch_trajectory(self, direction='left', caller=None, **kwargs):
 
-        try:
-            state = self.app_state
-            cdm = calculated_drag(state.ammo)
-            traj = calculate_traj(state.rifle, state.ammo, state.ammo.target, state.ammo.atmo, state.ammo.zerodata)
-        except Exception as exc:
-            self.toast(tr('Error occurred on calculation', 'root'), duration=1)
-            logging.warning(exc)
-            return
+        # try:
+        state = self.app_state
+        cdm = calculated_drag(state.ammo)
+        traj = calculate_traj(state.rifle, state.ammo, state.ammo.target, state.ammo.atmo, state.ammo.zerodata)
+        # except Exception as exc:
+        #     self.toast(tr('Error occurred on calculation', 'root'), duration=1)
+        #     logging.warning(exc)
+        #     return
 
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'traj_screen'
