@@ -8,7 +8,8 @@ __all__ = ['APP_DATA', 'STORAGE', 'USER_DATA']
 if platform == 'android':
     APP_DATA = '/data/data/o.murphy.eballistica'
     STORAGE = '/storage/emulated/0'
-    USER_DATA = '/storage/emulated/0/Android/data/o.murphy.eballistica/files'
+    # USER_DATA = '/storage/emulated/0/Android/data/o.murphy.eballistica/files'
+    USER_DATA = '/storage/emulated/0/eballistica'
 elif platform == 'win':
     APP_DATA = os.path.join(os.environ['LocalAppData'], 'eBallistica')
     STORAGE = os.path.expanduser(r"~\documents")
