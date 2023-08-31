@@ -4,3 +4,4 @@ signalslot
 kivy_garden.graph
 sqlalchemy==1.3.22
 py_ballisticcalc==1.0.12
+android
