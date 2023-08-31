@@ -2,6 +2,7 @@ import json
 import logging
 
 from kvgui.modules import signals as sig
+from kvgui.modules.env import SETTINGS_PATH
 
 DEFAULT_SETTINGS = {
     "lang": "English",
@@ -41,7 +42,7 @@ class AppSettings:
 
     def load_settings(self):
         try:
-            with open('kvgui/settings.json', 'r', encoding='utf-8') as fp:
+            with open(SETTINGS_PATH, 'r', encoding='utf-8') as fp:
                 config = json.load(fp)
                 for k, v in DEFAULT_SETTINGS.items():
                     if k not in config:
@@ -53,7 +54,7 @@ class AppSettings:
 
     def save_settings(self):
         try:
-            with open('kvgui/settings.json', 'w', encoding='utf-8') as fp:
+            with open(SETTINGS_PATH, 'w', encoding='utf-8') as fp:
                 json.dump(self._dict, fp)
         except Exception as exc:
             logging.error(exc)

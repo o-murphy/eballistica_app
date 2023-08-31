@@ -12,6 +12,7 @@ from kivymd.uix.scrollview import MDScrollView
 from datatypes.dbworker import AmmoData
 from kvgui.modules import signals as sig
 from kvgui.modules.translator import translate as tr
+from kvgui.modules.env import STORAGE
 # from a7p import A7PFile, profedit_pb2
 
 Builder.load_file('kvgui/kv/ammo_list_item.kv')
@@ -78,14 +79,14 @@ class AmmoListItem(ThreeLineListItem, TouchBehavior):
     # TODO: realise sharing profile to a7p file
 
     def share_ammo(self):
-        path = os.path.expanduser("~")
+
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,  # function called when the user reaches directory tree root
             select_path=self.select_path,  # function called when selecting a file/directory
             search='dirs',
             # ext=['.a7p']
         )
-        self.file_manager.show(path)
+        self.file_manager.show(STORAGE)
 
     def exit_manager(self, obj):
         logging.info(obj)

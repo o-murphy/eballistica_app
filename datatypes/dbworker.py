@@ -5,10 +5,13 @@ from sqlalchemy.orm import relationship, sessionmaker, validates
 
 
 from datatypes.defines import TwistDir, DragModel
+from kvgui.modules.env import DB_PATH
+
 
 Base = declarative_base()
-engine = create_engine('sqlite:///local.sqlite3', echo=False)
 
+
+engine = create_engine(f'sqlite:///{DB_PATH}', echo=False)
 
 
 class RifleData(Base):
