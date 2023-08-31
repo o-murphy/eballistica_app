@@ -20,11 +20,12 @@ else:
 
 
 if not os.path.exists(APP_DATA):
-    os.mkdir(APP_DATA)
+    os.makedirs(APP_DATA, exist_ok=True)
 if not os.path.exists(STORAGE):
-    os.mkdir(STORAGE)
+    os.makedirs(STORAGE, exist_ok=True)
 if not os.path.exists(USER_DATA):
-    os.mkdir(USER_DATA)
+    os.makedirs(USER_DATA, exist_ok=True)
+
 
 DB_PATH = os.path.join(USER_DATA, 'local.sqlite3')
 SETTINGS_PATH = os.path.join(USER_DATA, 'settings.json')
