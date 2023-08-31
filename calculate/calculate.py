@@ -20,7 +20,7 @@ def bc_g7(ammo: AmmoData):
         Distance(ammo.diameter, Distance.Inch),
         Weight(ammo.weight, Weight.Grain),
         list,
-        Velocity.MPS
+        int(Velocity.MPS)
     )
 
     return bc.custom_drag_func()
@@ -33,7 +33,7 @@ def bc_g1(ammo: AmmoData):
         Distance(ammo.diameter, Distance.Inch),
         Weight(ammo.weight, Weight.Grain),
         list,
-        Velocity.MPS
+        int(Velocity.MPS)
     )
 
     return bc.custom_drag_func()
