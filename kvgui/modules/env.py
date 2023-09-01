@@ -36,7 +36,7 @@ if platform == 'android':
 
     SS = SharedStorage()
     logging.info(f'SharedStorage: {SS}')
-    sig.toast(f'SharedStorage: {SS}')
+    sig.toast.emit(msg=f'SharedStorage: {SS}')
 
     if SS:
         SS.copy_to_shared('test_shared.txt', filepath='eBallistica/test_shared.txt')
