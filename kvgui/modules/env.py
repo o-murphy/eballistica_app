@@ -39,13 +39,13 @@ if platform == 'android':
     sig.toast.emit(msg=f'SharedStorage: {SS}')
 
     if SS:
-        SS.copy_to_shared('test_shared.txt', filepath='eBallistica/test_shared.txt')
+        SS.copy_to_shared('test_shared.txt', filepath='test_shared.txt')
 
     APP_DATA = '/data/data/o.murphy.eballistica'
-    # STORAGE = '/storage/emulated/0'
-    USER_DATA = '/storage/emulated/0/Android/data/o.murphy.eballistica/files'
-    # USER_DATA = '/storage/emulated/0/eballistica'
-    STORAGE = ''
+    STORAGE = '/storage/emulated/0'
+    #USER_DATA = '/storage/emulated/0/Android/data/o.murphy.eballistica/files'
+    USER_DATA = '/storage/emulated/0/eballistica'
+    #STORAGE = ''
 elif platform == 'win':
     APP_DATA = os.path.join(os.environ['LocalAppData'], 'eBallistica')
     STORAGE = os.path.expanduser(r"~\documents")
@@ -55,13 +55,25 @@ else:
     STORAGE = os.path.expanduser(r"~/documents")
     USER_DATA = os.path.expanduser(r"~/documents\eBallistica")
 
-for dir in (APP_DATA, USER_DATA, STORAGE):
-    if not os.path.exists(dir):
-        try:
-            os.makedirs(dir, exist_ok=True)
-        except PermissionError as err:
-            logging.warning(err)
-            dir = APP_DATA
+#for dir in (APP_DATA, USER_DATA, STORAGE):
+#    if not os.path.exists(dir):
+#        try:
+#            os.makedirs(dir, exist_ok=True)
+#        except PermissionError as err:
+#            logging.warning(err)
+#            dir = APP_DATA
+
+try:
+    if not os.path.exists(APP_DATA):
+        os.makedirs(dir, exist_ok=True)
+    if not os.path.exists(USER_DATA):
+        os.makedirs(dir, exist_ok=True)
+    if not os.path.exists(STORAGE):
+        os.makedirs(dir, exist_ok=True)
+except PermissionError as err:
+    logging.warning(err)
+    USER_DATA = APP_DATA
+    STORAGE = APP_DATA
 
 DB_PATH = os.path.join(USER_DATA, 'local.sqlite3')
 SETTINGS_PATH = os.path.join(USER_DATA, 'settings.json')
