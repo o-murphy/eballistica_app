@@ -6,7 +6,7 @@
 [app]
 
 # (str) Title of your application
-title = eBallisica
+title = eBallistica
 
 # (str) Package name
 package.name = eballistica
