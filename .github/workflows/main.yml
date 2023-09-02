@@ -56,7 +56,7 @@ jobs:
       - name: Extract version and requirements
         id: extract_version
         run: |
-          version=$(grep -o "__version__ = '[0-9.]*'" __version__.py | sed "s/__version__ = '//" | sed "s/'//")  # Extract version from main.py
+          version=$(grep -o "__version__ = '[0-9.]*'" version.py | sed "s/__version__ = '//" | sed "s/'//")  # Extract version from version.py
           echo "Extracted version: $version"
           echo "::set-output name=version::$version"
           requirements=$(grep -Eo '[^[:space:]]+' requirements.txt | tr '\n' ',')  # Extract requirements

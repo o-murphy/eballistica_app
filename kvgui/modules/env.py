@@ -1,22 +1,17 @@
 from kivy.utils import platform
 import os
 import logging
-from __version__ import __version__
+# from version import __version__
 
 
-__all__ = ['APP_DATA', 'STORAGE', 'USER_DATA', 'DB_PATH', 'SETTINGS_PATH', 'SS']
+__all__ = ['APP_DATA', 'STORAGE', 'USER_DATA', 'DB_PATH', 'SETTINGS_PATH']
 
 
-
-logging.info(f"App {__version__}")
-SS = None
-ANDROID_PERMISSIONS = []
-
+# logging.info(f"App version: {__version__}")
 
 if platform == 'android':
     from android import api_version
     from android.permissions import request_permissions, Permission
-    from android.storage import primary_external_storage_path  #, secondary_external_storage_path
     from androidstorage4kivy import SharedStorage, ShareSheet
     from kvgui.modules import signals as sig
 
@@ -32,9 +27,8 @@ if platform == 'android':
     request_permissions(ANDROID_PERMISSIONS)
 
     def use_test_ss():
-        with open(f'version-{__version__}.txt', 'w') as txt:
-            txt.write(__version__)
-            SharedStorage().copy_to_shared(f'version-{__version__}.txt', filepath=f'version-{__version__}.txt')
+        with open(f'version.txt', 'w') as txt:
+            SharedStorage().copy_to_shared(f'version.txt', filepath=f'version.txt')
 
     def create_test_uri():
         # create a file in Private storage
@@ -67,11 +61,6 @@ if platform == 'android':
     except Exception as exc:
         logging.exception(exc)
 
-    try:
-        sig.toast.emit(text=f'SharedStorage: {SS}')
-    except Exception as exc:
-        logging.exception(exc)
-        logging.warning('SharedStorage toast exception')
 
     APP_DATA = '/data/data/o.murphy.eballistica'
     STORAGE = '/storage/emulated/0'
