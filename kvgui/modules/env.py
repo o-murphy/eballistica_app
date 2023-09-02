@@ -25,7 +25,7 @@ if platform == 'android':
     else:
         # Android >= 10
         # Permission required to see Shared files created by other apps
-        ANDROID_PERMISSIONS = [Permission.READ_EXTERNAL_STORAGE]
+        ANDROID_PERMISSIONS = [Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE]
 
     request_permissions(ANDROID_PERMISSIONS)
 
@@ -36,10 +36,15 @@ if platform == 'android':
 
     SS = SharedStorage()
     logging.info(f'SharedStorage: {SS}')
-    sig.toast.emit(msg=f'SharedStorage: {SS}')
 
     if SS:
         SS.copy_to_shared('test_shared.txt', filepath='test_shared.txt')
+
+    try:
+        sig.toast.emit(text=f'SharedStorage: {SS}')
+    except Exception as exc:
+        logging.exception(exc)
+        logging.warning('SharedStorage toast exception')
 
     APP_DATA = '/data/data/o.murphy.eballistica'
     STORAGE = '/storage/emulated/0'

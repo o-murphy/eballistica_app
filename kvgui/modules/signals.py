@@ -50,7 +50,7 @@ drag_model_edit_act = Signal(args=['drag_model', 'drag_data'], name='drag_model_
 
 translator_update = Signal()
 
-toast = Signal(args=['msg'])
+toast = Signal(args=['text'])
 
 wait_me = Signal()
 unwait_me = Signal()
