@@ -34,7 +34,7 @@ if platform == 'android':
     def use_test_ss():
         with open(f'version-{__version__}.txt', 'w') as txt:
             txt.write(__version__)
-            SharedStorage().copy_to_shared('test_shared.txt', filepath='version.txt')
+            SharedStorage().copy_to_shared(f'version-{__version__}.txt', filepath=f'version-{__version__}.txt')
 
     def create_test_uri():
         # create a file in Private storage
