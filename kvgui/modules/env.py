@@ -1,21 +1,23 @@
-import logging
-
 from kivy.utils import platform
 import os
+import logging
+from __version__ import __version__
+
 
 __all__ = ['APP_DATA', 'STORAGE', 'USER_DATA', 'DB_PATH', 'SETTINGS_PATH', 'SS']
 
 
+
+logging.info(f"App {__version__}")
 SS = None
 ANDROID_PERMISSIONS = []
 
 
 if platform == 'android':
-    import logging
     from android import api_version
     from android.permissions import request_permissions, Permission
     from android.storage import primary_external_storage_path  #, secondary_external_storage_path
-    from androidstorage4kivy import SharedStorage
+    from androidstorage4kivy import SharedStorage, ShareSheet
     from kvgui.modules import signals as sig
 
     if api_version < 29:
@@ -29,16 +31,41 @@ if platform == 'android':
 
     request_permissions(ANDROID_PERMISSIONS)
 
-    primary_ext_storage = primary_external_storage_path()
-    # secondary_ext_storage = secondary_external_storage_path()
-    logging.info(f"Primary Storage: {primary_ext_storage}")
-    # logging.info(f"Secondary Storage: {secondary_ext_storage}")
+    def use_test_ss():
+        with open(f'version-{__version__}.txt', 'w') as txt:
+            txt.write(__version__)
+            SharedStorage().copy_to_shared('test_shared.txt', filepath='version.txt')
 
-    SS = SharedStorage()
-    logging.info(f'SharedStorage: {SS}')
+    def create_test_uri():
+        # create a file in Private storage
+        cash_dir = SharedStorage().get_cache_dir()
+        logging.info(f"SharedStorage Cache Dir: {cash_dir}")
+        filename = os.path.join(cash_dir, 'test.html')
+        with open(filename, "w") as f:
+            f.write("<html>\n")
+            f.write(" <head>\n")
+            f.write(" </head>\n")
+            f.write(" <body>\n")
+            f.write("  <h1>All we are saying, is<h1>\n")
+            f.write("  <h1>give bees a chance<h1>\n")
+            f.write(" </body>\n")
+            f.write("</html>\n")
 
-    if SS:
-        SS.copy_to_shared('test_shared.txt', filepath='test_shared.txt')
+        return SharedStorage().copy_to_shared(filename)
+
+    def share_test_file():
+        test_uri = create_test_uri()
+        ShareSheet().share_file(test_uri)
+
+    try:
+        use_test_ss()
+    except Exception as exc:
+        logging.exception(exc)
+
+    try:
+        share_test_file()
+    except Exception as exc:
+        logging.exception(exc)
 
     try:
         sig.toast.emit(text=f'SharedStorage: {SS}')
@@ -48,9 +75,9 @@ if platform == 'android':
 
     APP_DATA = '/data/data/o.murphy.eballistica'
     STORAGE = '/storage/emulated/0'
-    #USER_DATA = '/storage/emulated/0/Android/data/o.murphy.eballistica/files'
     USER_DATA = '/storage/emulated/0/eballistica'
-    #STORAGE = ''
+    #USER_DATA = '/storage/emulated/0/Android/data/o.murphy.eballistica/files'
+
 elif platform == 'win':
     APP_DATA = os.path.join(os.environ['LocalAppData'], 'eBallistica')
     STORAGE = os.path.expanduser(r"~\documents")
@@ -60,25 +87,13 @@ else:
     STORAGE = os.path.expanduser(r"~/documents")
     USER_DATA = os.path.expanduser(r"~/documents\eBallistica")
 
-#for dir in (APP_DATA, USER_DATA, STORAGE):
-#    if not os.path.exists(dir):
-#        try:
-#            os.makedirs(dir, exist_ok=True)
-#        except PermissionError as err:
-#            logging.warning(err)
-#            dir = APP_DATA
-
-try:
-    if not os.path.exists(APP_DATA):
-        os.makedirs(dir, exist_ok=True)
-    if not os.path.exists(USER_DATA):
-        os.makedirs(dir, exist_ok=True)
-    if not os.path.exists(STORAGE):
-        os.makedirs(dir, exist_ok=True)
-except PermissionError as err:
-    logging.warning(err)
-    USER_DATA = APP_DATA
-    STORAGE = APP_DATA
+for path in [APP_DATA, USER_DATA, STORAGE]:
+   if not os.path.exists(path):
+       try:
+           os.makedirs(path, exist_ok=True)
+       except PermissionError as err:
+           logging.warning(err)
+           path = APP_DATA
 
 DB_PATH = os.path.join(USER_DATA, 'local.sqlite3')
 SETTINGS_PATH = os.path.join(USER_DATA, 'settings.json')
