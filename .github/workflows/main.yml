@@ -54,7 +54,7 @@ jobs:
           buildozer android p4a -- --help
 
       - name: Extract version and requirements
-        id: extract_version
+        id: extract_props
         run: |
           version=$(grep -o "__version__ = '[0-9.]*'" version.py | sed "s/__version__ = '//" | sed "s/'//")
           echo "Extracted version: $version"
@@ -65,8 +65,8 @@ jobs:
 
       - name: Update buildozer.spec with extracted version and requirements
         run: |
-          sed -i.bak "s|version =.*|version = ${{ steps.extract_version.outputs.version }}|" buildozer.spec
-          sed -i.bak "s|requirements =.*|requirements = python3,${{ steps.update_requirements.outputs.requirements }}|" buildozer.spec
+          sed -i.bak "s|version =.*|version = ${{ steps.extract_props.outputs.version }}|" buildozer.spec
+          sed -i.bak "s|requirements =.*|requirements = python3,${{ steps.extract_props.outputs.requirements }}|" buildozer.spec
 
       - name: Upload Artifacts (buildozer.spec)
         uses: actions/upload-artifact@v2
