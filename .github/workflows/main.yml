@@ -56,17 +56,17 @@ jobs:
       - name: Extract version and requirements
         id: extract_version
         run: |
-          version=$(grep -o "__version__ = '[0-9.]*'" version.py | sed "s/__version__ = '//" | sed "s/'//")  # Extract version from version.py
+          version=$(grep -o "__version__ = '[0-9.]*'" version.py | sed "s/__version__ = '//" | sed "s/'//")
           echo "Extracted version: $version"
           echo "::set-output name=version::$version"
-          requirements=$(grep -Eo '[^[:space:]]+' requirements.txt | tr '\n' ',')  # Extract requirements
+          requirements=$(grep -Eo '[^[:space:]]+' requirements.txt | tr '\n' ',')
           echo "Extracted requirements: $requirements"
           echo "::set-output name=requirements::$requirements"
 
       - name: Update buildozer.spec with extracted version and requirements
         run: |
+          sed -i.bak "s|version =.*|version = ${{ steps.extract_version.outputs.version }}|" buildozer.spec
           sed -i.bak "s|requirements =.*|requirements = python3,${{ steps.update_requirements.outputs.requirements }}|" buildozer.spec
-          sed -i.bak "s/version =.*/version = ${{ steps.extract_version.outputs.version }}/" buildozer.spec
 
       - name: Upload Artifacts (buildozer.spec)
         uses: actions/upload-artifact@v2

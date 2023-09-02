@@ -1,13 +1,15 @@
 from kivy.utils import platform
 import os
 import logging
-# from version import __version__
+from version import __version__
 
 
-__all__ = ['APP_DATA', 'STORAGE', 'USER_DATA', 'DB_PATH', 'SETTINGS_PATH']
+__all__ = ['APP_DATA', 'STORAGE', 'USER_DATA', 'DB_PATH', 'SETTINGS_PATH', 'SS']
 
 
-# logging.info(f"App version: {__version__}")
+
+logging.info(f"App version:  {__version__}")
+
 
 if platform == 'android':
     from android import api_version
@@ -27,8 +29,9 @@ if platform == 'android':
     request_permissions(ANDROID_PERMISSIONS)
 
     def use_test_ss():
-        with open(f'version.txt', 'w') as txt:
-            SharedStorage().copy_to_shared(f'version.txt', filepath=f'version.txt')
+        with open(f'version-{__version__}.txt', 'w') as txt:
+            txt.write(__version__)
+            SharedStorage().copy_to_shared(f'version-{__version__}.txt', filepath=f'version-{__version__}.txt')
 
     def create_test_uri():
         # create a file in Private storage
@@ -60,7 +63,6 @@ if platform == 'android':
         share_test_file()
     except Exception as exc:
         logging.exception(exc)
-
 
     APP_DATA = '/data/data/o.murphy.eballistica'
     STORAGE = '/storage/emulated/0'
