@@ -55,7 +55,7 @@ if platform == 'android':
     try:
         logging.info("trying get access to cache dir")
         cash_dir = SharedStorage().get_cache_dir()
-        os.mkdir(os.path.join(cash_dir, 'test_dir'))
+        os.makedirs(os.path.join(cash_dir, 'test_dir'), exist_ok=True)
         logging.info("cache dir ok")
     except Exception as exc:
         logging.exception(exc)
