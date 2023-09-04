@@ -12,7 +12,8 @@ from kivymd.uix.scrollview import MDScrollView
 from datatypes.dbworker import AmmoData
 from kvgui.modules import signals as sig
 from kvgui.modules.translator import translate as tr
-from kvgui.modules.env import STORAGE
+from kvgui.modules.env import STORAGE, StorageWorker
+
 # from a7p import A7PFile, profedit_pb2
 
 Builder.load_file('kvgui/kv/ammo_list_item.kv')
@@ -93,11 +94,12 @@ class AmmoListItem(ThreeLineListItem, TouchBehavior):
         self.file_manager.close()
 
     def select_path(self, path):
-        logging.info(path)
+        logging.info(f"from file mngr {path}")
         # profile = profedit_pb2.Payload()
         # print(profile)
         # # with A7PFile() as fp:
         # #     profedit_pb2
+        StorageWorker.share_file(path)
 
 
 class AmmosScreen(Screen):
