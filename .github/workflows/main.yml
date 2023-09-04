@@ -8,7 +8,7 @@ on:
       - share_via_android
 
 jobs:
-  build:
+  build-droid:
     runs-on: ubuntu-latest
 
     steps:
