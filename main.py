@@ -1,5 +1,4 @@
 from kvgui.app import EBallisticaApp
-__version__ = '0.0.5'
 
 
 def main(argv):

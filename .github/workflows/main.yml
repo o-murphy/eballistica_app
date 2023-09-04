@@ -10,8 +10,9 @@ on:
       - kivymd-nightly
       - kivymd-dev
       - kivymd-main
-  schedule:
-    - cron: '0 0 1,15 * *'
+      - py_ballisticcalc_test
+#  schedule:
+#    - cron: '0 0 1,15 * *'
 
 jobs:
   build:
@@ -21,22 +22,19 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      # - name: Setup Android SDK
-      #  uses: android-actions/setup-android@v2
-
       - name: Set up Python 3.10.10
         uses: actions/setup-python@v2
         with:
           python-version: 3.10.10
           
-      # Add caching step for Python dependencies
-      - name: Cache Python dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+#      # Add caching step for Python dependencies
+#      - name: Cache Python dependencies
+#        uses: actions/cache@v2
+#        with:
+#          path: ~/.cache/pip
+#          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+#          restore-keys: |
+#            ${{ runner.os }}-pip-
           
       - name: Setup environment
         run: |
@@ -48,46 +46,23 @@ jobs:
       # Install OS specific dependencies
       - name: Install Linux dependencies
         run: sudo apt -y install automake
-
-      # - name: Reinit buildozer.spec
-      #   run: |
-          # rm buildozer.spec
-          # buildozer init
       
       - name: SDK, NDK and p4a download
         run: |
           sed -i.bak "s/# android.accept_sdk_license = False/android.accept_sdk_license = True/" buildozer.spec
-          sed -i.bak "s/#p4a.branch = master/p4a.branch = develop/" buildozer.spec
-          buildozer android p4a -- --help
+#          sed -i.bak "s/#p4a.branch = master/p4a.branch = develop/" buildozer.spec
+#          buildozer android p4a -- --help
 
-      - name: Extract version from main.py
-        id: extract_version
-        run: |
-          version=$(grep -o "__version__ = '[0-9.]*'" main.py | sed "s/__version__ = '//" | sed "s/'//")
-          echo "Extracted version: $version"
-          echo "::set-output name=version::$version"
-
-      - name: Update buildozer.spec
-        run: |
-          sed -i.bak "s/version =.*/version = ${{ steps.extract_version.outputs.version }}/" buildozer.spec
-
-#  #      For running on native machine:
-#          requirements=$(grep -Eo '[^[:space:]]+' requirements.txt | tr '\n' ',')
-#          sed -i.bak "s|requirements =.*|requirements = python3,$requirements|" buildozer.spec
-#
-#          version=$(grep -o "__version__ = '[0-9.]*'" main.py | sed "s/__version__ = '//" | sed "s/'//")
-#          sed -i.bak "s/version =.*/version = $version/" buildozer.spec
-
-      - name: Extract build requirements
-        id: update_requirements
+      - name: Extract requirements
+        id: extract_props
         run: |
           requirements=$(grep -Eo '[^[:space:]]+' requirements.txt | tr '\n' ',')
           echo "Extracted requirements: $requirements"
           echo "::set-output name=requirements::$requirements"
 
-      - name: Update buildozer.spec with extracted requirements
+      - name: Update buildozer.spec with requirements
         run: |
-          sed -i.bak "s|requirements =.*|requirements = python3,${{ steps.update_requirements.outputs.requirements }}|" buildozer.spec
+          sed -i.bak "s|requirements =.*|requirements = python3,${{ steps.extract_props.outputs.requirements }}|" buildozer.spec
 
       - name: Upload Artifacts (buildozer.spec)
         uses: actions/upload-artifact@v2
@@ -99,21 +74,15 @@ jobs:
         run: |
           touch main.py
           buildozer android debug
-      - name: buildozer android release (aab)
-        run: |
-          touch main.py
-          export BUILDOZER_ALLOW_ORG_TEST_DOMAIN=1
-          buildozer android release
 
-      - run: pip freeze > requirements.txt
+# # Disabled temporary
+#      - name: buildozer android release (aab)
+#        run: |
+#          touch main.py
+#          export BUILDOZER_ALLOW_ORG_TEST_DOMAIN=1
+#          buildozer android release
       
-#      - name: Upload Artifacts
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: build-artifacts-debug
-#          path: requirements.txt
-      
-      - name: Upload Artifacts
+      - name: Upload Build Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: build-artifacts-release

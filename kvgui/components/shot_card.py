@@ -66,8 +66,6 @@ class ShotCardScreen(Screen, MapIdsMixine):
         ...
 
     def display(self, data: AmmoData):
-        print(data.target.__dict__)
-        print(data.atmo.__dict__)
 
         self.distance.raw_value = data.target.distance
         self.look_angle.raw_value = data.target.look_angle

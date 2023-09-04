@@ -203,7 +203,7 @@ class AmmoCardScreen(Screen, MapIdsMixine):
             return self.cdm
 
     def validate(self):
-        print(sum([i[0] for i in self.bc]))
+
         if sum([i[0] for i in self.bc]) != 0 and self.drag_model.value == DragModel.G1:
             return True
         elif sum([i[0] for i in self.bc7]) != 0 and self.drag_model.value == DragModel.G7:
