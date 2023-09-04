@@ -5,13 +5,15 @@ import os
 from kivy.utils import platform
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
+from kivymd.app import MDApp
 from kivymd.uix.behaviors import TouchBehavior
 from kivymd.uix.filemanager import MDFileManager
 from kivymd.uix.list import ThreeLineListItem, MDList
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.scrollview import MDScrollView
 
-from datatypes.dbworker import AmmoData
+from datatypes.db2a7p import ammo2a7p
+from datatypes.dbworker import AmmoData, Worker
 from kvgui.modules import signals as sig
 from kvgui.modules.translator import translate as tr
 from kvgui.modules.env import STORAGE
@@ -76,24 +78,27 @@ class AmmoListItem(ThreeLineListItem, TouchBehavior):
         elif action == 'Delete':
             sig.ammo_del_act.emit(caller=self)
         elif action == 'Export':
-            self.share_ammo()
+            self.share_ammo(caller=self)
         self.menu.dismiss()
 
     # TODO: realise sharing profile to a7p file
 
-    def share_ammo(self):
+    def share_ammo(self, caller=None):
+
         if platform != 'android':
             self.file_manager = MDFileManager(
                 exit_manager=self.exit_manager,  # function called when the user reaches directory tree root
-                select_path=self.select_path,  # function called when selecting a file/directory
+                select_path=lambda path: self.save_to(path, caller.dbid),  # function called when selecting a file/directory
                 search='dirs',
                 # ext=['.a7p']
             )
             self.file_manager.show(STORAGE)
         else:
-            self.share_android()
+            self.share_android(ammo_id=caller.dbid)
 
-    def share_android(self):
+    def share_android(self, ammo_id=None):
+        ammo = Worker.get_ammo(ammo_id)
+        print(ammo)
         try:
             from androidstorage4kivy import SharedStorage, ShareSheet
             cash_dir = SharedStorage().get_cache_dir()
@@ -109,8 +114,15 @@ class AmmoListItem(ThreeLineListItem, TouchBehavior):
         logging.info(obj)
         self.file_manager.close()
 
-    def select_path(self, path):
+    def save_to(self, path=None, ammo_id=None):
         logging.info(f"from file mngr {path}")
+        ammo = Worker.get_ammo(ammo_id)
+        filename, file = ammo2a7p(ammo)
+        save_path = os.path.join(path, filename)
+        with open(save_path, 'wb') as fp:
+            fp.write(file)
+        sig.toast.emit(text=f"Saved to {filename}")
+        self.file_manager.close()
 
 
 class AmmosScreen(Screen):

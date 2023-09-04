@@ -68,7 +68,7 @@ class AmmoData(Base):
         if rifle is None:
             raise ValueError("AmmoData must be associated with a RifleData.")
 
-        self.rifle = rifle
+        self.rifle: RifleData = rifle
         self.zerodata = ZeroData(ammo=self)
         self.target = Target(ammo=self)
         self.atmo = AtmoData(ammo=self)
