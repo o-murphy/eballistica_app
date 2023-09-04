@@ -35,7 +35,7 @@ def ammo2a7p(ammo: AmmoData):
         ),
         barrel=A7PFactory.Barrel(
             caliber=ammo.rifle.name,
-            sight_height=ammo.rifle.sight_height,
+            sight_height=round(ammo.rifle.sight_height * 10),
             twist=ammo.rifle.barrel_twist,
             twist_dir=profedit_pb2.TwistDir.RIGHT
             if ammo.rifle.barrel_twist_dir == TwistDir.Right
