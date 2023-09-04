@@ -5,7 +5,7 @@ on:
       - kivymd-nightly
   push:
     branches:
-      - share_via_android
+      - kivymd-droid-db-backup
 
 jobs:
   build-droid:
