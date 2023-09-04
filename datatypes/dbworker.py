@@ -1,4 +1,5 @@
 import json
+import os
 import logging
 
 from kivy import platform
@@ -12,9 +13,6 @@ from kvgui.modules.env import DB_PATH
 
 
 Base = declarative_base()
-
-
-engine = create_engine(f'sqlite:///{DB_PATH}', echo=False)
 
 
 class RifleData(Base):
@@ -176,6 +174,19 @@ class AtmoData(Base):
         return "<{0.__class__.__name__}(id={0.id!r})>".format(self)
 
 
+if platform == 'android':
+    try:
+        from androidstorage4kivy import SharedStorage, ShareSheet
+
+        local_path = SharedStorage().copy_from_shared('local.sqlite3.bak')
+        logging.info(f'Copied from shared: {local_path}')
+        os.rename('local.sqlite3.bak', 'local.sqlite3')
+    except Exception as exc:
+        logging.exception(f"Exception on load db backup{exc}")
+
+engine = create_engine(f'sqlite:///{DB_PATH}', echo=False)
+
+
 Base.metadata.create_all(engine)
 
 Session = sessionmaker(bind=engine)
@@ -230,9 +241,11 @@ class Worker:
         if platform == 'android':
             try:
                 from androidstorage4kivy import SharedStorage, ShareSheet
-                import os
+
                 cache_dir = SharedStorage().get_cache_dir()
-                test_uri = SharedStorage().copy_to_shared(DB_PATH, filepath='local.sqlite3.bak')
+                logging.info(f"Cache dir: {cache_dir}")
+                db_cache_uri = SharedStorage().copy_to_shared(DB_PATH, filepath='local.sqlite3.bak')
+                logging.info(f"DB cache uri: {db_cache_uri}")
             except Exception as exc:
                 logging.exception(f"Exception on db backup{exc}")
 
