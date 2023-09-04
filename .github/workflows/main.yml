@@ -53,19 +53,15 @@ jobs:
           sed -i.bak "s/#p4a.branch = master/p4a.branch = develop/" buildozer.spec
           buildozer android p4a -- --help
 
-      - name: Extract version and requirements
+      - name: Extract requirements
         id: extract_props
         run: |
-          version=$(grep -o "__version__ = '[0-9.]*'" __version__.py | sed "s/__version__ = '//" | sed "s/'//")
-          echo "Extracted version: $version"
-          echo "::set-output name=version::$version"
           requirements=$(grep -Eo '[^[:space:]]+' requirements.txt | tr '\n' ',')
           echo "Extracted requirements: $requirements"
           echo "::set-output name=requirements::$requirements"
 
-      - name: Update buildozer.spec with extracted version and requirements
+      - name: Update buildozer.spec with requirements
         run: |
-          sed -i.bak "s|version =.*|version = ${{ steps.extract_props.outputs.version }}|" buildozer.spec
           sed -i.bak "s|requirements =.*|requirements = python3,${{ steps.extract_props.outputs.requirements }}|" buildozer.spec
 
       - name: Upload Artifacts (buildozer.spec)

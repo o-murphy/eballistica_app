@@ -35,11 +35,13 @@ source.include_patterns = kvgui/translations/*.json,kvgui/fonts/*.ttf,kvgui/font
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 0.0.1
+# version = 0.0.1
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
 # version.filename = %(source.dir)s/main.py
+version.regex = __version__ = ['"](.*)['"]
+version.filename = %(source.dir)s/__version__.py
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
@@ -337,6 +339,7 @@ android.allow_backup = True
 
 # (str) python-for-android specific commit to use, defaults to HEAD, must be within p4a.branch
 #p4a.commit = HEAD
+p4a.commit = 3107e4e788e152fc3c69e0ff67702d670a23d970
 
 # (str) python-for-android git clone directory
 #p4a.source_dir =
