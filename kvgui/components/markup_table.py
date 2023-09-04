@@ -53,6 +53,10 @@ class MarkupTable(MDBoxLayout, MapIdsMixine):
         self._rows_data = data
         self.update_texture()
 
+    def append_rows(self, data: list):
+        self._rows_data += data
+        self.update_texture()
+
     def append_row(self, data: list):
         self._rows_data.append(data)
         self.update_texture()

@@ -26,7 +26,6 @@ class GestureBox(BoxLayout):
 
     def on_left_to_right_line(self):
 
-        print('catch')
         sig.bot_bar_back_act.emit()
 
     # To recognize a gesture, you’ll need to start recording each individual event in the

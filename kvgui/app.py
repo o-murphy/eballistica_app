@@ -1,3 +1,5 @@
+import logging
+
 from kivy import platform
 from kivy.config import Config
 from kivy.core.window import Window
@@ -25,6 +27,8 @@ from kvgui.modules.settings import app_settings
 from kvgui.modules.translator import translate as tr
 
 from datatypes.dbworker import Worker, RifleData, AmmoData
+
+from calculate.calculate import calculated_drag, calculate_traj
 
 assert app_settings
 assert abstract
@@ -177,6 +181,7 @@ class EBallisticaApp(MDApp):
 
     def back_action(self, **kwargs):
         current = self.app_screen_manager.current
+        Worker.rollback()
         if current == 'ammos_screen':
             self.switch_rifles_list('right')
         elif current == 'rifle_card':
@@ -223,7 +228,7 @@ class EBallisticaApp(MDApp):
 
     def bot_fab_action(self, caller=None, **kwargs):
         current = self.app_screen_manager.current
-        print(current)
+
         if current == 'rifles_screen':
             self.edit_rifle(caller=caller, **kwargs)
         elif current == 'ammos_screen':
@@ -370,9 +375,21 @@ class EBallisticaApp(MDApp):
         ]
 
     def switch_trajectory(self, direction='left', caller=None, **kwargs):
-        sig.unwait_me.emit()
+
+        # try:
+        state = self.app_state
+        cdm = calculated_drag(state.ammo)
+        traj = calculate_traj(state.rifle, state.ammo, state.ammo.target, state.ammo.atmo, state.ammo.zerodata)
+        # except Exception as exc:
+        #     self.toast(tr('Error occurred on calculation', 'root'), duration=1)
+        #     logging.warning(exc)
+        #     return
+
         self.app_screen_manager.transition.direction = direction
         self.app_screen_manager.current = 'traj_screen'
+
+        self.app_screen_manager.trajectory_screen.display_data(traj, cdm)
+
         self.app_bottom_bar.fab_hide()
         self.app_top_bar.breadcrumb = [
             self.app_state.rifle.name, self.app_state.ammo.name, 'Trajectory'
