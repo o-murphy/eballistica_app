@@ -1,6 +1,8 @@
 import logging
 import os
 
+
+from kivy.utils import platform
 from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivymd.uix.behaviors import TouchBehavior
@@ -12,7 +14,7 @@ from kivymd.uix.scrollview import MDScrollView
 from datatypes.dbworker import AmmoData
 from kvgui.modules import signals as sig
 from kvgui.modules.translator import translate as tr
-from kvgui.modules.env import STORAGE, StorageWorker
+from kvgui.modules.env import STORAGE
 
 # from a7p import A7PFile, profedit_pb2
 
@@ -80,14 +82,28 @@ class AmmoListItem(ThreeLineListItem, TouchBehavior):
     # TODO: realise sharing profile to a7p file
 
     def share_ammo(self):
+        if platform != 'android':
+            self.file_manager = MDFileManager(
+                exit_manager=self.exit_manager,  # function called when the user reaches directory tree root
+                select_path=self.select_path,  # function called when selecting a file/directory
+                search='dirs',
+                # ext=['.a7p']
+            )
+            self.file_manager.show(STORAGE)
+        else:
+            self.share_android()
 
-        self.file_manager = MDFileManager(
-            exit_manager=self.exit_manager,  # function called when the user reaches directory tree root
-            select_path=self.select_path,  # function called when selecting a file/directory
-            search='dirs',
-            # ext=['.a7p']
-        )
-        self.file_manager.show(STORAGE)
+    def share_android(self):
+        try:
+            from androidstorage4kivy import SharedStorage, ShareSheet
+            cash_dir = SharedStorage().get_cache_dir()
+            test_uri = os.path.join(cash_dir, 'test.a7p')
+            with open(test_uri, 'w') as fp:
+                fp.write("")
+            ShareSheet().share_file(test_uri)
+            sig.toast.emit(text=f"test shared")
+        except Exception as exc:
+            logging.warning(exc)
 
     def exit_manager(self, obj):
         logging.info(obj)
@@ -95,11 +111,6 @@ class AmmoListItem(ThreeLineListItem, TouchBehavior):
 
     def select_path(self, path):
         logging.info(f"from file mngr {path}")
-        # profile = profedit_pb2.Payload()
-        # print(profile)
-        # # with A7PFile() as fp:
-        # #     profedit_pb2
-        StorageWorker.share_file(path)
 
 
 class AmmosScreen(Screen):

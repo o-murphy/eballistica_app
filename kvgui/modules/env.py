@@ -12,6 +12,15 @@ if platform == 'android':
     from android.permissions import request_permissions, Permission
     from androidstorage4kivy import SharedStorage, ShareSheet
 
+    from android.storage import primary_external_storage_path
+    primary_ext_storage = primary_external_storage_path()
+
+    try:
+        with open(os.path.join(primary_ext_storage, 'test_direct_file.txt'), 'w') as fp:
+            fp.write("0")
+    except Exception as exc:
+        logging.warning('test_direct_file write error')
+
     if api_version < 29:
         # Android < 10
         # Permission to write to Shared Storage
@@ -60,7 +69,8 @@ if platform == 'android':
     except Exception as exc:
         logging.exception(exc)
 
-    APP_DATA = '/data/data/o.murphy.eballistica'
+    ANDROID_APP_DATA = '/data/data/o.murphy.eballistica'
+    APP_DATA = '/data/data/o.murphy.eballistica/files'
 
     STORAGE = '/storage/emulated/0/Documents/eBallistica'
     USER_DATA = APP_DATA
@@ -83,25 +93,12 @@ for path in [APP_DATA, USER_DATA, STORAGE]:
             os.makedirs(path, exist_ok=True)
         except PermissionError as err:
             logging.warning(err)
-            # path = APP_DATA
 
-DB_PATH = os.path.join(USER_DATA, 'local.sqlite3')
-SETTINGS_PATH = os.path.join(USER_DATA, 'settings.json')
+DB_PATH = os.path.join(APP_DATA, 'local.sqlite3')
+SETTINGS_PATH = os.path.join(APP_DATA, 'settings.json')
 
 logging.info(f'APP_DATA: {APP_DATA}')
 logging.info(f'STORAGE: {STORAGE}')
 logging.info(f'USER_DATA: {USER_DATA}')
 logging.info(f'DB_PATH: {DB_PATH}')
 logging.info(f'SETTINGS_PATH: {SETTINGS_PATH}')
-
-
-class StorageWorker:
-
-    @staticmethod
-    def share_file(path):
-        if platform == 'android':
-            cash_dir = SharedStorage().get_cache_dir()
-            logging.info(f"cache path: {os.path.join(cash_dir, path)}")
-
-        else:
-            logging.info(f"cache path: {os.path.join(STORAGE, path)}")
