@@ -7,7 +7,7 @@ on:
     branches:
       - kivymd-pyinstaller
 
-  build-win64:
+  build:
     runs-on: windows-latest  # Use a Windows runner
 
     steps:
