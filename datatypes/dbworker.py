@@ -1,4 +1,7 @@
 import json
+import logging
+
+from kivy import platform
 from sqlalchemy import create_engine, Column, Integer, Float, String, Enum, Boolean, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker, validates
@@ -201,14 +204,14 @@ class Worker:
     def rifle_add_or_update(*args, **kwargs):
         rifle = RifleData(*args, **kwargs)
         rifle = session.merge(rifle)
-        session.commit()
+        Worker.commit()
         return rifle
 
     @staticmethod
     def delete_rifle(uid, **kwargs):
         rifle = session.query(RifleData).get(uid)
         session.delete(rifle)
-        session.commit()
+        Worker.commit()
 
     @staticmethod
     def list_ammos(**kwargs):
@@ -218,11 +221,20 @@ class Worker:
     @staticmethod
     def ammo_add(ammo):
         session.add(ammo)
-        session.commit()
+        Worker.commit()
 
     @staticmethod
     def commit():
         session.commit()
+
+        if platform == 'android':
+            try:
+                from androidstorage4kivy import SharedStorage, ShareSheet
+                import os
+                cache_dir = SharedStorage().get_cache_dir()
+                test_uri = SharedStorage().copy_to_shared(DB_PATH, filepath='local.sqlite3.bak')
+            except Exception as exc:
+                logging.exception(f"Exception on db backup{exc}")
 
     @staticmethod
     def rollback():
@@ -232,5 +244,5 @@ class Worker:
     def delete_ammo(uid, **kwargs):
         ammo = session.query(AmmoData).get(uid)
         session.delete(ammo)
-        session.commit()
+        Worker.commit()
 

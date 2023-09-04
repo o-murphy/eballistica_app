@@ -100,17 +100,15 @@ class AmmoListItem(ThreeLineListItem, TouchBehavior):
         ammo = Worker.get_ammo(ammo_id)
         try:
             from androidstorage4kivy import SharedStorage, ShareSheet
-            cash_dir = SharedStorage().get_cache_dir()
+            cache_dir = SharedStorage().get_cache_dir()
             filename, file = ammo2a7p(ammo)
-            temp_path = os.path.join(cash_dir, filename)
+            temp_path = os.path.join(cache_dir, filename)
 
             with open(temp_path, 'wb') as fp:
                 fp.write(file)
 
             test_uri = SharedStorage().copy_to_shared(temp_path)
             ShareSheet().share_file(test_uri)
-
-            sig.toast.emit(text=f"test shared")
         except Exception as exc:
             logging.warning(exc)
 
