@@ -1,0 +1,42 @@
+name: CI win64 build
+on:
+  pull_request:
+    branches:
+      - kivymd-nightly
+  push:
+    branches:
+      - kivymd-pyinstaller
+
+jobs:
+  build-win64:
+    runs-on: windows-latest  # Use a Windows runner
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.10.10  # Replace with your desired Python version
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt  # Replace with your requirements file
+
+      - name: Build with PyInstaller
+        run: |
+          pyinstaller pyinstaller.spec  # Replace with your script name
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-win64
+          path: dist  # Replace
+
+      - name: Upload and Send to Telegram
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TG_USER_ID }}
+          token: ${{ secrets.TG_GITHUB_ARTIFACTS_TOKEN }}
+          document: ./dist/* # Change the path to match your artifacts
