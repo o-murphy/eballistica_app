@@ -34,9 +34,9 @@ def ammo2a7p(ammo: AmmoData):
             user_note='Created with eBallistica app for Android',
         ),
         barrel=A7PFactory.Barrel(
-            caliber='New caliber',
-            sight_height=90,
-            twist=9.,
+            caliber=ammo.rifle.name,
+            sight_height=ammo.rifle.sight_height,
+            twist=ammo.rifle.barrel_twist,
             twist_dir=profedit_pb2.TwistDir.RIGHT
             if ammo.rifle.barrel_twist_dir == TwistDir.Right
             else profedit_pb2.TwistDir.LEFT,
@@ -48,7 +48,7 @@ def ammo2a7p(ammo: AmmoData):
             powder_sens=round(ammo.temp_sens)
         ),
         bullet=A7PFactory.Bullet(
-            name="New bullet",
+            name=ammo.name,
             diameter=ammo.diameter,
             weight=ammo.weight,
             length=ammo.length,
