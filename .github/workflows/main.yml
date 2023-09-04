@@ -56,7 +56,7 @@ jobs:
       - name: Extract version and requirements
         id: extract_props
         run: |
-          version=$(grep -o "__version__ = '[0-9][0-9.]*'" version.py | sed "s/__version__ = '//" | sed "s/'//")
+          version=$(grep -o "__version__ = '[0-9.]*'" version.py | sed "s/__version__ = '//" | sed "s/'//")
           echo "Extracted version: $version"
           echo "::set-output name=version::$version"
           requirements=$(grep -Eo '[^[:space:]]+' requirements.txt | tr '\n' ',')
