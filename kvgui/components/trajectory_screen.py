@@ -115,7 +115,7 @@ class TrajectoryScreen(Screen, MapIdsMixine):
         for item in data:
             t_range = item.travelled_distance()
             drop_adj = item.drop_adjustment()
-            wind_adj = item.drop_adjustment()
+            wind_adj = item.windage_adjustment()
             velocity = item.velocity()
             energy = item.energy()
 
