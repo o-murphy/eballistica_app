@@ -121,7 +121,7 @@ def restore_db_backup():
             Environment = autoclass('android.os.Environment')
 
             backup_uri = os.path.join(Environment.DIRECTORY_DOCUMENTS, APP_TITLE, '.local.bak')
-
+            logging.info(f"backup_uri: {backup_uri}")
             local_path = SharedStorage().copy_from_shared(backup_uri)
             logging.info(f'Copied from shared: {local_path}')
             os.rename('.local.bak', 'local.sqlite3')
