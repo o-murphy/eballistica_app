@@ -1,14 +1,11 @@
-from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivymd.uix.behaviors import TouchBehavior
 from kivymd.uix.list import ThreeLineListItem, MDList
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.scrollview import MDScrollView
 
-from kvgui.modules import signals as sig
-from kvgui.modules.translator import translate as tr
-
-Builder.load_file('kvgui/kv/rifle_list_item.kv')
+from modules import signals as sig
+from modules.translator import translate as tr
 
 
 class RifleListItem(ThreeLineListItem, TouchBehavior):

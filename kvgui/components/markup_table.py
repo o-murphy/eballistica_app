@@ -1,13 +1,10 @@
 from kivy.core.window import Window
-from kivy.lang import Builder
 from kivy.uix.label import Label
 from kivy.utils import get_hex_from_color
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.label import MDLabel
 
 from kvgui.components.mixines import MapIdsMixine
-
-Builder.load_file('kvgui/kv/markup_table.kv')
 
 
 class MarkupTableHeader(MDLabel):

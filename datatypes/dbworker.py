@@ -1,20 +1,16 @@
 import json
 import logging
+import os
 
 from kivy import platform
 from sqlalchemy import create_engine, Column, Integer, Float, String, Enum, Boolean, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker, validates
 
-
 from datatypes.defines import TwistDir, DragModel
-from kvgui.modules.env import DB_PATH
-
+from modules.env import DB_PATH, restore_db_backup, backup_db
 
 Base = declarative_base()
-
-
-engine = create_engine(f'sqlite:///{DB_PATH}', echo=False)
 
 
 class RifleData(Base):
@@ -62,7 +58,8 @@ class AmmoData(Base):
     target = relationship("Target", back_populates="ammo", uselist=False, cascade="all, delete-orphan")
     atmo = relationship("AtmoData", back_populates="ammo", uselist=False, cascade="all, delete-orphan")
 
-    def __init__(self, name='', diameter=0.338, weight=300, length=1.5, muzzle_velocity=800, temp_sens=1, powder_temp=15,
+    def __init__(self, name='', diameter=0.338, weight=300, length=1.5, muzzle_velocity=800, temp_sens=1,
+                 powder_temp=15,
                  drag_model=DragModel.G7, bc='[[0, 0]]', bc7='[[0, 0]]', cdm='[[0, 0]]', rifle=None, **kwargs):
         super(AmmoData, self).__init__(name=name, diameter=diameter, weight=weight, length=length,
                                        muzzle_velocity=muzzle_velocity, temp_sens=temp_sens, powder_temp=powder_temp,
@@ -176,10 +173,11 @@ class AtmoData(Base):
         return "<{0.__class__.__name__}(id={0.id!r})>".format(self)
 
 
+restore_db_backup()
+
+engine = create_engine(f'sqlite:///{DB_PATH}', echo=False)
 Base.metadata.create_all(engine)
-
 Session = sessionmaker(bind=engine)
-
 session = Session()
 
 
@@ -227,14 +225,7 @@ class Worker:
     def commit():
         session.commit()
 
-        if platform == 'android':
-            try:
-                from androidstorage4kivy import SharedStorage, ShareSheet
-                import os
-                cache_dir = SharedStorage().get_cache_dir()
-                test_uri = SharedStorage().copy_to_shared(DB_PATH, filepath='local.sqlite3.bak')
-            except Exception as exc:
-                logging.exception(f"Exception on db backup{exc}")
+        backup_db()
 
     @staticmethod
     def rollback():
@@ -245,4 +236,3 @@ class Worker:
         ammo = session.query(AmmoData).get(uid)
         session.delete(ammo)
         Worker.commit()
-

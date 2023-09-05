@@ -1,12 +1,9 @@
 from kivy.uix.screenmanager import Screen
 
 from datatypes.dbworker import AmmoData
-from kvgui.components.measure_widgets import *
 from kvgui.components.mixines import MapIdsMixine
-from kvgui.modules import signals as sig
-from kvgui.modules.translator import translate as tr
-
-Builder.load_file('kvgui/kv/shot_card.kv')
+from modules import signals as sig
+from modules.translator import translate as tr
 
 
 class ShotCardScreen(Screen, MapIdsMixine):

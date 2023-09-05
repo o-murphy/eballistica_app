@@ -1,13 +1,10 @@
-from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
 from kvgui.components.abstract import FormSelector
 from kvgui.components.mixines import MapIdsMixine
 from kvgui.components.unit_widgets import *
-from kvgui.modules import signals as sig
-from kvgui.modules.translator import translate as tr, app_translator
-
-Builder.load_file('kvgui/kv/settings_card.kv')
+from modules import signals as sig
+from modules.translator import translate as tr, app_translator
 
 
 class LanguageSelector(FormSelector, MapIdsMixine):
@@ -123,7 +120,6 @@ class SettingsScreen(Screen, MapIdsMixine):
             self.update_theme_selector('Dark')
 
     def change_lang(self, lang, **kwargs):
-        # TODO:
         self.lang.menu.dismiss()
         self.lang.text = lang
         sig.set_lang.emit(lang=lang)

@@ -5,10 +5,11 @@ on:
       - kivymd-nightly
   push:
     branches:
-      - share_via_android
+      - kivymd-droid-db-backup
+
 
 jobs:
-  build:
+  build-droid:
     runs-on: ubuntu-latest
 
     steps:
@@ -40,7 +41,7 @@ jobs:
       - name: Extract requirements
         id: extract_props
         run: |
-          requirements=$(grep -Eo '[^[:space:]]+' requirements.txt | tr '\n' ',')
+          requirements=$(grep -Eo '[^[:space:]]+' requirements-droid.txt | tr '\n' ',')
           echo "Extracted requirements: $requirements"
           echo "::set-output name=requirements::$requirements"
 
