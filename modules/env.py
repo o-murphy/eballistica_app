@@ -120,14 +120,23 @@ def restore_db_backup():
 
             Environment = autoclass('android.os.Environment')
 
-            backup_uri = os.path.join(Environment.DIRECTORY_DOCUMENTS, APP_TITLE, '.local.bak')
+            backup_uri = os.path.join(Environment.DIRECTORY_DOCUMENTS, APP_TITLE, 'local.bak')
             logging.info(f"backup_uri: {backup_uri}")
             local_path = SharedStorage().copy_from_shared(backup_uri)
             logging.info(f'Copied from shared: {local_path}')
-            os.rename('.local.bak', 'local.sqlite3')
+            os.rename('local.bak', 'local.sqlite3')
         except Exception as exc:
             logging.exception(f"Exception on load db backup{exc}")
 
+            try:
+                logging.info("try 2")
+                logging.info(f"backup_uri: {'local.bak'}")
+                local_path = SharedStorage().copy_from_shared(backup_uri)
+                logging.info(f'Copied from shared: {local_path}')
+                logging.info(f'Copied from shared: {local_path}')
+                os.rename('local.bak', 'local.sqlite3')
+            except Exception as exc:
+                logging.exception(f"Exception on load db backup{exc}")
 
 def backup_db():
     if IS_ANDROID:
@@ -136,7 +145,7 @@ def backup_db():
 
             cache_dir = SharedStorage().get_cache_dir()
             logging.info(f"Cache dir: {cache_dir}")
-            db_cache_uri = SharedStorage().copy_to_shared(DB_PATH, filepath='.local.bak')
+            db_cache_uri = SharedStorage().copy_to_shared(DB_PATH, filepath='local.bak')
             logging.info(f"DB cache uri: {db_cache_uri}")
         except Exception as exc:
             logging.exception(f"Exception on db backup{exc}")

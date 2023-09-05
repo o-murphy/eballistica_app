@@ -1,12 +1,12 @@
 name: CI android build
 on:
-  pull_request:
-    branches:
-      - kivymd-nightly
+#  pull_request:
+#    branches:
+#      - kivymd-nightly
 
   push:
     branches:
-      - kivymd-droid-db-backup
+      - kivymd-droid-db-restore
 
   workflow_dispatch:
     inputs:
@@ -16,13 +16,21 @@ on:
         default: 'warning'
       tags:
         description: 'Test scenario tags'
-
+      customTitle:
+        description: 'Custom workflow title'
+        required: true
 
 jobs:
   build-droid:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set Workflow Title
+        id: set-title
+        run: |
+          echo "::set-output name=title::${{ github.event.inputs.customTitle }}"
+      
+
       - name: Checkout Repository
         uses: actions/checkout@v2
 
