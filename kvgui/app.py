@@ -20,8 +20,8 @@ from modules.translator import translate as tr
 
 assert app_settings
 
-if platform == 'win':
-    Window.size = (500, 700)
+if platform == 'win' or platform == 'linux':
+    Window.size = (600, 700)
     Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
     # Config.set('graphics', 'multisamples', '0')  # Disable anti-aliasing (optional)
     # Config.set('graphics', 'gl_backend', 'angle_sdl2')  # Use OpenGL backend

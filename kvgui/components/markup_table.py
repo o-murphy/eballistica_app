@@ -95,6 +95,11 @@ class MarkupTable(MDBoxLayout, MapIdsMixine):
         self.update_texture()
 
     def update_texture(self):
+        if not isinstance(self._header_data, (list, tuple)) or not isinstance(self._rows_data, (list, tuple)):
+            return
+        elif not len(self._header_data) < 1 or not len(self._rows_data) < 1:
+            return
+
         # right align, adjusted
         def make_markup(data_part):
             pair = False
