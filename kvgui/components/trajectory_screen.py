@@ -1,7 +1,6 @@
 from functools import partial
 
 from kivy.clock import Clock
-from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivy.utils import get_color_from_hex
 from kivy_garden.graph import Graph, LinePlot
@@ -10,8 +9,6 @@ from py_ballisticcalc.trajectory_data import TrajectoryData
 
 from kvgui.components.mixines import MapIdsMixine
 from units.ext import *
-
-Builder.load_file('kvgui/kv/trajectory_screen.kv')
 
 
 class TrajectoryGraph(MDBoxLayout):

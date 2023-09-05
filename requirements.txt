@@ -4,6 +4,5 @@ signalslot
 kivy_garden.graph
 sqlalchemy==1.3.22
 py_ballisticcalc==1.0.12
-androidstorage4kivy
 a7p==0.0.4
 pyinstaller

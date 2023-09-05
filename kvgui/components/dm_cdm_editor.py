@@ -1,14 +1,11 @@
-from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivymd.uix.boxlayout import MDBoxLayout
 
 from kvgui.components.abstract import FormLabel
 from kvgui.components.measure_widgets import MachValue, CDValue
 from kvgui.components.mixines import MapIdsMixine
-from kvgui.modules import signals as sig
-from kvgui.modules.translator import translate as tr
-
-Builder.load_file('kvgui/kv/dm_cdm_editor.kv')
+from modules import signals as sig
+from modules.translator import translate as tr
 
 
 class MachCdPair(MDBoxLayout, MapIdsMixine):

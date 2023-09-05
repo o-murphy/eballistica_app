@@ -1,5 +1,3 @@
-import logging
-
 from kivy import platform
 from kivy.config import Config
 from kivy.core.window import Window
@@ -11,27 +9,16 @@ from kivymd.uix.button import MDRaisedButton, MDRectangleFlatButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.toolbar import MDActionBottomAppBarButton
 
+from calculate.calculate import calculated_drag, calculate_traj
+from datatypes.dbworker import Worker, RifleData, AmmoData
 from datatypes.defines import DragModel
 from kvgui.components import *
-from kvgui.components import abstract
-from kvgui.components.ammo_card import AmmoCardScreen
-from kvgui.components.dm_bc_editor import BCEditor
-from kvgui.components.dm_cdm_editor import CDMEditor
-from kvgui.components.one_shot_screen import OneShotScreen
-from kvgui.components.powder_sens_calc import PowderSensScreen
-from kvgui.components.shot_card import ShotCardScreen
-from kvgui.components.spinner import WaitMe
-from kvgui.components.trajectory_screen import TrajectoryScreen
-from kvgui.modules import signals as sig
-from kvgui.modules.settings import app_settings
-from kvgui.modules.translator import translate as tr
-
-from datatypes.dbworker import Worker, RifleData, AmmoData
-
-from calculate.calculate import calculated_drag, calculate_traj
+from modules import signals as sig
+from modules.env import IS_ANDROID
+from modules.settings import app_settings
+from modules.translator import translate as tr
 
 assert app_settings
-assert abstract
 
 if platform == 'win':
     Window.size = (500, 700)
@@ -200,7 +187,6 @@ class EBallisticaApp(MDApp):
             self.switch_shot_edit('right')
 
     def show_exit_confirmation(self, instance):
-        # Todo: refactor
         self.dialog = MDDialog(
             text=tr('Are you sure you want to exit?', 'root'),
             buttons=[
@@ -429,7 +415,6 @@ class EBallisticaApp(MDApp):
         self.app_top_bar.breadcrumb = [self.app_state.rifle.name, 'Properties']
 
     def switch_ammos_list(self, direction='left', caller=None, **kwargs):
-        # Todo:
         if isinstance(caller, RifleListItem):
             self.app_state.rifle = Worker.get_rifle(caller.dbid)
         if self.app_state.rifle is None:
@@ -459,7 +444,7 @@ class EBallisticaApp(MDApp):
 
     def toast(self, text='', duration=2.5, **kwargs):
         try:
-            if platform == 'android':
+            if IS_ANDROID:
                 toast(text=text, gravity=80, length_long=duration)
             else:
                 toast(text=text, duration=duration)
@@ -467,7 +452,6 @@ class EBallisticaApp(MDApp):
             toast(text=text)
 
     def on_stop(self):
-        # # TODO: temporary
         # print('creating translation template')
         # create_translation_template()
         pass

@@ -11,7 +11,10 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[('kvgui/kv', 'kvgui/kv'), ('kvgui/fonts', 'kvgui/fonts'), ('kvgui/translations', 'kvgui/translations')],
+    datas=[
+        ('kvgui/kv', 'kvgui/kv'),
+        ('resources', 'resources')
+    ],
     hiddenimports=[
         'py_ballisticcalc.profile',
         'py_ballisticcalc.drag_tables',
@@ -20,8 +23,9 @@ a = Analysis(
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=['wheel', 'jnius', 'kivy_install', 'setuptools', 'docutils', 'numpy',
-        'pywin32', 'win32', 'win32com' 'pythonwin', 'PIL'
+    excludes=[
+        'wheel', 'jnius', 'kivy_install', 'setuptools', 'docutils',
+        'numpy', 'pywin32', 'win32', 'win32com' 'pythonwin', 'PIL'
     ],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
@@ -47,7 +51,7 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['kvgui/icon.png'],
+    icon=['resources/icons/icon.png'],
 )
 coll = COLLECT(
     exe,

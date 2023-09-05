@@ -137,7 +137,7 @@ class MDNumericField(MDTextField):
         else:
             try:
                 text = text.replace('.', '')
-                new_value = int(text) / 10**self.decimals
+                new_value = int(text) / 10 ** self.decimals
                 self._value = new_value
 
             except ValueError as err:

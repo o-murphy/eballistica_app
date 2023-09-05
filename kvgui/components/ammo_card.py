@@ -7,12 +7,9 @@ from kivymd.uix.menu import MDDropdownMenu
 from datatypes.dbworker import AmmoData
 from datatypes.defines import DragModel
 from kvgui.components.abstract import FormSelector
-from kvgui.components.measure_widgets import *
 from kvgui.components.mixines import MapIdsMixine
-from kvgui.modules import signals as sig
-from kvgui.modules.translator import translate as tr
-
-Builder.load_file('kvgui/kv/ammo_card.kv')
+from modules import signals as sig
+from modules.translator import translate as tr
 
 
 class DragEdit(MDRectangleFlatButton):
@@ -227,8 +224,6 @@ class AmmoCardScreen(Screen, MapIdsMixine):
             bc7_list=self.bc7,
             cdm_list=self.cdm
         )
-        # TODO:
-        # drag_model, drag_data
 
     def get_zero(self):
         return dict(
