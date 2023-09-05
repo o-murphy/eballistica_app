@@ -8,7 +8,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker, validates
 
 from datatypes.defines import TwistDir, DragModel
-from modules.env import DB_PATH
+from modules.env import DB_PATH, restore_db_backup, backup_db
 
 Base = declarative_base()
 

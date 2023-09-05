@@ -23,10 +23,11 @@ a = Analysis(
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=[
-        'wheel', 'jnius', 'kivy_install', 'setuptools', 'docutils',
-        'numpy', 'pywin32', 'win32', 'win32com' 'pythonwin', 'PIL'
-    ],
+    excludes=[],
+    #excludes=[
+    #    'wheel', 'jnius', 'kivy_install', 'setuptools', 'docutils',
+    #    'numpy', 'pywin32', 'win32', 'win32com' 'pythonwin', 'PIL'
+    #],
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
     cipher=block_cipher,
