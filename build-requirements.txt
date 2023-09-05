@@ -1,6 +1,0 @@
-kivy
-https://github.com/kivymd/KivyMD/archive/master.zip
-signalslot
-sqlalchemy
-Cython==0.29.36
-buildozer

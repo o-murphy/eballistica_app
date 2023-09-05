@@ -1,14 +1,11 @@
-from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 
 from datatypes.dbworker import RifleData
+from datatypes.defines import TwistDir
 from kvgui.components.abstract import FormSelector
 from kvgui.components.mixines import MapIdsMixine
-from datatypes.defines import TwistDir
-from kvgui.modules import signals as sig
-from kvgui.modules.translator import translate as tr
-
-Builder.load_file('kvgui/kv/rifle_card.kv')
+from modules import signals as sig
+from modules.translator import translate as tr
 
 
 class TwistDirSelector(FormSelector, MapIdsMixine):
@@ -105,4 +102,3 @@ class RifleCardScreen(Screen, MapIdsMixine):
             barrel_twist_dir=self.twist_dir.value,
             sight_height=self.sight_height.raw_value
         )
-

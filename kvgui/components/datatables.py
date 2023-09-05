@@ -28,12 +28,10 @@ Components/DataTables
 
 __all__ = ("MDDataTableFit",)
 
-import os
 from collections import defaultdict
 from typing import Union
 
 from kivy.clock import Clock
-from kivy.lang import Builder
 from kivy.metrics import dp
 from kivy.properties import (
     BooleanProperty,
@@ -55,8 +53,6 @@ from kivy.uix.recycleview import RecycleView
 from kivy.uix.recycleview.layout import LayoutSelectionBehavior
 from kivy.uix.recycleview.views import RecycleDataViewBehavior
 from kivy.uix.scrollview import ScrollView
-
-from kivymd import uix_path
 from kivymd.effects.stiffscroll import StiffScrollEffect
 from kivymd.material_resources import (
     DATA_TABLE_ELEVATION,
@@ -72,7 +68,7 @@ from kivymd.uix.selectioncontrol import MDCheckbox
 from kivymd.uix.tooltip import MDTooltip
 
 
-Builder.load_file('kvgui/kv/datatables.kv')
+# Builder.load_file('kvgui/kv/datatables.kv')
 
 
 class TableRecycleGridLayout(
@@ -160,7 +156,6 @@ class CellHeader(MDTooltip, BoxLayout):
     and defaults to `''`.
     """
 
-    # TODO: Added example.
     sort_action = ObjectProperty()
     """
     Custom function for sorting.
@@ -209,8 +204,8 @@ class CellHeader(MDTooltip, BoxLayout):
             for j, y in enumerate(curr_checks[x]):
                 new_page = (indices[y // columns + x * rows_num]) // rows_num
                 new_indice = (
-                    (indices[y // columns + x * rows_num]) % rows_num
-                ) * columns
+                                     (indices[y // columns + x * rows_num]) % rows_num
+                             ) * columns
                 new_checks[new_page].append(new_indice)
         self.table_data.current_selection_check = dict(new_checks)
 
@@ -557,7 +552,7 @@ class TableData(RecycleView):
                     }
 
                     if (
-                        isinstance(x[0], tuple) or isinstance(x[0], list)
+                            isinstance(x[0], tuple) or isinstance(x[0], list)
                     ) and len(x[0]) == 3:
                         r_data["icon"] = x[0][0]
                         r_data["icon_color"] = x[0][1]
@@ -565,7 +560,7 @@ class TableData(RecycleView):
                         self.recycle_data.append(r_data)
 
                     elif (
-                        isinstance(x[0], tuple) or isinstance(x[0], list)
+                            isinstance(x[0], tuple) or isinstance(x[0], list)
                     ) and len(x[0]) == 2:
                         r_data["icon"] = x[0][0]
                         r_data["text"] = str(x[0][1])
@@ -589,8 +584,8 @@ class TableData(RecycleView):
                 self._to_value = len(self._row_data_parts[self._rows_number])
             elif direction == "forward":
                 if (
-                    len(self._row_data_parts[self._rows_number])
-                    < self._to_value
+                        len(self._row_data_parts[self._rows_number])
+                        < self._to_value
                 ):
                     self._current_value = self._current_value + self.rows_num
                 else:
@@ -727,14 +722,14 @@ class TableData(RecycleView):
         )
 
     def on_pagination(
-        self, instance_table_date, instance_table_pagination
+            self, instance_table_date, instance_table_pagination
     ) -> None:
         if self._to_value < len(self.row_data):
             self.pagination.ids.button_forward.disabled = False
 
     def _split_list_into_equal_parts(self, lst, parts):
         for i in range(0, len(lst), parts):
-            yield lst[i : i + parts]
+            yield lst[i: i + parts]
 
     def _get_row_checks(self):
         """Returns all rows that are checked."""
@@ -1780,7 +1775,7 @@ class MDDataTableFit(ThemableBehavior, AnchorLayout):
         self.row_data.remove(data)
 
     def update_row(
-        self, old_data: Union[list, tuple], new_data: Union[list, tuple]
+            self, old_data: Union[list, tuple], new_data: Union[list, tuple]
     ) -> None:
         """
         Updates a table row.
@@ -1965,14 +1960,14 @@ class CellRow(
         self.ids.check.bind(active=self.notify_checkbox_click)
 
     def notify_checkbox_click(
-        self, instance_check: MDCheckbox, active: bool
+            self, instance_check: MDCheckbox, active: bool
     ) -> None:
         """Called when the table row checkbox is activated/deactivated."""
 
         self.table.get_select_row(self.index)
 
     def refresh_view_attrs(
-        self, instance_table_data: TableData, index: int, data: dict
+            self, instance_table_data: TableData, index: int, data: dict
     ):
         """
         Called by the :class:`RecycleAdapter` when the view is initially
@@ -1993,7 +1988,7 @@ class CellRow(
         return super().refresh_view_attrs(instance_table_data, index, data)
 
     def apply_selection(
-        self, instance_table_data: TableData, index: int, is_selected: bool
+            self, instance_table_data: TableData, index: int, is_selected: bool
     ) -> None:
         """Called when list items of table appear on the screen."""
 
@@ -2023,17 +2018,17 @@ class CellRow(
 
         # Set checkboxes state.
         if (
-            instance_table_data._rows_number
-            in instance_table_data.current_selection_check
+                instance_table_data._rows_number
+                in instance_table_data.current_selection_check
         ):
             for index in instance_table_data.current_selection_check[
                 instance_table_data._rows_number
             ]:
                 if (
-                    self.index
-                    in instance_table_data.current_selection_check[
-                        instance_table_data._rows_number
-                    ]
+                        self.index
+                        in instance_table_data.current_selection_check[
+                    instance_table_data._rows_number
+                ]
                 ):
                     self.change_check_state_no_notify("down")
                 else:
@@ -2048,21 +2043,21 @@ class CellRow(
         checkbox.bind(active=self.notify_checkbox_click)
 
     def select_check(
-        self, instance_table_data: MDDataTableFit, active: bool
+            self, instance_table_data: MDDataTableFit, active: bool
     ) -> None:
         """Called upon activation/deactivation of the checkbox."""
 
         if active:
             if (
-                self.table._rows_number
-                not in self.table.current_selection_check
+                    self.table._rows_number
+                    not in self.table.current_selection_check
             ):
                 self.table.current_selection_check[self.table._rows_number] = []
             if (
-                self.index
-                not in self.table.current_selection_check[
-                    self.table._rows_number
-                ]
+                    self.index
+                    not in self.table.current_selection_check[
+                self.table._rows_number
+            ]
             ):
                 self.table.current_selection_check[
                     self.table._rows_number
@@ -2070,11 +2065,11 @@ class CellRow(
         else:
             if self.table._rows_number in self.table.current_selection_check:
                 if (
-                    self.index
-                    in self.table.current_selection_check[
-                        self.table._rows_number
-                    ]
-                    and not active
+                        self.index
+                        in self.table.current_selection_check[
+                    self.table._rows_number
+                ]
+                        and not active
                 ):
                     self.table.current_selection_check[
                         self.table._rows_number
@@ -2090,7 +2085,7 @@ class CellRow(
         self.icon_copy = name_icon
 
     def on_table(
-        self, instance_cell_row, instance_table_data: TableData
+            self, instance_cell_row, instance_table_data: TableData
     ) -> None:
         """Sets padding/spacing to zero if no checkboxes are used for rows."""
 

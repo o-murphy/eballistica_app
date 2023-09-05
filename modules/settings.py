@@ -1,8 +1,8 @@
 import json
 import logging
 
-from kvgui.modules import signals as sig
-from kvgui.modules.env import SETTINGS_PATH
+from modules import signals as sig
+from modules.env import SETTINGS_PATH
 
 DEFAULT_SETTINGS = {
     "lang": "English",

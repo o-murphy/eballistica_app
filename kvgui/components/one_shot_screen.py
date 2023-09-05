@@ -1,7 +1,4 @@
-from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
-
-Builder.load_file('kvgui/kv/one_shot_screen.kv')
 
 
 class OneShotScreen(Screen):

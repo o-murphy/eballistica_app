@@ -1,12 +1,8 @@
-from kivy.lang import Builder
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.toolbar import MDTopAppBar
 
-from kvgui.modules import signals as sig
-from kvgui.modules.translator import translate as tr
-
-
-Builder.load_file('kvgui/kv/top_bar.kv')
+from modules import signals as sig
+from modules.translator import translate as tr
 
 
 class TopBar(MDTopAppBar):

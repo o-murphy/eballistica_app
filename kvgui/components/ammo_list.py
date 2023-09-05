@@ -1,11 +1,8 @@
 import logging
 import os
 
-
-from kivy.utils import platform
-from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
-from kivymd.app import MDApp
+from kivy.utils import platform
 from kivymd.uix.behaviors import TouchBehavior
 from kivymd.uix.filemanager import MDFileManager
 from kivymd.uix.list import ThreeLineListItem, MDList
@@ -14,13 +11,9 @@ from kivymd.uix.scrollview import MDScrollView
 
 from datatypes.db2a7p import ammo2a7p
 from datatypes.dbworker import AmmoData, Worker
-from kvgui.modules import signals as sig
-from kvgui.modules.translator import translate as tr
-from kvgui.modules.env import STORAGE
-
-# from a7p import A7PFile, profedit_pb2
-
-Builder.load_file('kvgui/kv/ammo_list_item.kv')
+from modules import signals as sig
+from modules.env import USER_DATA
+from modules.translator import translate as tr
 
 
 class AmmoListItem(ThreeLineListItem, TouchBehavior):
@@ -81,18 +74,17 @@ class AmmoListItem(ThreeLineListItem, TouchBehavior):
             self.share_ammo(caller=self)
         self.menu.dismiss()
 
-    # TODO: realise sharing profile to a7p file
-
     def share_ammo(self, caller=None):
 
         if platform != 'android':
             self.file_manager = MDFileManager(
                 exit_manager=self.exit_manager,  # function called when the user reaches directory tree root
-                select_path=lambda path: self.save_to(path, caller.dbid),  # function called when selecting a file/directory
+                select_path=lambda path: self.save_to(path, caller.dbid),
+                # function called when selecting a file/directory
                 search='dirs',
                 # ext=['.a7p']
             )
-            self.file_manager.show(STORAGE)
+            self.file_manager.show(USER_DATA)
         else:
             self.share_android(ammo_id=caller.dbid)
 

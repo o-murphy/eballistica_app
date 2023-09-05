@@ -1,11 +1,8 @@
-from kivy.lang import Builder
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.toolbar import MDActionBottomAppBarButton
 
 from kvgui.components.mixines import MapIdsMixine
-from kvgui.modules import signals as sig
-
-Builder.load_file('kvgui/kv/bottom_bar.kv')
+from modules import signals as sig
 
 
 class BottomAction(MDActionBottomAppBarButton):

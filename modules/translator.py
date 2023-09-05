@@ -3,7 +3,7 @@ import logging
 from datetime import datetime
 from pathlib import Path
 
-from kvgui.modules import signals as sig
+from modules import signals as sig
 
 TRANSLATION_VERSION = '0.0.1'
 
@@ -28,14 +28,14 @@ class Translator:
     def __init__(self):
         self._lang = DEFAULT_TRANSLATION
         try:
-            self.translations = list(lang.stem for lang in Path('kvgui', 'translations').iterdir())
+            self.translations = list(lang.stem for lang in Path('resources', 'translations').iterdir())
         except Exception:
             self.translations = ['English']
         sig.set_lang.connect(self.load_lang)
 
     def load_lang(self, lang='English', **kwargs):
         try:
-            path = Path('kvgui', 'translations', f'{lang}.json').absolute().as_posix()
+            path = Path('resources', 'translations', f'{lang}.json').absolute().as_posix()
             with open(path, 'r', encoding='utf-8') as fp:
                 self._lang = json.load(fp)['context']
         except Exception as exc:
@@ -66,7 +66,6 @@ translate = app_translator.translate
 
 # def translate(text: str = "", ctx: str = 'root'):
 #     global GENERATED_TRANSLATION
-#     # TODO: translator implementation
 #     context = GENERATED_TRANSLATION['context'].get(ctx)
 #     if context:
 #         translated_text = context.get(text)
