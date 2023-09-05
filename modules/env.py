@@ -130,13 +130,22 @@ def restore_db_backup():
 
             try:
                 logging.info("try 2")
-                logging.info(f"backup_uri: {'local.bak'}")
-                local_path = SharedStorage().copy_from_shared(backup_uri)
-                logging.info(f'Copied from shared: {local_path}')
+                logging.info(f"backup_uri2: {'local.bak'}")
+                local_path = SharedStorage().copy_from_shared('local.bak')
                 logging.info(f'Copied from shared: {local_path}')
                 os.rename('local.bak', 'local.sqlite3')
             except Exception as exc:
-                logging.exception(f"Exception on load db backup{exc}")
+                try:
+                    logging.exception(f"Exception on load db backup{exc}")
+                    logging.info("try 3")
+                    backup_uri = os.path.join(STORAGE, 'local.bak')
+                    logging.info(f"backup_uri3: {backup_uri}")
+                    local_path = SharedStorage().copy_from_shared(backup_uri)
+                    logging.info(f'Copied from shared: {local_path}')
+                    os.rename('local.bak', 'local.sqlite3')
+                except Exception as exc:
+                    logging.exception(f"Exception on load db backup{exc}")
+
 
 def backup_db():
     if IS_ANDROID:
