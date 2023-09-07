@@ -1,3 +1,5 @@
+import shutil
+
 from kivy.utils import platform
 import os
 import logging
@@ -129,22 +131,9 @@ def restore_db_backup():
             logging.exception(f"Exception on load db backup{exc}")
 
             try:
-                logging.info("try 2")
-                logging.info(f"backup_uri2: {'local.bak'}")
-                local_path = SharedStorage().copy_from_shared('local.bak')
-                logging.info(f'Copied from shared: {local_path}')
-                os.rename('local.bak', 'local.sqlite3')
+                shutil.copy(backup_uri, 'dbrestore.bak')
             except Exception as exc:
-                try:
-                    logging.exception(f"Exception on load db backup{exc}")
-                    logging.info("try 3")
-                    backup_uri = os.path.join(STORAGE, 'local.bak')
-                    logging.info(f"backup_uri3: {backup_uri}")
-                    local_path = SharedStorage().copy_from_shared(backup_uri)
-                    logging.info(f'Copied from shared: {local_path}')
-                    os.rename('local.bak', 'local.sqlite3')
-                except Exception as exc:
-                    logging.exception(f"Exception on load db backup{exc}")
+                logging.exception(exc)
 
 
 def backup_db():
