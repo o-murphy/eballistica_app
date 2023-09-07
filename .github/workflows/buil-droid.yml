@@ -30,10 +30,10 @@ jobs:
       - name: Restore .buildozer directory
         uses: actions/cache@v2
         with:
-          path: ${{ runner.workspace }}/.buildozer
-          key: buildozer-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
+          path: ~/.buildozer
+          key: buildozer-${{ runner.os }}
           restore-keys: |
-            buildozer-${{ runner.os }}-
+            buildozer-${{ runner.os }}
 
       - name: Set up Python 3.10.10
         uses: actions/setup-python@v2
@@ -99,17 +99,25 @@ jobs:
           token: ${{ secrets.TG_GITHUB_ARTIFACTS_TOKEN }}
           document: ./bin/* # Change the path to match your artifacts
 
-      - name: Save .buildozer directory
-        run: mv ~/.buildozer ${{ runner.workspace }}/
-
-  cache-buildozer:
-    runs-on: ubuntu-latest
-    steps:
       - name: Cache .buildozer directory
         uses: actions/cache@v2
         with:
-          path: ${{ runner.workspace }}/.buildozer
+          path: ~/.buildozer  # Specify the original location of .buildozer
           key: buildozer-${{ runner.os }}
           restore-keys: |
             buildozer-${{ runner.os }}
+
+#      - name: Save .buildozer directory
+#        run: mv ~/.buildozer ${{ runner.workspace }}/
+
+#  cache-buildozer:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Cache .buildozer directory
+#        uses: actions/cache@v2
+#        with:
+#          path: ${{ runner.workspace }}/.buildozer
+#          key: buildozer-${{ runner.os }}
+#          restore-keys: |
+#            buildozer-${{ runner.os }}
           
