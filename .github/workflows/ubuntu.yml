@@ -1,4 +1,4 @@
-name: CI android build
+name: CI ubuntu build
 on:
   workflow_dispatch:
     inputs:
@@ -24,18 +24,18 @@ jobs:
           python-version: 3.10.10
 
       - name: Setup environment
-          run: |
-            sudo apt-get install libtool
-            pip install --user --upgrade Cython==0.29.36
-            pip install --user --upgrade buildozer
+        run: |
+          sudo apt-get install libtool
+          pip install --user --upgrade Cython==0.29.36
+          pip install --user --upgrade buildozer
 
       - mane: Install requirements
-          run: |
-            pip install -r requirements-linux.txt
+        run: |
+          pip install -r requirements-linux.txt
 
       - name: Build with pyinstaller
-          run: |
-            pyinstaller pyinstaller-linux.spec -y --log-level=ERROR
+        run: |
+          pyinstaller pyinstaller-linux.spec -y --log-level=ERROR
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v2
