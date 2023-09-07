@@ -26,9 +26,9 @@ RUN apt update && DEBIAN_FRONTEND=noninteractive apt install -y \
     cmake \
     gettext \
     git \
-#    libffi-dev \
-#    libltdl-dev \
-#    libssl-dev \
+    libffi-dev \
+    libltdl-dev \
+    libssl-dev \
     libtool \
     openjdk-17-jdk \
     patch \
