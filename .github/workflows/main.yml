@@ -4,9 +4,9 @@ on:
 #    branches:
 #      - kivymd-nightly
 
-#  push:
-#    branches:
-#      - kivymd-droid-db-restore
+  push:
+    branches:
+      - kivymd-droid-db-restore
 
   workflow_dispatch:
     inputs:
