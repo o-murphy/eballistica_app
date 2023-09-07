@@ -6,7 +6,7 @@ on:
 
   push:
     branches:
-      - kivymd-droid-db-restore
+      - playing-with-buildtools
 
   workflow_dispatch:
     inputs:
