@@ -5,7 +5,7 @@ from modules import signals as sig
 from modules.env import SETTINGS_PATH
 
 DEFAULT_SETTINGS = {
-    "first_run": False,
+    "first_run": True,
     "lang": "English",
     "theme": "Dark",
     "unit_sight_height": 16,
