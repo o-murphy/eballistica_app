@@ -1,0 +1,52 @@
+name: CI ubuntu build
+on:
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'
+        required: true
+        default: 'warning'
+      tags:
+        description: 'Test scenario tags'
+
+jobs:
+  build-ubuntu:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3.10.10
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.10.10
+
+      - name: Setup environment
+        run: |
+          python -m venv venv
+          . venv/bin/activate
+          pip install --user --upgrade Cython==0.29.36
+          pip install --user --upgrade buildozer
+
+      - name: Install requirements
+        run: |
+          pip install -r requirements-linux.txt
+
+      - name: Build with pyinstaller
+        run: |
+          pyinstaller pyinstaller-linux.spec -y --log-level=ERROR
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifacts-release
+          path: dist
+
+      - name: Upload and Send to Telegram
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TG_USER_ID }}
+          token: ${{ secrets.TG_GITHUB_ARTIFACTS_TOKEN }}
+          document: ./dist/* # Change the path to match your artifacts

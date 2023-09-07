@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "eBallistica"
-#define MyAppVersion "0.0.27"
+#define MyAppVersion "0.0.28"
 #define MyAppPublisher "o-murphy"
 #define MyAppExeName "eBallistica.exe"
 
