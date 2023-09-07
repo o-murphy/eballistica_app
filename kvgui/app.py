@@ -5,7 +5,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivymd.app import MDApp
 from kivymd.toast import toast
 from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.button import MDRaisedButton, MDRectangleFlatButton
+from kivymd.uix.button import MDRaisedButton, MDRectangleFlatButton, MDFlatButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.toolbar import MDActionBottomAppBarButton
 
@@ -20,8 +20,8 @@ from modules.translator import translate as tr
 
 assert app_settings
 
-if platform == 'win':
-    Window.size = (500, 700)
+if platform == 'win' or platform == 'linux':
+    Window.size = (600, 700)
     Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
     # Config.set('graphics', 'multisamples', '0')  # Disable anti-aliasing (optional)
     # Config.set('graphics', 'gl_backend', 'angle_sdl2')  # Use OpenGL backend
@@ -156,7 +156,31 @@ class EBallisticaApp(MDApp):
         return self.screen
 
     def on_start(self):
-        ...
+        if platform == 'android':
+            self.first_run_dialog()
+
+    def first_run_dialog(self):
+        if app_settings.first_run:
+            self.dialog = MDDialog(
+                title=f"[color=FFA726]{tr('WARNING', 'root')}[/color]",
+                text=tr("Before deleting the app, make a backup of your local data in settings"),
+                buttons=[
+                    MDFlatButton(
+                        text=tr("Don't show again", 'root'),
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=lambda x: (self.dialog.dismiss(), app_settings.update(first_run=False))
+                    ),
+                    MDRectangleFlatButton(
+                        text=tr("Ok", 'root'),
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=lambda x: self.dialog.dismiss()
+                    ),
+                ],
+            )
+
+            self.dialog.open()
 
     def droid_back_act(self, window, key, *args):
         if key == 27:
@@ -188,29 +212,23 @@ class EBallisticaApp(MDApp):
 
     def show_exit_confirmation(self, instance):
         self.dialog = MDDialog(
+            title="Exit",
             text=tr('Are you sure you want to exit?', 'root'),
             buttons=[
                 MDRaisedButton(
                     text=tr("No", 'root'),
                     theme_text_color="Custom",
-                    # text_color=self.theme_cls.se,
-                    on_release=lambda x: self.close_exit_dialog(False)
+                    on_release=lambda x: self.dialog.dismiss()
                 ),
                 MDRectangleFlatButton(
                     text=tr("Yes", 'root'),
                     theme_text_color="Custom",
                     text_color=self.theme_cls.primary_color,
-                    on_release=lambda x: self.close_exit_dialog(True)
+                    on_release=lambda x: self.stop()
                 ),
             ],
         )
         self.dialog.open()
-
-    def close_exit_dialog(self, action):
-        if action:
-            self.stop()
-        else:
-            self.dialog.dismiss()
 
     def bot_fab_action(self, caller=None, **kwargs):
         current = self.app_screen_manager.current

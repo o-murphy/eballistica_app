@@ -2,10 +2,23 @@ name: CI ubuntu build
 on:
   workflow_dispatch:
     inputs:
-      logLevel:
-        description: 'Log level'
+      pyiLogLevel:
+        type: choice
+        description: 'PyI Log level'
         required: true
-        default: 'warning'
+        options:
+          - TRACE
+          - DEBUG
+          - INFO
+          - WARN
+          - ERROR
+          - CRITICAL
+        default: 'INFO'
+
+#      logLevel:
+#        description: 'Log level'
+#        required: true
+#        default: 'warning'
       tags:
         description: 'Test scenario tags'
 
@@ -18,24 +31,27 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Set up Python 3.10.10
+      - name: Set up Python 3.11
         uses: actions/setup-python@v2
         with:
-          python-version: 3.10.10
+          python-version: 3.11
 
-      - name: Setup environment
+      - name: Setup environment for build
         run: |
-          sudo apt-get install libtool
-          pip install --user --upgrade Cython==0.29.36
-          pip install --user --upgrade buildozer
+          python -m venv venv
+          . venv/bin/activate
 
-      - name: Install requirements
+      - name: Install build requirements
+        run: |
+          pip install --upgrade wheel setuptools pip Cython==0.29.36 pyinstaller==5.12.0
+
+      - name: Install app requirements
         run: |
           pip install -r requirements-linux.txt
 
       - name: Build with pyinstaller
         run: |
-          pyinstaller pyinstaller-linux.spec -y --log-level=ERROR
+          pyinstaller pyinstaller-linux.spec -y --log-level=${{github.event.inputs.pyiLogLevel}}
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v2

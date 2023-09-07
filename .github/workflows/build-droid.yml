@@ -4,9 +4,9 @@ on:
 #    branches:
 #      - kivymd-nightly
 
-#  push:
-#    branches:
-#      - kivymd-droid-db-restore
+  push:
+    branches:
+      - kivymd-droid-db-restore
 
   workflow_dispatch:
     inputs:
@@ -26,6 +26,14 @@ jobs:
 
       - name: Checkout Repository
         uses: actions/checkout@v2
+
+      - name: Restore .buildozer directory
+        uses: actions/cache@v2
+        with:
+          path: ~/.buildozer
+          key: buildozer-${{ runner.os }}
+          restore-keys: |
+            buildozer-${{ runner.os }}
 
       - name: Set up Python 3.10.10
         uses: actions/setup-python@v2
@@ -49,16 +57,16 @@ jobs:
 #          sed -i.bak "s/#p4a.branch = master/p4a.branch = develop/" buildozer.spec
 #          buildozer android p4a -- --help
 
-      - name: Extract requirements
-        id: extract_props
-        run: |
-          requirements=$(grep -Eo '[^[:space:]]+' requirements-droid.txt | tr '\n' ',')
-          echo "Extracted requirements: $requirements"
-          echo "::set-output name=requirements::$requirements"
+#      - name: Extract requirements
+#        id: extract_props
+#        run: |
+#          requirements=$(grep -Eo '[^[:space:]]+' requirements-droid.txt | tr '\n' ',')
+#          echo "Extracted requirements: $requirements"
+#          echo "::set-output name=requirements::$requirements"
 
-      - name: Update buildozer.spec with requirements
-        run: |
-          sed -i.bak "s|requirements =.*|requirements = python3,${{ steps.extract_props.outputs.requirements }}|" buildozer.spec
+#      - name: Update buildozer.spec with requirements
+#        run: |
+#          sed -i.bak "s|requirements =.*|requirements = python3,${{ steps.extract_props.outputs.requirements }}|" buildozer.spec
 
       - name: Upload Artifacts (buildozer.spec)
         uses: actions/upload-artifact@v2
@@ -90,4 +98,26 @@ jobs:
           to: ${{ secrets.TG_USER_ID }}
           token: ${{ secrets.TG_GITHUB_ARTIFACTS_TOKEN }}
           document: ./bin/* # Change the path to match your artifacts
+
+      - name: Cache .buildozer directory
+        uses: actions/cache@v2
+        with:
+          path: ~/.buildozer  # Specify the original location of .buildozer
+          key: buildozer-${{ runner.os }}
+          restore-keys: |
+            buildozer-${{ runner.os }}
+
+#      - name: Save .buildozer directory
+#        run: mv ~/.buildozer ${{ runner.workspace }}/
+
+#  cache-buildozer:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Cache .buildozer directory
+#        uses: actions/cache@v2
+#        with:
+#          path: ${{ runner.workspace }}/.buildozer
+#          key: buildozer-${{ runner.os }}
+#          restore-keys: |
+#            buildozer-${{ runner.os }}
           
