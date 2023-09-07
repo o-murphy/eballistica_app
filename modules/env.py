@@ -95,7 +95,7 @@ elif platform == 'win':
 else:
     APP_DATA = os.path.expanduser(r"~/.eBallistica")
     STORAGE = os.path.expanduser(r"~/documents")
-    USER_DATA = os.path.expanduser(r"~/documents\eBallistica")
+    USER_DATA = os.path.expanduser(r"~/documents/eBallistica")
 
 for path in [APP_DATA, USER_DATA, STORAGE]:
     if not os.path.exists(path):
