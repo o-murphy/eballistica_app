@@ -27,7 +27,6 @@ jobs:
         run: |
           python -m venv venv
           . venv/bin/activate
-#          sudo apt-get install libtool
           pip install --user --upgrade Cython==0.29.36
           pip install --user --upgrade buildozer
 
