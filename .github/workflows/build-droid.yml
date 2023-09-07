@@ -57,16 +57,16 @@ jobs:
 #          sed -i.bak "s/#p4a.branch = master/p4a.branch = develop/" buildozer.spec
 #          buildozer android p4a -- --help
 
-      - name: Extract requirements
-        id: extract_props
-        run: |
-          requirements=$(grep -Eo '[^[:space:]]+' requirements-droid.txt | tr '\n' ',')
-          echo "Extracted requirements: $requirements"
-          echo "::set-output name=requirements::$requirements"
+#      - name: Extract requirements
+#        id: extract_props
+#        run: |
+#          requirements=$(grep -Eo '[^[:space:]]+' requirements-droid.txt | tr '\n' ',')
+#          echo "Extracted requirements: $requirements"
+#          echo "::set-output name=requirements::$requirements"
 
-      - name: Update buildozer.spec with requirements
-        run: |
-          sed -i.bak "s|requirements =.*|requirements = python3,${{ steps.extract_props.outputs.requirements }}|" buildozer.spec
+#      - name: Update buildozer.spec with requirements
+#        run: |
+#          sed -i.bak "s|requirements =.*|requirements = python3,${{ steps.extract_props.outputs.requirements }}|" buildozer.spec
 
       - name: Upload Artifacts (buildozer.spec)
         uses: actions/upload-artifact@v2
