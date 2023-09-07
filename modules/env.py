@@ -131,7 +131,7 @@ def restore_db_backup():
             logging.exception(f"Exception on load db backup{exc}")
 
             try:
-                shutil.copy(backup_uri, 'dbrestore.bak')
+                shutil.copy(STORAGE, 'dbrestore.bak')
             except Exception as exc:
                 logging.exception(exc)
 
