@@ -34,7 +34,7 @@ class AppState:
 class EBallisticaApp(MDApp):
 
     def init_ui(self):
-        self.screen = Screen()
+        # self.screen = Screen()
         self.layout = MDBoxLayout()
         self.layout.orientation = 'vertical'
 
@@ -109,6 +109,19 @@ class EBallisticaApp(MDApp):
         self.theme_cls.accent_hue = "800"
 
         self.app_state = AppState()
+        self.screen = Screen()
+        # self.init_ui()
+        # self.bind_ui()
+        #
+        # app_settings.bind_on_load()
+        # app_settings.bind_on_set()
+        # self.switch_rifles_list()
+
+        return self.screen
+
+    def on_start(self):
+        if IS_ANDROID:
+            self.first_run_dialog()
 
         self.init_ui()
         self.bind_ui()
@@ -116,12 +129,6 @@ class EBallisticaApp(MDApp):
         app_settings.bind_on_load()
         app_settings.bind_on_set()
         self.switch_rifles_list()
-
-        return self.screen
-
-    def on_start(self):
-        if IS_ANDROID:
-            self.first_run_dialog()
 
     def first_run_dialog(self):
         if app_settings.first_run:
@@ -160,19 +167,19 @@ class EBallisticaApp(MDApp):
         Worker.rollback()
         if current == 'ammos_screen':
             self.switch_rifles_list('right')
-        elif current == 'rifle_card':
+        elif current == 'rifle_card_screen':
             self.switch_rifles_list('right')
-        elif current == 'settings':
+        elif current == 'settings_screen':
             self.switch_rifles_list('right')
-        elif current == 'ammo_card':
+        elif current == 'ammo_card_screen':
             self.switch_ammos_list('right')
-        elif current == 'shot_card':
+        elif current == 'shot_card_screen':
             self.switch_ammos_list('right')
         elif current in ['bc_editor_screen', 'cdm_editor_screen']:
             self.switch_ammo_card('right')
         elif current == 'rifles_screen':
             self.show_exit_confirmation()
-        elif current in ['one_shot', 'traj_screen']:
+        elif current in ['one_shot_screen', 'trajectory_screen']:
             self.switch_shot_edit('right')
 
     def show_exit_confirmation(self):
@@ -202,11 +209,11 @@ class EBallisticaApp(MDApp):
             self.edit_rifle(caller=caller, **kwargs)
         elif current == 'ammos_screen':
             self.edit_ammo(caller=caller, **kwargs)
-        elif current == 'rifle_card':
+        elif current == 'rifle_card_screen':
             self.save_rifle_card()
-        elif current == 'ammo_card':
+        elif current == 'ammo_card_screen':
             self.save_ammo_card()
-        elif current == 'shot_card':
+        elif current == 'shot_card_screen':
             self.save_shot_card()
         elif current == 'bc_editor_screen':
             self.update_card_bc()
@@ -214,7 +221,7 @@ class EBallisticaApp(MDApp):
             self.update_card_cdm()
 
     def update_card_bc(self):
-        drag_data = self.app_screen_manager.bc_edit.get()
+        drag_data = self.app_screen_manager.bc_editor_screen.get()
         sig.bc_data_edited.emit(drag_data=drag_data)
         self.switch_ammo_card('right')
         sig.toast.emit(text=tr('BC changed', 'root'))
@@ -336,7 +343,7 @@ class EBallisticaApp(MDApp):
         sig.toast.emit(text=tr('Undefined error expected', 'root'))
 
     def switch_one_shot(self, direction='left', caller=None, **kwargs):
-        self.app_screen_manager.switch_screen('one_shot', direction)
+        self.app_screen_manager.switch_screen('one_shot_screen', direction)
 
         self.app_bottom_bar.fab_hide()
         self.app_top_bar.breadcrumb = [
@@ -354,7 +361,7 @@ class EBallisticaApp(MDApp):
             return
 
         self.app_screen_manager.trajectory_screen.display_data(traj, cdm)
-        self.app_screen_manager.switch_screen('traj_screen', direction)
+        self.app_screen_manager.switch_screen('trajectory_screen', direction)
 
         self.app_bottom_bar.fab_hide()
         self.app_top_bar.breadcrumb = [
@@ -362,7 +369,7 @@ class EBallisticaApp(MDApp):
         ]
 
     def switch_shot_edit(self, direction='left', **kwargs):
-        self.app_screen_manager.switch_screen('shot_card', direction)
+        self.app_screen_manager.switch_screen('shot_card_screen', direction)
         self.app_bottom_bar.fab_applying()
         self.app_top_bar.breadcrumb = [
             self.app_state.rifle.name, self.app_state.ammo.name, 'Shot data'
@@ -378,14 +385,14 @@ class EBallisticaApp(MDApp):
         self.app_top_bar.breadcrumb = ['Rifles']
 
     def switch_ammo_card(self, direction='left', **kwargs):
-        self.app_screen_manager.switch_screen('ammo_card', direction)
+        self.app_screen_manager.switch_screen('ammo_card_screen', direction)
         self.app_bottom_bar.fab_applying()
         self.app_top_bar.breadcrumb = [
             self.app_state.rifle.name, self.app_state.ammo.name, 'Properties'
         ]
 
     def switch_rifle_card(self, direction='left', **kwargs):
-        self.app_screen_manager.switch_screen('rifle_card', direction)
+        self.app_screen_manager.switch_screen('rifle_card_screen', direction)
         self.app_bottom_bar.fab_applying()
         self.app_top_bar.breadcrumb = [self.app_state.rifle.name, 'Properties']
 
@@ -402,7 +409,7 @@ class EBallisticaApp(MDApp):
         self.app_top_bar.breadcrumb = [self.app_state.rifle.name]
 
     def switch_settings(self, direction='left', **kwargs):
-        self.app_screen_manager.switch_screen('settings', direction)
+        self.app_screen_manager.switch_screen('settings_screen', direction)
         self.app_bottom_bar.fab_hide()
         self.app_top_bar.breadcrumb = ['Settings']
 
