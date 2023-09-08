@@ -1,15 +1,16 @@
+import logging
+
 from kivy import platform
 from kivy.config import Config
 from kivy.core.window import Window
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import Screen
 from kivymd.app import MDApp
-from kivymd.toast import toast
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.button import MDRaisedButton, MDRectangleFlatButton, MDFlatButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.toolbar import MDActionBottomAppBarButton
 
-from calculate.calculate import calculated_drag, calculate_traj
+from calculate.calculate import calculate_traj
 from datatypes.dbworker import Worker, RifleData, AmmoData
 from datatypes.defines import DragModel
 from kvgui.components import *
@@ -23,9 +24,6 @@ assert app_settings
 if platform == 'win' or platform == 'linux':
     Window.size = (600, 700)
     Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
-    # Config.set('graphics', 'multisamples', '0')  # Disable anti-aliasing (optional)
-    # Config.set('graphics', 'gl_backend', 'angle_sdl2')  # Use OpenGL backend
-    # Config.set('graphics', 'verify_gl_main_thread', 0)  # Use OpenGL backend
 
 
 class AppState:
@@ -33,44 +31,10 @@ class AppState:
     ammo: None
 
 
-class AppScreenManager(ScreenManager):
-
-    def __init__(self, **kwargs):
-        super(AppScreenManager, self).__init__(**kwargs)
-        self.init_ui()
-
-    def init_ui(self):
-        self.rifles_screen = RiflesScreen()
-        self.ammos_screen = AmmosScreen()
-        self.rifle_card_screen = RifleCardScreen()
-        self.settings_screen = SettingsScreen()
-        self.ammo_card_screen = AmmoCardScreen()
-        self.shot_card_screen = ShotCardScreen()
-
-        self.bc_edit = BCEditor()
-        self.cdm_editor = CDMEditor()
-        self.powder_sens_calc = PowderSensScreen()
-
-        self.one_shot_screen = OneShotScreen()
-        self.trajectory_screen = TrajectoryScreen()
-
-        self.add_widget(self.rifles_screen)
-        self.add_widget(self.ammos_screen)
-        self.add_widget(self.rifle_card_screen)
-        self.add_widget(self.settings_screen)
-        self.add_widget(self.ammo_card_screen)
-        self.add_widget(self.shot_card_screen)
-        self.add_widget(self.bc_edit)
-        self.add_widget(self.cdm_editor)
-        self.add_widget(self.powder_sens_calc)
-        self.add_widget(self.one_shot_screen)
-        self.add_widget(self.trajectory_screen)
-
-
 class EBallisticaApp(MDApp):
 
     def init_ui(self):
-        self.screen = Screen()
+        # self.screen = Screen()
         self.layout = MDBoxLayout()
         self.layout.orientation = 'vertical'
 
@@ -129,14 +93,14 @@ class EBallisticaApp(MDApp):
         self.app_screen_manager.rifles_screen.on_enter = self.app_top_bar.show_cog
         self.app_screen_manager.rifles_screen.on_leave = self.app_top_bar.hide_all
 
-        sig.toast.connect(self.toast)
-
         sig.wait_me.connect(self.wait_me)
         sig.unwait_me.connect(self.unwait_me)
 
     def build(self):
+        # NOTE: freezes on low-end devices
         # self.theme_cls.theme_style_switch_animation = True  # uncomment if animation needed
         # self.theme_cls.theme_style_switch_animation_duration = 0.2  # uncomment if animation needed
+
         self.theme_cls.theme_style = 'Dark'
         self.theme_cls.material_style = "M3"
         self.theme_cls.primary_palette = 'Teal'
@@ -145,6 +109,19 @@ class EBallisticaApp(MDApp):
         self.theme_cls.accent_hue = "800"
 
         self.app_state = AppState()
+        self.screen = Screen()
+        # self.init_ui()
+        # self.bind_ui()
+        #
+        # app_settings.bind_on_load()
+        # app_settings.bind_on_set()
+        # self.switch_rifles_list()
+
+        return self.screen
+
+    def on_start(self):
+        if IS_ANDROID:
+            self.first_run_dialog()
 
         self.init_ui()
         self.bind_ui()
@@ -152,12 +129,6 @@ class EBallisticaApp(MDApp):
         app_settings.bind_on_load()
         app_settings.bind_on_set()
         self.switch_rifles_list()
-
-        return self.screen
-
-    def on_start(self):
-        if platform == 'android':
-            self.first_run_dialog()
 
     def first_run_dialog(self):
         if app_settings.first_run:
@@ -169,7 +140,8 @@ class EBallisticaApp(MDApp):
                         text=tr("Don't show again", 'root'),
                         theme_text_color="Custom",
                         text_color=self.theme_cls.primary_color,
-                        on_release=lambda x: (self.dialog.dismiss(), app_settings.update(first_run=False))
+                        on_release=lambda x: (self.dialog.dismiss(),
+                                              app_settings.update(first_run=False))
                     ),
                     MDRectangleFlatButton(
                         text=tr("Ok", 'root'),
@@ -195,22 +167,22 @@ class EBallisticaApp(MDApp):
         Worker.rollback()
         if current == 'ammos_screen':
             self.switch_rifles_list('right')
-        elif current == 'rifle_card':
+        elif current == 'rifle_card_screen':
             self.switch_rifles_list('right')
-        elif current == 'settings':
+        elif current == 'settings_screen':
             self.switch_rifles_list('right')
-        elif current == 'ammo_card':
+        elif current == 'ammo_card_screen':
             self.switch_ammos_list('right')
-        elif current == 'shot_card':
+        elif current == 'shot_card_screen':
             self.switch_ammos_list('right')
         elif current in ['bc_editor_screen', 'cdm_editor_screen']:
             self.switch_ammo_card('right')
         elif current == 'rifles_screen':
-            self.show_exit_confirmation(self)
-        elif current in ['one_shot', 'traj_screen']:
+            self.show_exit_confirmation()
+        elif current in ['one_shot_screen', 'trajectory_screen']:
             self.switch_shot_edit('right')
 
-    def show_exit_confirmation(self, instance):
+    def show_exit_confirmation(self):
         self.dialog = MDDialog(
             title="Exit",
             text=tr('Are you sure you want to exit?', 'root'),
@@ -237,11 +209,11 @@ class EBallisticaApp(MDApp):
             self.edit_rifle(caller=caller, **kwargs)
         elif current == 'ammos_screen':
             self.edit_ammo(caller=caller, **kwargs)
-        elif current == 'rifle_card':
+        elif current == 'rifle_card_screen':
             self.save_rifle_card()
-        elif current == 'ammo_card':
+        elif current == 'ammo_card_screen':
             self.save_ammo_card()
-        elif current == 'shot_card':
+        elif current == 'shot_card_screen':
             self.save_shot_card()
         elif current == 'bc_editor_screen':
             self.update_card_bc()
@@ -249,17 +221,17 @@ class EBallisticaApp(MDApp):
             self.update_card_cdm()
 
     def update_card_bc(self):
-        drag_data = self.app_screen_manager.bc_edit.get()
+        drag_data = self.app_screen_manager.bc_editor_screen.get()
         sig.bc_data_edited.emit(drag_data=drag_data)
         self.switch_ammo_card('right')
-        self.toast(tr('BC changed', 'root'))
+        sig.toast.emit(text=tr('BC changed', 'root'))
 
     def update_card_cdm(self):
         # drag_data = self.app_screen_manager.cdm_editor.get()
         # sig.cdm_data_edited.emit(drag_data=drag_data)
         # TODO:
         self.switch_ammo_card('right')
-        self.toast(tr('CDM changed', 'root'))
+        sig.toast.emit(text=tr('CDM changed', 'root'))
 
     def save_rifle_card(self):
         rifle = self.app_state.rifle
@@ -270,12 +242,12 @@ class EBallisticaApp(MDApp):
             Worker.rifle_add_or_update(**new_data)
         self.app_state.rifle = None
         self.switch_rifles_list('right')
-        self.toast(tr("Rifle data saved"), duration=1)
+        sig.toast.emit(text=tr("Rifle data saved"), duration=1)
 
     def save_ammo_card(self):
 
         if not self.app_screen_manager.ammo_card_screen.validate():
-            self.toast(tr('Wrong drag model data', 'root'), duration=1)
+            sig.toast.emit(text=tr('Wrong drag model data', 'root'), duration=1)
             return
 
         ammo = self.app_screen_manager.ammo_card_screen.get_ammo()
@@ -287,12 +259,12 @@ class EBallisticaApp(MDApp):
 
         if self.app_state.ammo.id:
             Worker.commit()
-            self.toast(tr("Ammo data saved"), duration=1)
+            sig.toast.emit(text=tr("Ammo data saved"), duration=1)
         elif self.app_state.ammo:
             Worker.ammo_add(self.app_state.ammo)
-            self.toast(tr("Ammo data saved"), duration=1)
+            sig.toast.emit(text=tr("Ammo data saved"), duration=1)
         else:
-            self.toast(tr('Undefined error expected', 'root'), duration=1)
+            self.undefined_error()
 
         self.app_state.ammo = None
         self.switch_ammos_list('right')
@@ -309,9 +281,9 @@ class EBallisticaApp(MDApp):
 
         if self.app_state.ammo:
             Worker.commit()
-            self.toast(tr("Shot data saved"), duration=1)
+            sig.toast.emit(text=tr("Shot data saved"), duration=1)
         else:
-            self.toast(tr('Undefined error expected', 'root'), duration=1)
+            self.undefined_error()
 
         self.app_state.ammo = None
         self.switch_ammos_list('right')
@@ -323,11 +295,10 @@ class EBallisticaApp(MDApp):
         elif isinstance(caller, RifleListItem):
             self.app_state.rifle = Worker.get_rifle(caller.dbid)
         else:
-            self.toast(tr('Undefined error expected', 'root'))
+            self.undefined_error()
             return
 
         self.app_screen_manager.rifle_card_screen.display(self.app_state.rifle)
-
         self.switch_rifle_card('left', caller=caller)
 
     def del_rifle(self, caller, **kwargs):
@@ -336,8 +307,7 @@ class EBallisticaApp(MDApp):
             rifles = Worker.list_rifles().all()
             self.app_screen_manager.rifles_screen.display(rifles)
         else:
-            self.toast(tr('Undefined error expected', 'root'))
-            return
+            self.undefined_error()
 
     def edit_ammo(self, caller=None, **kwargs):
         if caller == self.app_bottom_bar.bottom_bar_fab:
@@ -345,7 +315,7 @@ class EBallisticaApp(MDApp):
         elif isinstance(caller, AmmoListItem):
             self.app_state.ammo = Worker.get_ammo(caller.dbid)
         else:
-            self.toast(tr('Undefined error expected', 'root'))
+            self.undefined_error()
             return
 
         self.app_screen_manager.ammo_card_screen.display(self.app_state.ammo)
@@ -358,8 +328,7 @@ class EBallisticaApp(MDApp):
             self.app_screen_manager.shot_card_screen.display(self.app_state.ammo)
             self.switch_shot_edit('left')
         else:
-            self.toast(tr('Undefined error expected', 'root'))
-            return
+            self.undefined_error()
 
     def del_ammo(self, caller, **kwargs):
         if isinstance(caller, AmmoListItem):
@@ -367,68 +336,63 @@ class EBallisticaApp(MDApp):
             ammos = Worker.list_ammos().all()
             self.app_screen_manager.ammos_screen.display(ammos)
         else:
-            self.toast(tr('Undefined error expected', 'root'))
-            return
+            self.undefined_error()
+
+    @staticmethod
+    def undefined_error():
+        sig.toast.emit(text=tr('Undefined error expected', 'root'))
 
     def switch_one_shot(self, direction='left', caller=None, **kwargs):
-        self.app_screen_manager.transition.direction = direction
-        self.app_screen_manager.current = 'one_shot'
+        self.app_screen_manager.switch_screen('one_shot_screen', direction)
+
         self.app_bottom_bar.fab_hide()
         self.app_top_bar.breadcrumb = [
             self.app_state.rifle.name, self.app_state.ammo.name, 'Shot'
         ]
 
-    def switch_trajectory(self, direction='left', caller=None, **kwargs):
+    def switch_trajectory(self, direction='left', **kwargs):
 
-        # try:
-        state = self.app_state
-        cdm = calculated_drag(state.ammo)
-        traj = calculate_traj(state.rifle, state.ammo, state.ammo.target, state.ammo.atmo, state.ammo.zerodata)
-        # except Exception as exc:
-        #     self.toast(tr('Error occurred on calculation', 'root'), duration=1)
-        #     logging.warning(exc)
-        #     return
-
-        self.app_screen_manager.transition.direction = direction
-        self.app_screen_manager.current = 'traj_screen'
+        try:
+            state = self.app_state
+            cdm, traj = calculate_traj(state.rifle, state.ammo, state.ammo.target, state.ammo.atmo, state.ammo.zerodata)
+        except Exception as exc:
+            sig.toast.emit(text=tr('Error occurred on calculation', 'root'), duration=1)
+            logging.warning(exc)
+            return
 
         self.app_screen_manager.trajectory_screen.display_data(traj, cdm)
+        self.app_screen_manager.switch_screen('trajectory_screen', direction)
 
         self.app_bottom_bar.fab_hide()
         self.app_top_bar.breadcrumb = [
             self.app_state.rifle.name, self.app_state.ammo.name, 'Trajectory'
         ]
 
-    def switch_shot_edit(self, direction='left', caller=None, **kwargs):
-        self.app_screen_manager.transition.direction = direction
-        self.app_screen_manager.current = 'shot_card'
+    def switch_shot_edit(self, direction='left', **kwargs):
+        self.app_screen_manager.switch_screen('shot_card_screen', direction)
         self.app_bottom_bar.fab_applying()
         self.app_top_bar.breadcrumb = [
             self.app_state.rifle.name, self.app_state.ammo.name, 'Shot data'
         ]
 
-    def switch_rifles_list(self, direction='left', caller=None, **kwargs):
+    def switch_rifles_list(self, direction='left', **kwargs):
 
         rifles = Worker.list_rifles().all()
 
         self.app_screen_manager.rifles_screen.display(rifles)
-
-        self.app_screen_manager.transition.direction = direction
-        self.app_screen_manager.current = 'rifles_screen'
+        self.app_screen_manager.switch_screen('rifles_screen', direction)
         self.app_bottom_bar.fab_add_new()
         self.app_top_bar.breadcrumb = ['Rifles']
 
-    def switch_ammo_card(self, direction='left', caller=None, **kwargs):
-        self.app_screen_manager.transition.direction = direction
-        self.app_screen_manager.current = 'ammo_card'
+    def switch_ammo_card(self, direction='left', **kwargs):
+        self.app_screen_manager.switch_screen('ammo_card_screen', direction)
         self.app_bottom_bar.fab_applying()
         self.app_top_bar.breadcrumb = [
             self.app_state.rifle.name, self.app_state.ammo.name, 'Properties'
         ]
 
-    def switch_rifle_card(self, direction='left', caller=None, **kwargs):
-        self.app_screen_manager.transition.direction = direction
-        self.app_screen_manager.current = 'rifle_card'
+    def switch_rifle_card(self, direction='left', **kwargs):
+        self.app_screen_manager.switch_screen('rifle_card_screen', direction)
         self.app_bottom_bar.fab_applying()
         self.app_top_bar.breadcrumb = [self.app_state.rifle.name, 'Properties']
 
@@ -436,38 +400,25 @@ class EBallisticaApp(MDApp):
         if isinstance(caller, RifleListItem):
             self.app_state.rifle = Worker.get_rifle(caller.dbid)
         if self.app_state.rifle is None:
-            self.toast(tr('Data not found', 'root'))
+            sig.toast.emit(text=tr('Data not found', 'root'))
             return
         ammos = Worker.list_ammos(rifle=self.app_state.rifle).all()
         self.app_screen_manager.ammos_screen.display(ammos)
-
-        self.app_screen_manager.transition.direction = direction
-        self.app_screen_manager.current = 'ammos_screen'
+        self.app_screen_manager.switch_screen('ammos_screen', direction)
         self.app_bottom_bar.fab_add_new()
         self.app_top_bar.breadcrumb = [self.app_state.rifle.name]
 
-    def switch_settings(self, direction='left', caller=None, **kwargs):
-        self.app_screen_manager.transition.direction = direction
-        self.app_screen_manager.current = 'settings'
+    def switch_settings(self, direction='left', **kwargs):
+        self.app_screen_manager.switch_screen('settings_screen', direction)
         self.app_bottom_bar.fab_hide()
         self.app_top_bar.breadcrumb = ['Settings']
 
     def switch_drag_model_edit(self, drag_model: DragModel, **kwargs):
-        self.app_screen_manager.transition.direction = 'left'
-        self.app_bottom_bar.fab_show()
         if drag_model in [DragModel.G7, DragModel.G1]:
-            self.app_screen_manager.current = 'bc_editor_screen'
+            self.app_screen_manager.switch_screen('bc_editor_screen')
         elif drag_model == DragModel.CDM:
-            self.app_screen_manager.current = 'cdm_editor_screen'
-
-    def toast(self, text='', duration=2.5, **kwargs):
-        try:
-            if IS_ANDROID:
-                toast(text=text, gravity=80, length_long=duration)
-            else:
-                toast(text=text, duration=duration)
-        except Exception:
-            toast(text=text)
+            self.app_screen_manager.switch_screen('cdm_editor_screen')
+        self.app_bottom_bar.fab_show()
 
     def on_stop(self):
         # print('creating translation template')

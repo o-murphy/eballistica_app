@@ -9,7 +9,7 @@ from modules.translator import translate as tr
 class ShotCardScreen(Screen, MapIdsMixine):
     def __init__(self, **kwargs):
         super(ShotCardScreen, self).__init__(**kwargs)
-        self.name = 'shot_card'
+        # self.name = 'shot_card_screen'
         self.init_ui()
         self.bind_ui()
 
