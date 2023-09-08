@@ -129,7 +129,7 @@ def calculate_traj(rifle: RifleData, ammo: AmmoData, target: Target, atmo: AtmoD
 
     data = calc.trajectory(ammunition, weapon, atmosphere, shot_info, wind)
 
-    return data
+    return cdm, data
 
 
 def calculate_powder_sens(ret_list):
