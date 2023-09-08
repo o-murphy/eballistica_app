@@ -71,8 +71,9 @@ class RifleCardScreen(Screen, MapIdsMixine):
         self.twist_dir_label.text = tr('Twist direction', 'RifleCard')
 
     def bind_ui(self):
-        sig.set_settings.connect(self.on_set_settings)
+        sig.on_set_settings.connect(self.on_set_settings)
         sig.translator_update.connect(self.translate_ui)
+        sig.set_settings.emit()
 
     def on_enter(self, *args):
         ...

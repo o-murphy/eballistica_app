@@ -6,7 +6,7 @@ on:
 
   push:
     branches:
-      - playing-with-buildtools
+      - kivymd-nightly
 
   workflow_dispatch:
     inputs:

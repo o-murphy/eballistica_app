@@ -4,6 +4,7 @@ import logging
 from modules import signals as sig
 from modules.env import SETTINGS_PATH
 
+
 DEFAULT_SETTINGS = {
     "first_run": True,
     "lang": "English",
@@ -36,10 +37,14 @@ class AppSettings:
             if value:
                 return value
 
+    @property
+    def current_settings(self):
+        return self._dict
+
     def update(self, **kwargs):
-        print("update:", kwargs)
         self._dict.update(kwargs)
         self.save_settings()
+        sig.on_set_settings.emit(**self._dict)
 
     def load_settings(self):
         try:
@@ -52,6 +57,7 @@ class AppSettings:
         except Exception as exc:
             logging.error(exc)
             self._dict = DEFAULT_SETTINGS
+        sig.on_set_settings.emit(**self._dict)
 
     def save_settings(self):
         try:
@@ -64,6 +70,7 @@ class AppSettings:
         sig.load_set_theme.emit(theme=self.theme)
         sig.load_set_lang.emit(lang=self.lang)
         sig.load_setting.emit(**self._dict)
+        sig.on_set_settings.emit(**self._dict)
 
     def bind_on_set(self):
         sig.set_theme.connect(self.update)

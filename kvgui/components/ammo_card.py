@@ -107,11 +107,12 @@ class AmmoCardScreen(Screen, MapIdsMixine):
             drag_model=self.drag_model.value, drag_data=self.get_current_drag_data()
         ))
 
-        sig.set_settings.connect(self.on_set_settings)
+        sig.on_set_settings.connect(self.on_set_settings)
         sig.translator_update.connect(self.translate_ui)
         sig.bc_data_edited.connect(self.update_drag_data)
         sig.cdm_data_edited.connect(self.update_drag_data)
         sig.drag_model_changed.connect(self.drag_model_changed)
+        sig.set_settings.emit()
 
     def drag_model_changed(self, **kwargs):
 

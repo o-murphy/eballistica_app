@@ -9,7 +9,7 @@ from modules.translator import translate as tr
 class ShotCardScreen(Screen, MapIdsMixine):
     def __init__(self, **kwargs):
         super(ShotCardScreen, self).__init__(**kwargs)
-        # self.name = 'shot_card_screen'
+        self.name = 'shot_card_screen'
         self.init_ui()
         self.bind_ui()
 
@@ -39,8 +39,9 @@ class ShotCardScreen(Screen, MapIdsMixine):
     def bind_ui(self):
         self.one_shot.bind(on_release=lambda x: sig.one_shot_act.emit(caller=self))
         self.trajectory.bind(on_release=lambda x: sig.trajectory_act.emit(caller=self))
-        sig.set_settings.connect(self.on_set_settings)
+        sig.on_set_settings.connect(self.on_set_settings)
         sig.translator_update.connect(self.translate_ui)
+        sig.set_settings.emit()
 
     def on_set_settings(self, **kwargs):
 

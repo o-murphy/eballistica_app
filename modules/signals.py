@@ -44,6 +44,7 @@ load_unit_adjustment = Signal(args=['unit'], name='load_set_unit_adjustment')
 load_unit_energy = Signal(args=['unit'], name='load_set_e_unit')
 
 set_settings = Signal(args=['target', 'value'], name='set_settings')
+on_set_settings = Signal(args=['target', 'value'], name='set_settings')
 load_setting = Signal(name='load_setting')
 
 drag_model_edit_act = Signal(args=['drag_model', 'drag_data'], name='drag_model_edit_act')

@@ -1,10 +1,12 @@
 from kivy.uix.screenmanager import Screen
+from kivymd.app import MDApp
 
 from kvgui.components.abstract import FormSelector
 from kvgui.components.mixines import MapIdsMixine
 from kvgui.components.unit_widgets import *
 from modules import signals as sig
 from modules.translator import translate as tr, app_translator
+from modules.settings import app_settings
 
 
 class LanguageSelector(FormSelector, MapIdsMixine):
@@ -54,12 +56,15 @@ class SettingsScreen(Screen, MapIdsMixine):
         sig.load_set_lang.connect(self.change_lang)
 
         sig.load_setting.connect(self.on_load_settings)
+        # sig.on_set_settings.connect(self.on_load_settings)
 
         sig.translator_update.connect(self.translate_ui)
 
         for k, uid in self.ids.items():
             if isinstance(uid, UnitSelector):
                 uid.bind(on_release=self.on_unit_dropdown)
+
+        self.on_load_settings(**app_settings.current_settings)
 
     def on_load_settings(self, **kwargs):
         for k, v in kwargs.items():
@@ -68,7 +73,7 @@ class SettingsScreen(Screen, MapIdsMixine):
                 self.set_unit(found_child, v)
 
     def set_unit(self, selector, unit, **kwargs):
-        text = tr(selector.unit_class.name(unit), ctx='Unit')
+        text = tr(selector.unit_class.name(unit), 'Unit')
         self.on_menu_action(selector, text)
         sig.set_settings.emit(**{selector.id: unit})
 
@@ -123,3 +128,4 @@ class SettingsScreen(Screen, MapIdsMixine):
         self.lang.menu.dismiss()
         self.lang.text = lang
         sig.set_lang.emit(lang=lang)
+        self.on_load_settings(**app_settings.current_settings)

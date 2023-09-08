@@ -108,20 +108,15 @@ class EBallisticaApp(MDApp):
         self.theme_cls.accent_palette = 'Teal'
         self.theme_cls.accent_hue = "800"
 
-        self.app_state = AppState()
         self.screen = Screen()
-        # self.init_ui()
-        # self.bind_ui()
-        #
-        # app_settings.bind_on_load()
-        # app_settings.bind_on_set()
-        # self.switch_rifles_list()
 
         return self.screen
 
     def on_start(self):
         if IS_ANDROID:
             self.first_run_dialog()
+
+        self.app_state = AppState()
 
         self.init_ui()
         self.bind_ui()

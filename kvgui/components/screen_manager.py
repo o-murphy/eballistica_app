@@ -71,6 +71,6 @@ class AppScreenManager(ScreenManager):
 
     def switch_screen(self, screen_name, direction='left', caller=None, **kwargs):
         if not hasattr(self, screen_name):
-            self.lazy_load(screen_name)
+            self.lazy_load_screen(screen_name)
         self.transition.direction = direction
         self.current = screen_name
