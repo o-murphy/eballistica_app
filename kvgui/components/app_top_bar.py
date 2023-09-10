@@ -1,8 +1,8 @@
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.toolbar import MDTopAppBar
 
-
-from kvgui.modules import signals as sig
+from modules import signals as sig
+from modules.translator import translate as tr
 
 
 class TopBar(MDTopAppBar):
@@ -14,6 +14,11 @@ class TopBar(MDTopAppBar):
 
     def init_ui(self):
         self.show_cog()
+        self.ids.label_headline.font_style = 'Subtitle1'
+
+    def set_headline_font_style(self, interval=None, font_style=None) -> None:
+        # Skip default font_styles
+        pass
 
     def bind_ui(self):
         ...
@@ -42,20 +47,46 @@ class AppTopBar(MDBoxLayout):
     def __init__(self, **kwargs):
         super(AppTopBar, self).__init__(**kwargs)
         self.init_ui()
+        self.bind_ui()
+
+        self._breadcrumb_value = None
 
     def init_ui(self):
-        self.bar = TopBar()
-        self.add_widget(self.bar)
+        self.top_bar = TopBar()
+        self.add_widget(self.top_bar)
+
+    def bind_ui(self):
+        sig.translator_update.connect(self.update_breadcrumb)
+
+    def update_breadcrumb(self, **kwargs):
+        self.breadcrumb = self._breadcrumb_value
+
+    @property
+    def headline_text(self):
+        return self.top_bar.headline_text
+
+    @headline_text.setter
+    def headline_text(self, text):
+        self.top_bar.headline_text = text
+
+    @property
+    def breadcrumb(self):
+        return self._breadcrumb_value
+
+    @breadcrumb.setter
+    def breadcrumb(self, texts: list[str]):
+        if texts is not None:
+            self._breadcrumb_value = texts
+            texts = [tr(string, 'Breadcrumb') for string in texts]
+            self.top_bar.headline_text = ' / '.join(texts)
 
     def show_check(self):
-        self.bar.hide_all()
-        self.bar.show_check()
+        self.top_bar.hide_all()
+        self.top_bar.show_check()
 
     def show_cog(self):
-        self.bar.hide_all()
-        self.bar.show_cog()
+        self.top_bar.hide_all()
+        self.top_bar.show_cog()
 
     def hide_all(self):
-        self.bar.hide_all()
-
-
+        self.top_bar.hide_all()

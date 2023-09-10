@@ -14,7 +14,7 @@
                 height: dp(140)
 
                 FormLabel:
-                    id: target_l
+                    id: target_label
                     text: 'Target'
                     font_style: 'H6'
                     size_hint: 1, None
@@ -25,32 +25,32 @@
                     spacing: "15dp"
 
                     FormLabel:
-                        id: dt_l
+                        id: distance_label
                         text: 'Distance'
 
-                    FormFloatInput:
-                        id: dt_v
+                    DistanceValue:
+                        id: distance
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: dt_s
-                        text: 'm'
+                        id: distance_suffix
+                        text: ''
 
                 MDBoxLayout:
                     orientation: 'horizontal'
                     spacing: "15dp"
 
                     FormLabel:
-                        id: la_l
+                        id: look_angle_label
                         text: 'Look angle'
 
-                    FormFloatInput:
-                        id: la_v
+                    LookAngleValue:
+                        id: look_angle
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: la_s
-                        text: '°'
+                        id: look_angle_suffix
+                        text: ''
 
             MD3CardAbs:
                 orientation: 'vertical'
@@ -58,7 +58,7 @@
                 height: dp(300)
 
                 FormLabel:
-                    id: atmo_l
+                    id: atmo_label
                     text: 'Atmosphere'
                     font_style: 'H6'
                     size_hint: 1, None
@@ -69,96 +69,96 @@
                     spacing: "15dp"
 
                     FormLabel:
-                        id: alt_l
+                        id: altitude_label
                         text: 'Altitude'
 
-                    FormFloatInput:
-                        id: alt_v
+                    AltitudeValue:
+                        id: altitude
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: alt_s
-                        text: 'm'
+                        id: altitude_suffix
+                        text: ''
 
                 MDBoxLayout:
                     orientation: 'horizontal'
                     spacing: "15dp"
 
                     FormLabel:
-                        id: ps_l
+                        id: pressure_label
                         text: 'Pressure'
 
-                    FormFloatInput:
-                        id: ps_v
+                    PressureValue:
+                        id: pressure
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: ps_s
-                        text: 'mmHg'
+                        id: pressure_suffix
+                        text: ''
 
                 MDBoxLayout:
                     orientation: 'horizontal'
                     spacing: "15dp"
 
                     FormLabel:
-                        id: t_l
+                        id: temperature_label
                         text: 'Temperature'
 
-                    FormFloatInput:
-                        id: t_v
+                    TemperatureValue:
+                        id: temperature
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: t_s
-                        text: '°C'
+                        id: temperature_suffix
+                        text: ''
 
                 MDBoxLayout:
                     orientation: 'horizontal'
                     spacing: "15dp"
 
                     FormLabel:
-                        id: h_l
+                        id: humidity_label
                         text: 'Humidity'
 
-                    FormFloatInput:
-                        id: h_v
+                    HumidityValue:
+                        id: humidity
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: h_s
-                        text: '%'
+                        id: humidity_suffix
+                        text: ''
 
                 MDBoxLayout:
                     orientation: 'horizontal'
                     spacing: "15dp"
 
                     FormLabel:
-                        id: ws_l
+                        id: wind_speed_label
                         text: 'Wind speed'
 
-                    FormFloatInput:
-                        id: ws_v
+                    WindSpeedValue:
+                        id: wind_speed
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: ws_s
-                        text: '%'
+                        id: wind_speed_suffix
+                        text: ''
 
                 MDBoxLayout:
                     orientation: 'horizontal'
                     spacing: "15dp"
 
                     FormLabel:
-                        id: wa_l
+                        id: wind_dir_label
                         text: 'Wind angle'
 
-                    FormFloatInput:
-                        id: wa_v
+                    WindAngleValue:
+                        id: wind_angle
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: wa_s
-                        text: '%'
+                        id: wind_angle_suffix
+                        text: ''
 
             MD3CardAbs:
                 orientation: 'vertical'
@@ -173,10 +173,10 @@
                         id: one_shot
                         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                         size_hint: 1, None
-                        text: 'One shot'
+                        elevation: 0
 
                     MDRaisedButton:
                         id: trajectory
                         pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                         size_hint: 1, None
-                        text: 'Trajectory'
+                        elevation: 0

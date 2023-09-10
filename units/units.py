@@ -177,7 +177,7 @@ class Distance(AbstractUnit):
     @staticmethod
     def accuracy(units: Unit):
         if units == Distance.Inch:
-            accuracy = 3
+            accuracy = 1
         elif units == Distance.Foot:
             accuracy = 2
         elif units == Distance.Yard:

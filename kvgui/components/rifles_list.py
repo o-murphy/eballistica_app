@@ -1,13 +1,11 @@
-from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
 from kivymd.uix.behaviors import TouchBehavior
 from kivymd.uix.list import ThreeLineListItem, MDList
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.scrollview import MDScrollView
 
-from kvgui.modules import signals as sig
-
-Builder.load_file('kvgui/kv/rifle_list_item.kv')
+from modules import signals as sig
+from modules.translator import translate as tr
 
 
 class RifleListItem(ThreeLineListItem, TouchBehavior):
@@ -21,7 +19,9 @@ class RifleListItem(ThreeLineListItem, TouchBehavior):
         self.bind_ui()
 
     def init_ui(self):
-        ...
+        self.text = tr('New weapon', "RifleItem")
+        self.secondary_text = tr('Twist:', "RifleItem")
+        self.tertiary_text = tr('Sight height:', "RifleItem")
 
     def bind_ui(self):
         ...
@@ -31,21 +31,22 @@ class RifleListItem(ThreeLineListItem, TouchBehavior):
         self.show_menu()
 
     def on_touch_up(self, touch):
-        if not self.is_long_touch:
-            sig.rifle_item_touch.emit(caller=self)
-        else:
-            sig.rifle_item_long_touch.emit(caller=self)
+        if self.collide_point(*touch.pos):
+            if not self.is_long_touch:
+                sig.rifle_item_touch.emit(caller=self)
+            else:
+                sig.rifle_item_long_touch.emit(caller=self)
         self.is_long_touch = False
 
     def show_menu(self):
 
         menu_items = [
             {
-                "text": "Edit", "leading_icon": "pencil-outline",
+                "text": tr("Edit", "AmmoItem"), "leading_icon": "pencil-outline",
                 "on_release": lambda: self.on_menu_action(action='Edit')
             },
             {
-                "text": "Delete", "leading_icon": "delete-outline",
+                "text": tr("Delete", "AmmoItem"), "leading_icon": "delete-outline",
                 "on_release": lambda: self.on_menu_action(action='Delete')
             },
         ]
@@ -67,23 +68,33 @@ class RiflesScreen(Screen):
     def __init__(self, **kwargs):
         super(RiflesScreen, self).__init__(**kwargs)
         self.name = 'rifles_screen'
+
         self.init_ui()
 
     def init_ui(self):
         self.scroll = MDScrollView()
         self.list = MDList()
-
-        # TODO: temporary
-        item = RifleListItem()
-        item.secondary_text = item.secondary_text.format('9', 'inch')
-        item.tertiary_text = item.tertiary_text.format('9', 'cm')
-
-        item2 = RifleListItem()
-        item2.secondary_text = item2.secondary_text.format('9', 'inch')
-        item2.tertiary_text = item2.tertiary_text.format('9', 'cm')
-
-        self.list.add_widget(item)
-        self.list.add_widget(item2)
+        self.list.size_hint_y = None
+        self.list.height = self.list.minimum_height
 
         self.scroll.add_widget(self.list)
         self.add_widget(self.scroll)
+
+    def on_enter(self, *args):
+        ...
+
+    def translate_ui(self):
+        ...
+
+    def display(self, data):
+
+        self.list.clear_widgets()
+
+        if data:
+            for rifle in data:
+                item = RifleListItem()
+                item.dbid = rifle.id
+                item.text = rifle.name
+                item.secondary_text = f"{tr('Twist', 'RifleItem')}: {rifle.barrel_twist} {tr('inch', 'Unit')}"
+                item.tertiary_text = f"{tr('Sight height', 'RifleItem')}: {rifle.sight_height} {tr('cm', 'Unit')}"
+                self.list.add_widget(item)

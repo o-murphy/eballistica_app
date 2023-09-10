@@ -1,6 +1,5 @@
 from signalslot import Signal
 
-
 top_bar_cog_act = Signal(name='settings_cicked')
 top_bar_apply_act = Signal(name='settings_cicked')
 
@@ -23,19 +22,6 @@ ammo_powder_sens_act = Signal(args=['caller'], name='ammo_powder_sens_act')
 one_shot_act = Signal(args=['caller'], name='one_shot_act')
 trajectory_act = Signal(args=['caller'], name='trajectory_act')
 
-set_unit_velocity = Signal(args=['unit'], name='set_v_unit')  # TODO: Deprecated
-set_unit_distance = Signal(args=['unit'], name='set_dt_unit')  # TODO: Deprecated
-set_unit_temperature = Signal(args=['unit'], name='set_t_unit')  # TODO: Deprecated
-set_unit_weight = Signal(args=['unit'], name='set_w_unit')  # TODO: Deprecated
-
-set_unit_length = Signal(args=['unit'], name='set_ln_unit')  # TODO: Deprecated
-set_unit_diameter = Signal(args=['unit'], name='set_dm_unit')  # TODO: Deprecated
-set_unit_pressure = Signal(args=['unit'], name='set_ps_unit')  # TODO: Deprecated
-set_unit_drop = Signal(args=['unit'], name='set_dp_unit')  # TODO: Deprecated
-set_unit_angular = Signal(args=['unit'], name='set_an_unit')  # TODO: Deprecated
-set_unit_adjustment = Signal(args=['unit'], name='set_unit_adjustment')  # TODO: Deprecated
-set_unit_energy = Signal(args=['unit'], name='set_e_unit')  # TODO: Deprecated
-
 set_theme = Signal(args=['theme'], name='set_theme')
 set_lang = Signal(args=['lang'], name='set_lang')
 
@@ -57,5 +43,20 @@ load_unit_angular = Signal(args=['unit'], name='load_set_an_unit')
 load_unit_adjustment = Signal(args=['unit'], name='load_set_unit_adjustment')
 load_unit_energy = Signal(args=['unit'], name='load_set_e_unit')
 
-set_setting = Signal(args=['target', 'value'], name='set_setting')
+set_settings = Signal(args=['target', 'value'], name='set_settings')
+on_set_settings = Signal(args=['target', 'value'], name='set_settings')
 load_setting = Signal(name='load_setting')
+
+drag_model_edit_act = Signal(args=['drag_model', 'drag_data'], name='drag_model_edit_act')
+
+translator_update = Signal()
+
+toast = Signal(args=['text'])
+
+wait_me = Signal()
+unwait_me = Signal()
+trajectory_preloaded = Signal()
+
+drag_model_changed = Signal(args=['drag_model'])
+bc_data_edited = Signal(args=['drag_data'])
+cdm_data_edited = Signal(args=['drag_data'])

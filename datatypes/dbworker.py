@@ -1,22 +1,16 @@
-import enum
 import json
-from functools import wraps
+import logging
+import os
+
+from kivy import platform
 from sqlalchemy import create_engine, Column, Integer, Float, String, Enum, Boolean, ForeignKey
-from sqlalchemy.orm import relationship, declarative_base, sessionmaker, mapped_column, validates
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship, sessionmaker, validates
+
+from datatypes.defines import TwistDir, DragModel
+from modules.env import DB_PATH, restore_db_backup, backup_db
 
 Base = declarative_base()
-engine = create_engine('sqlite:///local.sqlite3', echo=False)
-
-
-class TwistDir(enum.IntEnum):
-    Right = 0
-    Left = 1
-
-
-class DragModel(enum.IntEnum):
-    G1 = 0
-    G7 = 1
-    CDM = -1
 
 
 class RifleData(Base):
@@ -57,15 +51,16 @@ class AmmoData(Base):
     bc7 = Column(String, nullable=True, default='[[0, 0]]')
     cdm = Column(String, nullable=True, default='[[0, 0]]')
 
-    rifle_id = mapped_column(ForeignKey("rifle.id", ondelete="CASCADE"), nullable=False)
+    rifle_id = Column(ForeignKey("rifle.id", ondelete="CASCADE"), nullable=False)
     rifle = relationship("RifleData", back_populates="ammo")
 
     zerodata = relationship("ZeroData", back_populates="ammo", uselist=False, cascade="all, delete-orphan")
     target = relationship("Target", back_populates="ammo", uselist=False, cascade="all, delete-orphan")
     atmo = relationship("AtmoData", back_populates="ammo", uselist=False, cascade="all, delete-orphan")
 
-    def __init__(self, name, diameter=0.338, weight=300, length=1.5, muzzle_velocity=800, temp_sens=1, powder_temp=15,
-                 drag_model=DragModel.G7, bc=None, bc7=None, cdm=None, rifle=None, **kwargs):
+    def __init__(self, name='', diameter=0.338, weight=300, length=1.5, muzzle_velocity=800, temp_sens=1,
+                 powder_temp=15,
+                 drag_model=DragModel.G7, bc='[[0, 0]]', bc7='[[0, 0]]', cdm='[[0, 0]]', rifle=None, **kwargs):
         super(AmmoData, self).__init__(name=name, diameter=diameter, weight=weight, length=length,
                                        muzzle_velocity=muzzle_velocity, temp_sens=temp_sens, powder_temp=powder_temp,
                                        drag_model=drag_model, bc=bc, bc7=bc7, cdm=cdm, **kwargs)
@@ -73,7 +68,7 @@ class AmmoData(Base):
         if rifle is None:
             raise ValueError("AmmoData must be associated with a RifleData.")
 
-        self.rifle = rifle
+        self.rifle: RifleData = rifle
         self.zerodata = ZeroData(ammo=self)
         self.target = Target(ammo=self)
         self.atmo = AtmoData(ammo=self)
@@ -102,9 +97,11 @@ class AmmoData(Base):
 
     @validates('rifle_id')
     def validate_rifle_id(self, key, rifle_id):
-        with Session() as session:
-            if not session.query(RifleData).filter_by(id=rifle_id).scalar():
-                raise ValueError(f"RifleData with ID {rifle_id} does not exist in the database.")
+        # with Session() as session:
+        #     if not session.query(RifleData).filter_by(id=rifle_id).scalar():
+        #         raise ValueError(f"RifleData with ID {rifle_id} does not exist in the database.")
+        if not session.query(RifleData).filter_by(id=rifle_id).scalar():
+            raise ValueError(f"RifleData with ID {rifle_id} does not exist in the database.")
         return rifle_id
 
     def __repr__(self):
@@ -123,7 +120,7 @@ class ZeroData(Base):
     temperature = Column(Float, nullable=False, default=15)
     humidity = Column(Float, nullable=False, default=50)
 
-    ammo_id = mapped_column(ForeignKey("ammo.id", ondelete="CASCADE"), nullable=False, unique=True)
+    ammo_id = Column(ForeignKey("ammo.id", ondelete="CASCADE"), nullable=False, unique=True)
     ammo = relationship("AmmoData", back_populates="zerodata")
 
     def __init__(self, zero_range=100, zero_height=9, is_zero_atmo=True,
@@ -142,11 +139,12 @@ class Target(Base):
     id = Column(Integer, primary_key=True, nullable=False, unique=True, autoincrement=True)
     distance = Column(Float, nullable=False, default=1000)
     look_angle = Column(Float, nullable=False, default=0)
-    move_speed = Column(Float, nullable=False, default=0)
-    move_angle = Column(Float, nullable=False, default=0)
 
-    ammo_id = mapped_column(ForeignKey("ammo.id", ondelete="CASCADE"), nullable=False, unique=True)
+    ammo_id = Column(ForeignKey("ammo.id", ondelete="CASCADE"), nullable=False, unique=True)
     ammo = relationship("AmmoData", back_populates="target")
+
+    def __init__(self, ammo=None, distance=1000, look_angle=0):
+        super(Target, self).__init__(ammo=ammo, distance=distance, look_angle=look_angle)
 
     def __repr__(self):
         return "<{0.__class__.__name__}(id={0.id!r})>".format(self)
@@ -163,73 +161,78 @@ class AtmoData(Base):
     wind_speed = Column(Float, nullable=False, default=0)
     wind_angle = Column(Float, nullable=False, default=0)
 
-    ammo_id = mapped_column(ForeignKey("ammo.id", ondelete="CASCADE"), nullable=False, unique=True)
+    ammo_id = Column(ForeignKey("ammo.id", ondelete="CASCADE"), nullable=False, unique=True)
     ammo = relationship("AmmoData", back_populates="atmo")
+
+    def __init__(self, ammo=None, altitude=0, pressure=760, temperature=15, humidity=50, wind_speed=0, wind_angle=0):
+        super(AtmoData, self).__init__(ammo=ammo, altitude=altitude, pressure=pressure,
+                                       temperature=temperature, humidity=humidity,
+                                       wind_speed=wind_speed, wind_angle=wind_angle)
 
     def __repr__(self):
         return "<{0.__class__.__name__}(id={0.id!r})>".format(self)
 
 
-Base.metadata.create_all(engine)
+restore_db_backup()
 
+engine = create_engine(f'sqlite:///{DB_PATH}', echo=False)
+Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
+session = Session()
 
 
 class Worker:
 
     @staticmethod
     def list_rifles(**kwargs):
-        with Session() as session:
-            rifles = session.query(RifleData).filter_by(**kwargs)
+        rifles = session.query(RifleData).filter_by(**kwargs)
         return rifles
 
     @staticmethod
+    def get_rifle(uid, **kwargs):
+        rifle = session.query(RifleData).get(uid, **kwargs)
+        return rifle
+
+    @staticmethod
+    def get_ammo(uid, **kwargs):
+        ammo = session.query(AmmoData).get(uid, **kwargs)
+        return ammo
+
+    @staticmethod
     def rifle_add_or_update(*args, **kwargs):
-        with Session() as session:
-            rifle = RifleData(*args, **kwargs)
-            rifle = session.merge(rifle)
-            session.commit()
+        rifle = RifleData(*args, **kwargs)
+        rifle = session.merge(rifle)
+        Worker.commit()
+        return rifle
 
     @staticmethod
     def delete_rifle(uid, **kwargs):
-        with Session() as session:
-            rifle = session.get(RifleData, uid)
-            session.delete(rifle)
-            session.commit()
+        rifle = session.query(RifleData).get(uid)
+        session.delete(rifle)
+        Worker.commit()
 
     @staticmethod
     def list_ammos(**kwargs):
-        with Session() as session:
-            ammos = session.query(AmmoData).filter_by(**kwargs)
+        ammos = session.query(AmmoData).filter_by(**kwargs)
         return ammos
 
     @staticmethod
-    def ammo_add_or_update(ammo):
-        with Session() as session:
-            ammo = session.merge(ammo)
-            session.commit()
-
-    # @staticmethod
-    # def zero_add_or_update(*args, **kwargs):
-    #     with Session() as session:
-    #         zero = ZeroData(*args, **kwargs)
-    #         zero = session.merge(zero)
-    #         session.commit()
+    def ammo_add(ammo):
+        session.add(ammo)
+        Worker.commit()
 
     @staticmethod
-    def ammo_merge_transaction(ammo, zero):
-        with Session() as session:
-            ammo = AmmoData(**ammo)
-            ammo = session.merge(ammo)
-            session.commit()
-            zero = ZeroData(**zero, ammo=ammo)
-            zero = session.merge(zero)
-            session.commit()
+    def commit():
+        session.commit()
+
+        backup_db()
+
+    @staticmethod
+    def rollback():
+        session.rollback()
 
     @staticmethod
     def delete_ammo(uid, **kwargs):
-        with Session() as session:
-            ammo = session.get(AmmoData, uid)
-            session.delete(ammo)
-            session.commit()
-
+        ammo = session.query(AmmoData).get(uid)
+        session.delete(ammo)
+        Worker.commit()

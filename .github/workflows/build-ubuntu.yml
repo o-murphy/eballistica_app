@@ -1,0 +1,68 @@
+name: CI ubuntu build
+on:
+  workflow_dispatch:
+    inputs:
+      pyiLogLevel:
+        type: choice
+        description: 'PyI Log level'
+        required: true
+        options:
+          - TRACE
+          - DEBUG
+          - INFO
+          - WARN
+          - ERROR
+          - CRITICAL
+        default: 'INFO'
+
+#      logLevel:
+#        description: 'Log level'
+#        required: true
+#        default: 'warning'
+      tags:
+        description: 'Test scenario tags'
+
+jobs:
+  build-ubuntu:
+#    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.11
+
+      - name: Setup environment for build
+        run: |
+          python -m venv venv
+          . venv/bin/activate
+
+      - name: Install build requirements
+        run: |
+          pip install --upgrade wheel setuptools pip Cython==0.29.36 pyinstaller==5.12.0
+
+      - name: Install app requirements
+        run: |
+          pip install -r requirements-linux.txt
+
+      - name: Build with pyinstaller
+        run: |
+          pyinstaller pyinstaller-linux.spec -y --log-level=${{github.event.inputs.pyiLogLevel}}
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifacts-release
+          path: dist
+
+      - name: Upload and Send to Telegram
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TG_USER_ID }}
+          token: ${{ secrets.TG_GITHUB_ARTIFACTS_TOKEN }}
+          document: ./dist/* # Change the path to match your artifacts

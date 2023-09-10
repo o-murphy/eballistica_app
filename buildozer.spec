@@ -6,7 +6,7 @@
 [app]
 
 # (str) Title of your application
-title = eBallisica
+title = eBallistica
 
 # (str) Package name
 package.name = eballistica
@@ -18,10 +18,11 @@ package.domain = o.murphy
 source.dir = .
 
 # (list) Source files to include (leave empty to include all the files)
-source.include_exts = py,png,jpg,kv,atlas
+source.include_exts = py,png,jpg,kv,atlas,json,ttf,txt
 
 # (list) List of inclusions using pattern matching
 #source.include_patterns = assets/*,images/*.png
+source.include_patterns = kvgui/translations/*.json,kvgui/fonts/*.ttf,kvgui/fonts/*.txt
 
 # (list) Source files to exclude (leave empty to not exclude anything)
 #source.exclude_exts = spec
@@ -34,15 +35,28 @@ source.include_exts = py,png,jpg,kv,atlas
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 0.0.1
+# version = 0.0.1
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]
 # version.filename = %(source.dir)s/main.py
+version.regex = __version__ = ['"](.*)['"]
+version.filename = %(source.dir)s/__version__.py
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy,https://github.com/kivymd/KivyMD/archive/master.zip,signalslot
+requirements = python3,
+    kivy,
+    https://github.com/kivymd/KivyMD/archive/master.zip,
+    signalslot,
+    kivy_garden.graph,
+    sqlalchemy==1.3.22,
+    py_ballisticcalc==1.0.12,
+    android,
+    androidstorage4kivy,
+    google,
+    protobuf,
+    a7p==0.0.4
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -50,9 +64,11 @@ requirements = python3,kivy,https://github.com/kivymd/KivyMD/archive/master.zip,
 
 # (str) Presplash of the application
 #presplash.filename = %(source.dir)s/data/presplash.png
+presplash.filename = resources/icons/presplash.png
 
 # (str) Icon of the application
 #icon.filename = %(source.dir)s/data/icon.png
+icon.filename = resources/icons/icon.png
 
 # (list) Supported orientations
 # Valid options are: landscape, portrait, portrait-reverse or landscape-reverse
@@ -103,7 +119,8 @@ fullscreen = 0
 
 # (list) Permissions
 # (See https://python-for-android.readthedocs.io/en/latest/buildoptions/#build-options-1 for all the supported syntaxes and properties)
-#android.permissions = android.permission.INTERNET, (name=android.permission.WRITE_EXTERNAL_STORAGE;maxSdkVersion=18)
+#android.permissions = #android.permission.INTERNET, (name=android.permission.WRITE_EXTERNAL_STORAGE;maxSdkVersion=18)
+android.permissions = READ_EXTERNAL_STORAGE, (name=android.permission.WRITE_EXTERNAL_STORAGE;maxSdkVersion=18)
 
 # (list) features (adds uses-feature -tags to manifest)
 #android.features = android.hardware.usb.host
@@ -329,10 +346,12 @@ android.allow_backup = True
 #p4a.fork = kivy
 
 # (str) python-for-android branch to use, defaults to master
-#p4a.branch = master
+#p4a.branch = main
+p4a.branch = develop
 
 # (str) python-for-android specific commit to use, defaults to HEAD, must be within p4a.branch
 #p4a.commit = HEAD
+p4a.commit = 3107e4e
 
 # (str) python-for-android git clone directory
 #p4a.source_dir =

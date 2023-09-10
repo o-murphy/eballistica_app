@@ -15,12 +15,12 @@
                 height: dp(60)
 
                 FormLabel:
-                    id: name_l
+                    id: name_label
                     text: 'Name'
                     size_hint_x: 0.2
 
                 FormInput:
-                    id: name_v
+                    id: name_input
                     text: 'New Rifle'
                     size_hint_x: 0.8
 
@@ -30,7 +30,7 @@
                 height: dp(220)
 
                 FormLabel:
-                    id: prop_title
+                    id: prop_title_label
                     text: 'Properties'
                     font_style: 'H6'
 
@@ -39,15 +39,15 @@
                     spacing: "15dp"
 
                     FormLabel:
-                        id: sh_l
+                        id: sight_height_label
                         text: 'Sight height'
 
-                    FormFloatInput:
-                        id: sh_v
+                    SightHeightValue:
+                        id: sight_height
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: sh_s
+                        id: sight_height_suffix
                         text: 'cm'
 
                 MDBoxLayout:
@@ -55,13 +55,12 @@
                     spacing: "15dp"
 
                     FormLabel:
-                        id: td_l
+                        id: twist_dir_label
                         text: 'Twist direction'
                         size_hint_x: 0.6
 
                     TwistDirSelector:
-                        id: td_v
-                        text: 'Right'
+                        id: twist_dir
                         icon: 'rotate-right'
                         size_hint_x: 0.3
                         size_hint_y: None
@@ -75,15 +74,15 @@
                     spacing: "15dp"
 
                     FormLabel:
-                        id: tw_l
+                        id: twist_label
                         text: 'Twist'
 
-                    FormFloatInput:
-                        id: tw_v
+                    TwistValue:
+                        id: twist
                         input_filter: 'float'
 
                     FormSuffix:
-                        id: tw_s
+                        id: twist_suffix
                         text: 'inch'
 
 

@@ -1,20 +1,20 @@
-from kivy.lang import Builder
+import logging
+
 from kivy.uix.screenmanager import Screen
 from kivymd.uix.button import MDRectangleFlatButton
 from kivymd.uix.menu import MDDropdownMenu
-from kivymd.uix.textfield import MDTextField
 
+from datatypes.dbworker import AmmoData
+from datatypes.defines import DragModel
 from kvgui.components.abstract import FormSelector
-from kvgui.modules import signals as sig
-from kvgui.modules.translator import translate as tr
-from units import *
-
-Builder.load_file('kvgui/kv/ammo_card.kv')
+from kvgui.components.mixines import MapIdsMixine
+from modules import signals as sig
+from modules.translator import translate as tr
 
 
-class BCSelector(MDRectangleFlatButton):
+class DragEdit(MDRectangleFlatButton):
     def __init__(self, **kwargs):
-        super(BCSelector, self).__init__(**kwargs)
+        super(DragEdit, self).__init__(**kwargs)
         self.init_ui()
         self.bind_ui()
 
@@ -30,118 +30,207 @@ class DragModelSelector(FormSelector):
         super(DragModelSelector, self).__init__(**kwargs)
         self.init_ui()
         self.bind_ui()
-        self.value = "G7"
+        self.value = DragModel.G7
 
     def init_ui(self):
         self.menu = MDDropdownMenu(
             caller=self,
             items=[
-                {"text": "G1", "on_release": lambda: self.on_menu(action="G1")},
-                {"text": "G7", "on_release": lambda: self.on_menu(action="G7")},
-                {"text": "CDM", "on_release": lambda: self.on_menu(action="CDM")},
+                {"text": "G1", "on_release": lambda: self.on_menu(action=DragModel.G1)},
+                {"text": "G7", "on_release": lambda: self.on_menu(action=DragModel.G7)},
+                {"text": "CDM", "on_release": lambda: self.on_menu(action=DragModel.CDM)},
             ],
         )
 
     def bind_ui(self):
-        self.bind(on_release=self.show_menu)
+        self.bind(on_release=self.showeight_menu)
 
-    def show_menu(self, *args, **kwargs):
+    def showeight_menu(self, *args, **kwargs):
         self.menu.open()
 
     def on_menu(self, action):
-        self.text = action
         self.value = action
         self.menu.dismiss()
-        sig.ammo_dm_change.emit(caller=self)
+
+    @property
+    def value(self) -> DragModel:
+        return self._value
+
+    @value.setter
+    def value(self, value: DragModel):
+        self._value = value
+        self.text = value.name
+        sig.drag_model_changed.emit(drag_model=self._value)
 
 
-class AmmoCardScreen(Screen):
+class AmmoCardScreen(Screen, MapIdsMixine):
     def __init__(self, **kwargs):
         super(AmmoCardScreen, self).__init__(**kwargs)
         self.name = 'ammo_card'
         self.init_ui()
         self.bind_ui()
 
-    def init_ui(self):
+        self.bc = [[0, 0]]
+        self.bc7 = [[0, 0]]
+        self.cdm = [[0, 0]]
 
-        for uid in self.ids:
-            child = self.ids[uid]
-            if hasattr(child, 'text') and not isinstance(child, MDTextField):
-                child.text = tr(child.text, ctx='AmmoCard')
-
-        # convertable values
-        self.dm_v = self.ids.dm_v
-        self.dm_s = self.ids.dm_s
-        self.w_v = self.ids.w_v
-        self.w_s = self.ids.w_s
-        self.ln_v = self.ids.ln_v
-        self.ln_s = self.ids.ln_s
-        self.mv_v = self.ids.mv_v
-        self.mv_s = self.ids.mv_s
-
-        # convertable values
-        self.pwt_v = self.ids.pwt_v
-        self.pwt_s = self.ids.pwt_s
-        self.zd_v = self.ids.zd_v
-        self.zd_s = self.ids.zd_s
-        self.alt_v = self.ids.alt_v
-        self.alt_s = self.ids.alt_s
-        self.ps_v = self.ids.ps_v
-        self.ps_s = self.ids.ps_s
-        self.t_v = self.ids.t_v
-        self.t_s = self.ids.t_s
-
-        # not need conversion values
-        self.pws_v = self.ids.pws_v
-        self.h_v = self.ids.h_v
-
-        # special actions
-        self.dm_select = self.ids.dm_select
-        self.bc_select = self.ids.bc_select
-        self.pws_act: MDRectangleFlatButton = self.ids.pws_act
-
-    def bind_ui(self):
-        self.pws_act.bind(on_release=lambda x: sig.ammo_powder_sens_act.emit(caller=self))
-
-        sig.set_unit_diameter.connect(self.dm_unit_change)
-        sig.set_unit_weight.connect(self.w_unit_change)
-        sig.set_unit_velocity.connect(self.mv_unit_change)
-        sig.set_unit_velocity.connect(self.mv_unit_change)
-        sig.set_unit_temperature.connect(self.t_unit_change)
-        sig.set_unit_distance.connect(self.dt_unit_change)
-        sig.set_unit_pressure.connect(self.ps_unit_change)
-
-    def on_enter(self, *args):
+    def on_pre_enter(self, *args):  # Note: Definition that may translate ui automatically
+        # self.translate_ui()
         ...
 
-    def dm_unit_change(self, unit, **kwargs):
-        self.dm_v.convertor = Convertor(Distance, Distance.Centimeter, unit)
-        self.dm_s.text = tr(Distance.name(unit), 'Unit')
+    def init_ui(self):
+        super(AmmoCardScreen, self).init_ui()
+        self.translate_ui()
 
-    def w_unit_change(self, unit, **kwargs):
-        self.w_v.convertor = Convertor(Weight, Weight.Grain, unit)
-        self.w_s.text = tr(Weight.name(unit), 'Unit')
+    def translate_ui(self, **kwargs):
+        self.name_label.text = tr('Name', 'AmmoCard')
+        self.zero_title.text = tr('Zeroing', 'AmmoCard')
+        self.prop_title.text = tr('Properties', 'AmmoCard')
+        self.diameter_label.text = tr('Diameter', 'AmmoCard')
+        self.weight_label.text = tr('Weight', 'AmmoCard')
+        self.length_label.text = tr('Length', 'AmmoCard')
+        self.muzzle_velocity_label.text = tr('Muzzle velocity', 'AmmoCard')
+        self.dm_label.text = tr('Drag model', 'AmmoCard')
+        self.powder_sens_label.text = tr('Powder sensitivity', 'AmmoCard')
+        self.powder_temp_label.text = tr('Powder temperature', 'AmmoCard')
+        self.zero_dist_label.text = tr('Zero distance', 'AmmoCard')
+        self.altitude_label.text = tr('Altitude', 'AmmoCard')
+        self.pressure_label.text = tr('Pressure', 'AmmoCard')
+        self.temperature_label.text = tr('Temperature', 'AmmoCard')
+        self.humidity_label.text = tr('Humidity', 'AmmoCard')
 
-    def ln_unit_change(self, unit, **kwargs):
-        self.ln_v.convertor = Convertor(Distance, Distance.Inch, unit)
-        self.ln_s.text = tr(Distance.name(unit), 'Unit')
+        self.powder_sens_act.text = tr('Calculate powder sensitivity', 'AmmoCard')
 
-    def mv_unit_change(self, unit, **kwargs):
-        self.mv_v.convertor = Convertor(Velocity, Velocity.MPS, unit)
-        self.mv_s.text = tr(Velocity.name(unit), 'Unit')
+    def bind_ui(self):
+        self.powder_sens_act.bind(on_release=lambda x: sig.ammo_powder_sens_act.emit(caller=self))
+        self.drag_edit.bind(on_release=lambda x: sig.drag_model_edit_act.emit(
+            drag_model=self.drag_model.value, drag_data=self.get_current_drag_data()
+        ))
 
-    def t_unit_change(self, unit, **kwargs):
-        self.pwt_v.convertor = Convertor(Temperature, Temperature.Celsius, unit)
-        self.pwt_s.text = tr(Temperature.name(unit), 'Unit')
-        self.t_v.convertor = Convertor(Temperature, Temperature.Celsius, unit)
-        self.t_s.text = tr(Temperature.name(unit), 'Unit')
+        sig.on_set_settings.connect(self.on_set_settings)
+        sig.translator_update.connect(self.translate_ui)
+        sig.bc_data_edited.connect(self.update_drag_data)
+        sig.cdm_data_edited.connect(self.update_drag_data)
+        sig.drag_model_changed.connect(self.drag_model_changed)
+        sig.set_settings.emit()
 
-    def dt_unit_change(self, unit, **kwargs):
-        self.zd_v.convertor = Convertor(Distance, Distance.Meter, unit)
-        self.zd_s.text = tr(Distance.name(unit), 'Unit')
-        self.alt_v.convertor = Convertor(Distance, Distance.Meter, unit)
-        self.alt_s.text = tr(Distance.name(unit), 'Unit')
+    def drag_model_changed(self, **kwargs):
 
-    def ps_unit_change(self, unit, **kwargs):
-        self.ps_v.convertor = Convertor(Pressure, Pressure.MmHg, unit)
-        self.ps_s.text = tr(Pressure.name(unit), 'Unit')
+        if self.drag_model.value == DragModel.CDM:
+            table = self.cdm
+            count = len([i for i in table if i[1] > 0])
+
+        else:
+
+            if self.drag_model.value == DragModel.G1:
+                table = self.bc
+            elif self.drag_model.value == DragModel.G7:
+                table = self.bc7
+            else:
+                logging.warning('Wrong DragModel')
+                return
+            count = len([i for i in table if i[0] > 0])
+        if count == 0:
+            value = f"{tr('None', 'AmmoCard')}"
+
+        elif count > 1:
+            value = f"({count})"
+        else:
+            value = f"{table[0][1]}"
+
+        pref = self.drag_model.value.name if self.drag_model.value == DragModel.CDM else f"{tr('BC', 'AmmoCard')} {self.drag_model.value.name}"
+        self.drag_edit.text = f"{pref}: {value}"
+
+    def update_drag_data(self, drag_data, **kwargs):
+        if self.drag_model.value == DragModel.G1:
+            self.bc = drag_data
+        elif self.drag_model.value == DragModel.G7:
+            self.bc7 = drag_data
+        elif self.drag_model.value == DragModel.CDM:
+            self.cmd = drag_data
+        self.drag_model_changed()
+
+    def on_set_settings(self, **kwargs):
+
+        def set_unit_for_target(target, target_suffix, key):
+            if kwargs.get(key):
+                unit = kwargs.get(key)
+                if unit:
+                    target.unit = unit
+                    target_suffix.text = tr(target.measure.name(target.unit), 'Unit')
+
+        set_unit_for_target(self.diameter, self.diameter_suffix, 'unit_diameter')
+        set_unit_for_target(self.weight, self.weight_suffix, 'unit_weight')
+        set_unit_for_target(self.length, self.length_suffix, 'unit_length')
+        set_unit_for_target(self.muzzle_velocity, self.muzzle_velocity_suffix, 'unit_velocity')
+
+        set_unit_for_target(self.powder_temp, self.powder_temp_suffix, 'unit_temperature')
+        set_unit_for_target(self.zero_dist, self.zero_dist_suffix, 'unit_distance')
+        set_unit_for_target(self.altitude, self.altitude_suffix, 'unit_distance')
+        set_unit_for_target(self.pressure, self.pressure_suffix, 'unit_pressure')
+        set_unit_for_target(self.temperature, self.temperature_suffix, 'unit_temperature')
+
+    def display(self, data: AmmoData):
+        self.name_input.text = data.name if data.name else tr('New ammo', 'AmmoCard')
+        self.diameter.raw_value = data.diameter
+        self.weight.raw_value = data.weight
+        self.length.raw_value = data.length
+        self.muzzle_velocity.raw_value = data.muzzle_velocity
+        self.powder_sens.raw_value = data.temp_sens
+        self.powder_temp.raw_value = data.powder_temp
+
+        self.zero_dist.raw_value = data.zerodata.zero_range
+        self.altitude.raw_value = data.zerodata.altitude
+        self.pressure.raw_value = data.zerodata.pressure
+        self.temperature.raw_value = data.zerodata.temperature
+        self.humidity.raw_value = data.zerodata.humidity
+
+        self.bc = data.bc_list
+        self.bc7 = data.bc7_list
+        self.cdm = data.cdm_list
+
+        # set after all other data
+        self.drag_model.value = data.drag_model
+
+    def get_current_drag_data(self):
+        if self.drag_model.value == DragModel.G1:
+            return self.bc
+        elif self.drag_model.value == DragModel.G7:
+            return self.bc7
+        elif self.drag_model.value == DragModel.CDM:
+            return self.cdm
+
+    def validate(self):
+
+        if sum([i[0] for i in self.bc]) != 0 and self.drag_model.value == DragModel.G1:
+            return True
+        elif sum([i[0] for i in self.bc7]) != 0 and self.drag_model.value == DragModel.G7:
+            return True
+        elif sum([i[0] for i in self.cdm]) != 0 and self.drag_model.value == DragModel.CDM:
+            return True
+        else:
+            return False
+
+    def get_ammo(self):
+        return dict(
+            name=self.name_input.text,
+            diameter=self.diameter.raw_value,
+            weight=self.weight.raw_value,
+            length=self.length.raw_value,
+            muzzle_velocity=self.muzzle_velocity.raw_value,
+            temp_sens=self.powder_sens.raw_value,
+            powder_temp=self.powder_temp.raw_value,
+            drag_model=self.drag_model.value,
+            bc_list=self.bc,
+            bc7_list=self.bc7,
+            cdm_list=self.cdm
+        )
+
+    def get_zero(self):
+        return dict(
+            zero_range=self.zero_dist.raw_value,
+            altitude=self.altitude.raw_value,
+            pressure=self.pressure.raw_value,
+            temperature=self.temperature.raw_value,
+            humidity=self.humidity.raw_value,
+        )

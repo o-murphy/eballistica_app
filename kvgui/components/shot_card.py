@@ -1,84 +1,92 @@
-from kivy.lang import Builder
 from kivy.uix.screenmanager import Screen
-from kivymd.uix.button import MDRaisedButton
-from kivymd.uix.textfield import MDTextField
 
-from kvgui.modules import signals as sig
-from kvgui.modules.translator import translate as tr
-from units import *
-
-Builder.load_file('kvgui/kv/shot_card.kv')
+from datatypes.dbworker import AmmoData
+from kvgui.components.mixines import MapIdsMixine
+from modules import signals as sig
+from modules.translator import translate as tr
 
 
-class ShotCardScreen(Screen):
+class ShotCardScreen(Screen, MapIdsMixine):
     def __init__(self, **kwargs):
         super(ShotCardScreen, self).__init__(**kwargs)
-        self.name = 'shot_card'
+        self.name = 'shot_card_screen'
         self.init_ui()
         self.bind_ui()
 
     def init_ui(self):
-        for uid in self.ids:
-            child = self.ids[uid]
-            if hasattr(child, 'text') and not isinstance(child, MDTextField):
-                child.text = tr(child.text, ctx='ShotCard')
+        super(ShotCardScreen, self).init_ui()
+        self.humidity_suffix.text = '%'
+        self.translate_ui()
 
-        # convertable values
-        self.dt_v = self.ids.dt_v
-        self.dt_s = self.ids.dt_s
-        self.la_v = self.ids.la_v
-        self.la_s = self.ids.la_s
-        self.alt_v = self.ids.alt_v
-        self.alt_s = self.ids.alt_s
-        self.ps_v = self.ids.ps_v
-        self.ps_s = self.ids.ps_s
-        self.t_v = self.ids.t_v
-        self.t_s = self.ids.t_s
-        self.ws_v = self.ids.ws_v
-        self.ws_s = self.ids.ws_s
-        self.wa_v = self.ids.wa_v
-        self.wa_s = self.ids.wa_s
+    def on_pre_enter(self, *args):  # Note: Definition that may translate ui automatically
+        # self.translate_ui()
+        ...
 
-        # not need conversion values
-        self.h_v = self.ids.h_v
-
-        # special actions
-        self.one_shot: MDRaisedButton = self.ids.one_shot
-        self.trajectory: MDRaisedButton = self.ids.trajectory
+    def translate_ui(self, **kwargs):
+        self.target_label.text = tr('Target', 'ShotCard')
+        self.distance_label.text = tr('Distance', 'ShotCard')
+        self.look_angle_label.text = tr('Look angle', 'ShotCard')
+        self.atmo_label.text = tr('Atmosphere', 'ShotCard')
+        self.altitude_label.text = tr('Altitude', 'ShotCard')
+        self.pressure_label.text = tr('Pressure', 'ShotCard')
+        self.temperature_label.text = tr('Temperature', 'ShotCard')
+        self.humidity_label.text = tr('Humidity', 'ShotCard')
+        self.wind_speed_label.text = tr('Wind speed', 'ShotCard')
+        self.wind_dir_label.text = tr('Wind angle', 'ShotCard')
+        self.one_shot.text = tr('One shot', 'ShotCard')
+        self.trajectory.text = tr('Trajectory', 'ShotCard')
 
     def bind_ui(self):
         self.one_shot.bind(on_release=lambda x: sig.one_shot_act.emit(caller=self))
         self.trajectory.bind(on_release=lambda x: sig.trajectory_act.emit(caller=self))
+        sig.on_set_settings.connect(self.on_set_settings)
+        sig.translator_update.connect(self.translate_ui)
+        sig.set_settings.emit()
 
-        sig.set_unit_distance.connect(self.dt_unit_change)
-        sig.set_unit_velocity.connect(self.v_unit_change)
-        sig.set_unit_temperature.connect(self.t_unit_change)
-        sig.set_unit_pressure.connect(self.ps_unit_change)
-        sig.set_unit_angular.connect(self.an_unit_change)
+    def on_set_settings(self, **kwargs):
+
+        def set_unit_for_target(target, target_suffix, key):
+            if kwargs.get(key):
+                unit = kwargs.get(key)
+                if unit:
+                    target.unit = unit
+                    target_suffix.text = tr(target.measure.name(target.unit), 'Unit')
+
+        set_unit_for_target(self.distance, self.distance_suffix, 'unit_distance')
+        set_unit_for_target(self.altitude, self.altitude_suffix, 'unit_distance')
+        set_unit_for_target(self.look_angle, self.look_angle_suffix, 'unit_angular')
+        set_unit_for_target(self.pressure, self.pressure_suffix, 'unit_pressure')
+        set_unit_for_target(self.temperature, self.temperature_suffix, 'unit_temperature')
+        set_unit_for_target(self.wind_speed, self.wind_speed_suffix, 'unit_velocity')
+        set_unit_for_target(self.wind_angle, self.wind_angle_suffix, 'unit_angular')
 
     def on_enter(self, *args):
         ...
 
-    def an_unit_change(self, unit, **kwargs):
-        self.wa_v.convertor = Convertor(Angular, Angular.Degree, unit)
-        self.wa_s.text = tr(Velocity.name(unit), 'Unit')
-        self.la_v.convertor = Convertor(Angular, Angular.Degree, unit)
-        self.la_s.text = tr(Velocity.name(unit), 'Unit')
+    def display(self, data: AmmoData):
 
-    def v_unit_change(self, unit, **kwargs):
-        self.ws_v.convertor = Convertor(Velocity, Velocity.MPS, unit)
-        self.ws_s.text = tr(Velocity.name(unit), 'Unit')
+        self.distance.raw_value = data.target.distance
+        self.look_angle.raw_value = data.target.look_angle
 
-    def t_unit_change(self, unit, **kwargs):
-        self.t_v.convertor = Convertor(Temperature, Temperature.Celsius, unit)
-        self.t_s.text = tr(Temperature.name(unit), 'Unit')
+        self.altitude.raw_value = data.atmo.altitude
+        self.pressure.raw_value = data.atmo.pressure
+        self.temperature.raw_value = data.atmo.temperature
+        self.humidity.value = data.atmo.humidity
+        self.wind_speed.raw_value = data.atmo.wind_speed
+        self.wind_angle.raw_value = data.atmo.wind_angle
 
-    def dt_unit_change(self, unit, **kwargs):
-        self.dt_v.convertor = Convertor(Distance, Distance.Meter, unit)
-        self.dt_s.text = tr(Distance.name(unit), 'Unit')
-        self.alt_v.convertor = Convertor(Distance, Distance.Meter, unit)
-        self.alt_s.text = tr(Distance.name(unit), 'Unit')
+    def get_target(self):
+        return dict(
+            distance=self.distance.raw_value,
+            look_angle=self.look_angle.raw_value,
+        )
 
-    def ps_unit_change(self, unit, **kwargs):
-        self.ps_v.convertor = Convertor(Pressure, Pressure.MmHg, unit)
-        self.ps_s.text = tr(Pressure.name(unit), 'Unit')
+    def get_atmo(self):
+        return dict(
+            altitude=self.altitude.raw_value,
+            pressure=self.pressure.raw_value,
+            temperature=self.temperature.raw_value,
+            humidity=self.humidity.value,
+            wind_speed=self.wind_speed.raw_value,
+            wind_angle=self.wind_angle.raw_value,
+        )

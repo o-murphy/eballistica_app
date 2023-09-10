@@ -1,0 +1,25 @@
+<TrajectoryScreen>
+
+    MDTabs:
+        elevation: 2
+
+        Tab:
+            id: fast_tab
+            title: "Table"
+            content_text: f"This is an example text for {self.title}"
+
+            MarkupTable:
+                id: markup_table
+                height: fast_tab.height
+                padding: dp(10)
+
+        Tab:
+            id: graph_tab
+            title: "Graph"
+            content_text: f"This is an example text for {self.title}"
+
+        Tab:
+            id: drag_mach_tab
+            title: 'Drag model'
+            content_text: f"This is an example text for {self.title}"
+
