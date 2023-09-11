@@ -78,6 +78,8 @@ pip install pyinstaller
 pip install pyinstaller==5.6.2  # (recommended)
 # build binaries
 pyinstaller pyinstaller.spec
+# make installer
+ISCC setup_x64.iss
 ```
 
 #### Linux

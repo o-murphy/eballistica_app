@@ -1,23 +1,21 @@
+import logging
+import os
 import shutil
 
 from kivy.utils import platform
-import os
-import logging
+
 from __version__ import __version__
 
 __all__ = ['APP_DATA', 'STORAGE', 'USER_DATA', 'DB_PATH', 'SETTINGS_PATH']
 
 logging.info(f"App version:  {__version__}")
 
-
 IS_ANDROID = platform == 'android'
-
-
 
 if IS_ANDROID:
     from android import api_version
     from android.permissions import request_permissions, Permission
-    from androidstorage4kivy import SharedStorage, ShareSheet
+    from androidstorage4kivy import SharedStorage
 
     from android.storage import primary_external_storage_path
 
@@ -38,16 +36,15 @@ if IS_ANDROID:
     else:
         # Android >= 10
         # Permission required to see Shared files created by other apps
-        ANDROID_PERMISSIONS = [Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE]
+        ANDROID_PERMISSIONS = [Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE,
+                               Permission.MANAGE_EXTERNAL_STORAGE]
 
     request_permissions(ANDROID_PERMISSIONS)
-
 
     # def use_test_ss():
     #     with open(f'version-{__version__}.txt', 'w') as txt:
     #         txt.write(__version__)
     #         SharedStorage().copy_to_shared(f'version-{__version__}.txt', filepath=f'version-{__version__}.txt')
-
 
     # def create_test_uri():
     #     # create a file in Private storage
@@ -65,7 +62,6 @@ if IS_ANDROID:
     #         f.write("</html>\n")
     #
     #     return SharedStorage().copy_to_shared(filename)
-
 
     # def share_test_file():
     #     test_uri = create_test_uri()
