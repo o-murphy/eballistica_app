@@ -60,7 +60,7 @@ jobs:
       - name: SDK, NDK and p4a download settings
         run: |
           sed -i.bak "s/# android.accept_sdk_license = False/android.accept_sdk_license = True/" buildozer.spec
-          sed -i "s/^log_level = .*/log_level = ${{{ inputs.buildozerLogLevel }}}/" buildozer.spec
+          sed -i "s/^log_level = .*/log_level = ${{ inputs.buildozerLogLevel }}/" buildozer.spec
 
 #          sed -i.bak "s/#p4a.branch = master/p4a.branch = develop/" buildozer.spec
 #          buildozer android p4a -- --help
