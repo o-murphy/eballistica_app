@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+
+# Install the Python dependencies from the local requirements.txt
+pip3 install --user -r requirements.txt
+
+# Run pyinstaller
+pyinstaller "$@"

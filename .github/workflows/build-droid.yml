@@ -22,8 +22,6 @@ on:
       tags:
         description: 'Test scenario tags'
 
-
-
 jobs:
   build-droid:
     runs-on: ubuntu-latest

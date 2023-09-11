@@ -68,11 +68,17 @@ docker pull omurphyslaw/buildozer:SDK31-NDKr25b
 docker run -v ${pwd}:/home/user/hostcwd -d omurphyslaw/buildozer:SDK31-NDKr25b android debug
 
 ```
+Or you can use Dockerfile from docker dir
+```shell
+docker build -t buildozer -f docker/buildozer.Dockerfile .
+docker run -v ${pwd}:/home/user/hostcwd -d buildozer android debug
+```
 
 
 #### Windows
 ```shell
 # install pyinstaller wia pip
+pip install -r requirements.txt
 pip install pyinstaller
 # or
 pip install pyinstaller==5.6.2  # (recommended)
@@ -85,6 +91,7 @@ ISCC setup_x64.iss
 #### Linux
 ```shell
 # install pyinstaller wia pip
+pip install -r requirements.txt
 pip install pyinstaller
 # or
 pip install pyinstaller==5.12.0  # (recommended)
