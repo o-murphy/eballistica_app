@@ -15,12 +15,9 @@ on:
         description: 'Buildozer Log level'
         required: true
         options:
-          - value: '0'
-            label: 'Error only'
-          - value: '1'
-            label: 'Info'
-          - value: '2'
-            label: 'Debug'
+          - '0'
+          - '1'
+          - '2'
         default: '1'
       tags:
         description: 'Test scenario tags'
