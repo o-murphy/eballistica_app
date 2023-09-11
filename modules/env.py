@@ -36,8 +36,8 @@ if IS_ANDROID:
     else:
         # Android >= 10
         # Permission required to see Shared files created by other apps
-        ANDROID_PERMISSIONS = [Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE,
-                               Permission.MANAGE_EXTERNAL_STORAGE]
+        ANDROID_PERMISSIONS = [Permission.READ_EXTERNAL_STORAGE,
+                               Permission.WRITE_EXTERNAL_STORAGE]
 
     request_permissions(ANDROID_PERMISSIONS)
 
