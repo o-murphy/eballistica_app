@@ -62,10 +62,10 @@ buildozer android debug
 # bind your source folder to hostcwd directory of the Docker container
 # build in debug mode
 docker pull omurphyslaw/buildozer:test
-docker run -v "path-to-sources:/home/user/hostcwd" -d omurphyslaw/buildozer:test android debug
+docker run -v ${pwd}:/home/user/hostcwd -d omurphyslaw/buildozer:test android debug
 # or use branch with preinstalled SDK/NDK
 docker pull omurphyslaw/buildozer:SDK31-NDKr25b
-docker run -v "path-to-sources:/home/user/hostcwd" -d omurphyslaw/buildozer::SDK31-NDKr25b android debug
+docker run -v ${pwd}:/home/user/hostcwd -d omurphyslaw/buildozer:SDK31-NDKr25b android debug
 
 ```
 
